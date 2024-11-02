@@ -28,10 +28,15 @@ const currencies = {
     raindrop: new Currency("raindrop", "raindrop", () => true, () => {
         let amount = game.raindrop.upgrades.worth + 1
             * (game.watercoin.tempBoostTime > 0 ? watercoinUpgrades.tempboost.getEffect() : 1);
+        amount = Math.ceil(amount);
 
         game.raindrop.amount += amount;
         game.stats.totalRaindrops += amount;
         if (game.raindrop.amount > game.stats.mostRaindrops) game.stats.mostRaindrops = game.raindrop.amount;
+
+        // temporary
+        game.raindrop.amount = Math.ceil(game.raindrop.amount);
+        game.stats.totalRaindrops = Math.ceil(game.stats.totalRaindrops);
 
         game.watercoin.fill++;
     }),

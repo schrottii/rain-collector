@@ -72,7 +72,7 @@ scenes["mainmenu"] = new Scene(
         game.raindrop.time += tick;
         game.watercoin.time += tick;
         
-        if (game.raindrop.time >= 1 / raindropUpgrades.time.getEffect()) {
+        if (game.raindrop.time >= raindropUpgrades.time.getEffect()) {
             game.raindrop.time = 0;
             for (let i = 1; i <= 20; i++) {
                 if (objects["drop" + i].power == false) {

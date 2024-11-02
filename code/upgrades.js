@@ -26,6 +26,10 @@ class Upgrade {
         return typeof (this.effect) == "function" ? this.effect(level) : this.effect;
     }
 
+    getMaxLevel() {
+        return this.maxLevel == 0 ? 9999999999999999999 : this.maxLevel;
+    }
+
     getDescription(level = this.getLevel(), part = 1) {
         let baseDescription = typeof (this.description) == "function" ? this.description(level) : this.description;
         let charLength = isMobile() ? 48 : 80;
@@ -38,7 +42,7 @@ class Upgrade {
     createObjects(index) {
         createSquare(this.me() + "bg", 0, 0.1 + index * 0.1, 1, 0.1, index % 2 == 0 ? "#560000" : "#A83F3F");
         createButton(this.me() + "button", 0.025, 0.1 + index * 0.1, 0.1, 0.1, "upgrades", () => {
-            if (game[this.currency].amount >= this.getPrice()) {
+            if (game[this.currency].amount >= this.getPrice() && this.getLevel() < this.getMaxLevel()) {
                 game[this.currency].amount -= this.getPrice();
                 game[this.currency].upgrades[this.name]++;
 
