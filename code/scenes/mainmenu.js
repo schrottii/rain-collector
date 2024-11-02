@@ -5,7 +5,7 @@ scenes["mainmenu"] = new Scene(
         if (game.settings.bg) createImage("bgSquare2", 0, 0, 1, 0.9, "bg");
         createSquare("bgSquare3", 0, 0.9, 1, 0.1, "darkgray");
 
-        createText("header", 0.5, 0.06, "Rain Collector v1.0", { size: 60, color: "white" });
+        createText("header", 0.5, 0.06, "Rain Collector v1.0.1", { size: 60, color: "white" });
 
         for (let i = 1; i <= 20; i++) {
             createButton("drop" + i, -10, -10, 0.1, 0.1, "currencies/raindrop", () => {
