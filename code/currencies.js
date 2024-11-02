@@ -26,7 +26,7 @@ function cc() {
 
 const currencies = {
     raindrop: new Currency("raindrop", "raindrop", () => true, () => {
-        let amount = game.raindrop.upgrades.worth + 1
+        let amount = (game.raindrop.upgrades.worth + 1)
             * (game.watercoin.tempBoostTime > 0 ? watercoinUpgrades.tempboost.getEffect() : 1);
         amount = Math.ceil(amount);
 

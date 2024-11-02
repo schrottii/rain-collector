@@ -75,7 +75,7 @@ class Upgrade {
 const raindropUpgrades = {
     worth: new Upgrade("raindrop", "worth", "Raindrop Worth", level => "Raindrops are worth more. Current worth: +" + level, level => 10 * Math.pow(level + 1, 1.08), level => level, 0),
     time: new Upgrade("raindrop", "time", "Raindrop Time", level => "Raindrops spawn more often. Current time: " + raindropUpgrades.time.getEffect(level).toFixed(2) + "s", level => 50 * Math.pow(level + 1, 1.16), level => (1 / ((level / 10) + 1)), 100),
-    auto: new Upgrade("raindrop", "auto", "Raindrop Auto", level => "Raindrops can be collected automatically. Chance: " + level + "%", level => 10 * Math.pow(level + 1, 1.16), level => level, 50),
+    auto: new Upgrade("raindrop", "auto", "Raindrop Auto", level => level == 45 ? "hello elmendaL45(.2)" : ("Raindrops can be collected automatically. Chance: " + level + "%", level => 10 * Math.pow(level + 1, 1.16)), level => level, 50),
 };
 
 const watercoinUpgrades = {
