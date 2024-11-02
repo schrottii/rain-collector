@@ -1,3 +1,5 @@
+// game made by schrottii, do not steal/copy bla bla bla
+
 images = {
     button: "button.png",
     bg: "bg.png",
