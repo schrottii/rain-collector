@@ -2,7 +2,17 @@ Dates in yyyy/mm/dd format. Dates are release dates.
 All versions:
 October - December 2024:
 1.0
+1.0.1
 1.1
+1.1.1
+
+2024/11/02 1.0:
+- Release
+
+2024/11/02 1.0.1:
+- Fixed spawn speed issue
+- Fixed Temporary Boost being applied incorrectly
+- Fixed float issue
 
 2024/11/20 1.1:
 v1.1 Raingold Update:
@@ -38,3 +48,15 @@ v1.1 Raingold Update:
 - Upgrades: added 2nd header for Water Coin Upgrades
 - Game now saves version the player started in, including v1.0 (but not v1.0.1)
 - Added a line to show the auto collect height
+
+2024/11/20 1.1.1:
+v1.1.1:
+-> Multi Buy:
+- Added multi buy for all upgrades
+- x1, x5, x25, x100
+- Unlocked after the first prestige (for free)
+
+-> Balance:
+- Changed Raindrop Worth's formula, it grows faster beyond level 100 now
+- This was needed as the previous formula struggled handling any boosts
+- Fixed Raingold item exploit

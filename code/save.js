@@ -60,6 +60,13 @@ class SaveGame {
         }
         else if (sg.startVer == "") sg.startVer = GAMEVERSION;
 
+        if (objects["drop4"] != undefined) {
+            for (let i = 1; i <= 20; i++) {
+                objects["drop" + i].power = false;
+            }
+        }
+        postPrestige = [0, 0];
+
         for (let element in sg) {
             if (typeof (this[element]) == "object") {
                 for (let element2 in this[element]) {

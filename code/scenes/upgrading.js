@@ -19,6 +19,16 @@ scenes["upgrading"] = new Scene(
             watercoinUpgrades[upg].createObjects(4 + Object.keys(watercoinUpgrades).indexOf(upg));
         }
 
+        // Multi buy
+        createButton("multiBuyButton1", 0.1, 10, 0.2, 0.05, "#212121", () => { multiBuy = 1; });
+        createText("multiBuyText1", 0.2, 10, "x1", { color: "white", size: 40 });
+        createButton("multiBuyButton2", 0.3, 10, 0.2, 0.05, "#404040", () => { multiBuy = 5; });
+        createText("multiBuyText2", 0.4, 10, "x5", { color: "white", size: 40 });
+        createButton("multiBuyButton3", 0.5, 10, 0.2, 0.05, "#212121", () => { multiBuy = 25; });
+        createText("multiBuyText3", 0.6, 10, "x25", { color: "white", size: 40 });
+        createButton("multiBuyButton4", 0.7, 10, 0.2, 0.05, "#404040", () => { multiBuy = 100; });
+        createText("multiBuyText4", 0.8, 10, "x100", { color: "white", size: 40 });
+
         // Currency display
         createSquare("currency1", 0.2, 0.775, 0.6, 0.1, "#560000");
         createImage("currency2", 0.25, 0.775, 0.1, 0.1, "currencies/raindrop", { quadratic: true, centered: true });
@@ -34,5 +44,21 @@ scenes["upgrading"] = new Scene(
         }
 
         objects["currencyDisplay"].text = game.raindrop.amount;
+
+        if (game.stats.prestiges > 0) {
+            for (let i = 1; i < 5; i++) {
+                objects["multiBuyButton" + i].y = 0.705;
+                clickables["multiBuyButton" + i][1] = 0.705 * wggjCanvasHeight;
+                objects["multiBuyText" + i].y = 0.74;
+            }
+        }
+        else {
+            for (let i = 1; i < 5; i++) {
+                objects["multiBuyButton" + i].y = 10;
+                clickables["multiBuyButton" + i][1] = 10 * wggjCanvasHeight;
+                objects["multiBuyText" + i].y = 10;
+            }
+            multiBuy = 1;
+        }
     }
 );

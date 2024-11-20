@@ -1,3 +1,5 @@
+var multiBuy = 1;
+
 class Upgrade {
     constructor(currency, name, displayName, description, price, effect, maxLevel, config) {
         this.currency = currency;
@@ -49,11 +51,13 @@ class Upgrade {
         createSquare(this.me() + "bg2", 0, 0.15 + index * 0.1, 1, 0.05, index % 2 == 0 ? "#470000" : "#993A3A");
 
         createButton(this.me() + "button", 0.025, 0.1 + index * 0.1, 0.1, 0.1, "upgrades", () => {
-            if (game[this.currency].amount >= this.getPrice() && this.getLevel() < this.getMaxLevel()) {
-                game[this.currency].amount -= this.getPrice();
-                game[this.currency].upgrades[this.name]++;
+            for (let i = 0; i < multiBuy; i++) {
+                if (game[this.currency].amount >= this.getPrice() && this.getLevel() < this.getMaxLevel()) {
+                    game[this.currency].amount -= this.getPrice();
+                    game[this.currency].upgrades[this.name]++;
 
-                if (this.onBuy) this.onBuy(this);
+                    if (this.onBuy) this.onBuy(this);
+                }
             }
         }, { quadratic: true });
         createImage(this.me() + "pic", 0.025, 0.1 + index * 0.1, 0.025, 0.025, "currencies/" + currencies[this.currency].image, { quadratic: true });
@@ -78,7 +82,7 @@ class Upgrade {
 }
 
 const raindropUpgrades = {
-    worth: new Upgrade("raindrop", "worth", "Raindrop Worth", level => "Raindrops are worth more. Current worth: +" + level, level => 10 * Math.pow(level + 1, 1.08), level => level, 0),
+    worth: new Upgrade("raindrop", "worth", "Raindrop Worth", level => "Raindrops are worth more. Current worth: +" + level, level => 10 * Math.pow(level + 1, 1.08) * (level > 99 ? Math.pow(1.008, level - 99) : 1), level => level, 0),
     time: new Upgrade("raindrop", "time", "Raindrop Time", level => "Raindrops spawn more often. Current time: " + raindropUpgrades.time.getEffect(level).toFixed(2) + "s", level => 50 * Math.pow(level + 1, 1.16), level => (1 / ((level / 10) + 1)), 100),
     auto: new Upgrade("raindrop", "auto", "Raindrop Auto", level => "Raindrops can be collected automatically. Chance: " + level + "%", level => 10 * Math.pow(level + 1, 1.16), level => level, 50),
 };
