@@ -1,0 +1,40 @@
+Dates in yyyy/mm/dd format. Dates are release dates.
+All versions:
+October - December 2024:
+1.0
+1.1
+
+2024/11/20 1.1:
+v1.1 Raingold Update:
+-> Prestige:
+- New feature: Prestige!
+- Unlocked at 10k Raindrops
+- New currency: Raingold!
+- Every Raingold boosts Raindrop gains by 1%
+- Prestige to gain Raindrops, they have to be collected to be earned
+- Prestige resets Raindrops, their upgrades and Water Coins, but nothing else
+- Raingold gain formula is based on Raindrop amount and upgrade levels
+
+-> Design:
+- New font (for higher readability)
+- Added collect effects for manual and auto
+- Items spawn closer to the middle (X-axis) on PC
+- Items spawn a bit more to the left (centered)
+
+-> Balance:
+- Reduced duration of both Water Coin boosts from 60s to 30s
+- Temporary Boost now starts at x2 as intended (rather than x2.2)
+- Changed auto collect height from 40% to 10%
+
+-> Settings:
+- Changed settings design
+- New setting: Play my other games
+- New setting: Delete Save
+- The player's start version is now displayed
+- Players who finished the game on release get a special display
+
+-> Other:
+- Changed upgrades design
+- Upgrades: added 2nd header for Water Coin Upgrades
+- Game now saves version the player started in, including v1.0 (but not v1.0.1)
+- Added a line to show the auto collect height

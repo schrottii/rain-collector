@@ -2,6 +2,7 @@ class SaveGame {
     new() {
         this.id = Math.random().toString(16).slice(2);
         this.name = "";
+        this.startVer = "";
 
         this.selCur = "raindrop";
 
@@ -30,13 +31,21 @@ class SaveGame {
             }
         }
 
+        this.raingold = {
+            amount: 0,
+        }
+
         this.stats = {
             playTime: 0,
+            prestiges: 0,
 
+            // currencies
             totalRaindrops: 0,
             mostRaindrops: 0,
             totalWatercoins: 0,
             mostWatercoins: 0,
+            totalRaingold: 0,
+            mostRaingold: 0,
         }
 
         this.settings = {
@@ -45,6 +54,12 @@ class SaveGame {
         }
     }
     loadFromSaveGame(sg) {
+        if (sg.startVer == undefined) {
+            sg.startVer = "1.0";
+            if (game.raindrop.upgrades.time >= 100 && game.raindrop.upgrades.auto >= 50) sg.startVer = "**1.0**";
+        }
+        else if (sg.startVer == "") sg.startVer = GAMEVERSION;
+
         for (let element in sg) {
             if (typeof (this[element]) == "object") {
                 for (let element2 in this[element]) {
@@ -89,6 +104,22 @@ function importGame() {
     }
     catch {
         alert("Wrong!");
+    }
+}
+
+function deleteGame() {
+    if (confirm("Are you SURE you want to delete your save?! This cannot be undone!")) {
+        if (confirm("Please consider making a backup before this. Are you really sure?!")) {
+            if (confirm("If you press Yes one more time, your progress is gone. Maybe don't do that.")) {
+                game = new SaveGame();
+                game.new();
+                game.startVer = GAMEVERSION;
+
+                loadScene("mainmenu");
+
+                alert("Progress dropped successfully!");
+            }
+        }
     }
 }
 

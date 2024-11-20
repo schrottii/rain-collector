@@ -1,11 +1,14 @@
 // game made by schrottii, do not steal/copy bla bla bla
 
+const GAMEVERSION = "1.1";
+
 images = {
     button: "button.png",
     bg: "bg.png",
     bg2: "bg2.png",
 
     upgrades: "upgrades.png",
+    prestige: "prestige.png",
     settings: "settings.png",
 
     pencil: "pencil.png",
@@ -14,11 +17,15 @@ images = {
     background: "background.png",
     backgroundoff: "backgroundoff.png",
 
+    collected: "collected.png",
+    collected2: "collected2.png",
+
     "currencies/raindrop": "currencies/raindrop.png",
     "currencies/watercoin": "currencies/watercoin.png",
+    "currencies/raingold": "currencies/raingold.png",
 }
 GAMENAME = "Rain Collector";
-FONT = "Birdland";
+FONT = "Quicksand";
 wggjLoadImages();
 wggjLoop();
 
@@ -30,7 +37,7 @@ function loadedScene() {
     wggjCTX.textBaseline = "bottom";
     wggjCTX.textAlign = "center";
 
-    wggjCTX.font = "80px " + FONT;
+    wggjCTX.font = "60px " + FONT;
     wggjCTX.fillText(GAMENAME, wggjCanvasWidth / 2, wggjCanvasHeight / 4);
 
     wggjCTX.font = "40px " + FONT;
