@@ -1,3 +1,25 @@
+const ITEM_LIMIT = 20;
+
+function collectItem(i, isAuto = false) {
+    if (objects["drop" + i].power == false) return false;
+    objects["drop" + i].power = false;
+
+    if (isAuto == true) {
+        objects["collected2"].power = true;
+        objects["collected2"].x = objects["drop" + i].x;
+        objects["collected2"].y = objects["drop" + i].y;
+        objects["collected2"].timer = 0.25;
+    }
+    else {
+        objects["collected"].power = true;
+        objects["collected"].x = objects["drop" + i].x;
+        objects["collected"].y = objects["drop" + i].y;
+        objects["collected"].timer = 0.25;
+    }
+
+    getItemCur(i).onCollect();
+}
+
 scenes["mainmenu"] = new Scene(
     () => {
         // Init
@@ -9,27 +31,10 @@ scenes["mainmenu"] = new Scene(
 
         createText("header", 0.5, 0.06, "Rain Collector v" + GAMEVERSION, { size: 60, color: "white" });
 
-        for (let i = 1; i <= 20; i++) {
+        for (let i = 1; i <= ITEM_LIMIT; i++) {
             createButton("drop" + i, -10, -10, 0.1, 0.1, "currencies/raindrop", (isAuto = false) => {
-                if (objects["drop" + i].power == false) return false;
-                objects["drop" + i].power = false;
-
-                if (isAuto == true) {
-                    objects["collected2"].power = true;
-                    objects["collected2"].x = objects["drop" + i].x;
-                    objects["collected2"].y = objects["drop" + i].y;
-                    objects["collected2"].timer = 0.25;
-                }
-                else {
-                    objects["collected"].power = true;
-                    objects["collected"].x = objects["drop" + i].x;
-                    objects["collected"].y = objects["drop" + i].y;
-                    objects["collected"].timer = 0.25;
-                }
-
-                currencies[objects["drop" + i].currency].onCollect();
-
-            }, { power: false, quadratic: true, centered: true });
+                collectItem(i, isAuto);
+            }, { power: false, quadratic: true, centered: true, onHold: () => { collectItem(i, false) } });
             objects["drop" + i].power = false;
         }
 
@@ -43,11 +48,11 @@ scenes["mainmenu"] = new Scene(
         // Buttons
         createButton("sceneButton1", 0, 0.9, 1 / 3, 0.1, "button", () => { loadScene("upgrading") });
         createButton("sceneButton2", 0 + 1 / 3, 0.9, 1 / 3, 0.1, "button", () => { game.raindrop.amount < 1e4 && game.raingold.amount < 1 ? alert("Unlocked at 10 000 Raindrops!") : loadScene("prestige") });
-        createButton("sceneButton3", 0 + 1 / 3 * 2, 0.9, 1 / 3, 0.1, "button", () => { loadScene("settings") });
+        createButton("sceneButton3", 0 + 1 / 3 * 2, 0.9, 1 / 3, 0.1, "button", () => { loadScene("stats") });
 
         createImage("sceneImage1", 1 / 6, 0.91, 0.08, 0.08, "upgrades", { quadratic: true, centered: true });
         createImage("sceneImage2", 1 / 6 * 3, 0.91, 0.08, 0.08, "prestige", { quadratic: true, centered: true });
-        createImage("sceneImage3", 1 / 6 * 5, 0.91, 0.08, 0.08, "settings", { quadratic: true, centered: true });
+        createImage("sceneImage3", 1 / 6 * 5, 0.91, 0.08, 0.08, "stats", { quadratic: true, centered: true });
 
         // Currency display
         createSquare("currency1", 0.2, 0.775, 0.6, 0.1, "#560000");
@@ -88,13 +93,15 @@ scenes["mainmenu"] = new Scene(
             objects["currencyDisplay"].size = 43;
         }
 
-        objects["currencyDisplay"].text = game.raindrop.amount;
-        objects["currencyDisplay2"].text = game.watercoin.amount;
+        // Currency displays
+        objects["currencyDisplay"].text = fn(game.raindrop.amount);
+        objects["currencyDisplay2"].text = fn(game.watercoin.amount);
 
         // Render falling drops
         game.raindrop.time += tick;
         game.watercoin.time += tick;
 
+        // Collect animations
         objects["collected"].timer -= tick;
         if (objects["collected"].timer < 0) {
             objects["collected"].timer = 0;
@@ -113,55 +120,23 @@ scenes["mainmenu"] = new Scene(
                 game.raindrop.time = 0;
                 postPrestige[0] -= 1;
 
-                for (let i = 1; i <= 20; i++) {
-                    if (objects["drop" + i].power == false) {
-                        objects["drop" + i].x = getFallingX();
-                        objects["drop" + i].y = -0.1;
-                        objects["drop" + i].image = "currencies/" + currencies.raingold.image;
-                        objects["drop" + i].currency = "raingold";
-
-                        objects["drop" + i].autod = false; // auto'd
-                        objects["drop" + i].power = true;
-                        break;
-                    }
-                }
+                console.log("nautious")
+                createFallingItem("raingold");
             }
         }
         else if (game.raindrop.time >= raindropUpgrades.time.getEffect()) {
             game.raindrop.time = 0;
-            for (let i = 1; i <= 20; i++) {
-                if (objects["drop" + i].power == false) {
-                    objects["drop" + i].x = getFallingX();
-                    objects["drop" + i].y = -0.1;
-                    objects["drop" + i].image = "currencies/" + cc().image;
-                    objects["drop" + i].currency = game.selCur;
-
-                    objects["drop" + i].autod = false; // auto'd
-                    objects["drop" + i].power = true;
-                    break;
-                }
-            }
+            createFallingItem(game.selCur);
         }
 
         if (game.watercoin.time >= 5 && game.watercoin.fill >= 100) {
             game.watercoin.time = 0;
-            for (let i = 1; i <= 20; i++) {
-                if (objects["drop" + i].power == false) {
-                    objects["drop" + i].x = getFallingX();
-                    objects["drop" + i].y = -0.1;
-                    objects["drop" + i].image = "currencies/" + currencies.watercoin.image;
-                    objects["drop" + i].currency = "watercoin";
-
-                    objects["drop" + i].autod = false; // auto'd
-                    objects["drop" + i].power = true;
-                    break;
-                }
-            }
+            createFallingItem("watercoin");
         }
 
         for (let i = 1; i <= 10; i++) {
             if (objects["drop" + i].power) {
-                objects["drop" + i].y += tick;
+                objects["drop" + i].y += tick * getItemCur(i).speedMulti;
                 clickables["drop" + i][0] = objects["drop" + i].x * wggjCanvasWidth;
                 clickables["drop" + i][1] = objects["drop" + i].y * wggjCanvasHeight;
 

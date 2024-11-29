@@ -6,8 +6,10 @@ class SaveGame {
 
         this.selCur = "raindrop";
 
+        // currencies start
+
         this.raindrop = {
-            amount: 0,
+            amount: new Decimal(0),
             time: 0,
 
             upgrades: {
@@ -18,7 +20,7 @@ class SaveGame {
         };
 
         this.watercoin = {
-            amount: 0,
+            amount: new Decimal(0),
             fill: 0,
             time: 0,
 
@@ -32,8 +34,12 @@ class SaveGame {
         }
 
         this.raingold = {
-            amount: 0,
+            amount: new Decimal(0),
         }
+
+        // currencies over
+
+        this.achievements = [];
 
         this.stats = {
             playTime: 0,
@@ -42,39 +48,52 @@ class SaveGame {
             // currencies
             totalRaindrops: 0,
             mostRaindrops: 0,
+            itemRaindrops: 0,
+
             totalWatercoins: 0,
             mostWatercoins: 0,
+            itemWatercoins: 0,
+
             totalRaingold: 0,
             mostRaingold: 0,
+            itemRaingold: 0,
         }
 
         this.settings = {
             music: false,
             bg: true,
+            notation: "normal",
         }
     }
-    loadFromSaveGame(sg) {
+    loadFromSaveGame(sg, passive = false) {
         if (sg.startVer == undefined) {
             sg.startVer = "1.0";
             if (game.raindrop.upgrades.time >= 100 && game.raindrop.upgrades.auto >= 50) sg.startVer = "**1.0**";
         }
         else if (sg.startVer == "") sg.startVer = GAMEVERSION;
 
-        if (objects["drop4"] != undefined) {
-            for (let i = 1; i <= 20; i++) {
-                objects["drop" + i].power = false;
-            }
+        if (!passive) {
+            clearFallingItems();
+            postPrestige = [0, 0];
         }
-        postPrestige = [0, 0];
 
         for (let element in sg) {
-            if (typeof (this[element]) == "object") {
+            if (typeof (this[element]) == "object" && this[element].length == undefined) {
                 for (let element2 in this[element]) {
-                    if (typeof (this[element][element2]) == "object") sg[element][element2] = Object.assign({}, this[element][element2], sg[element][element2]);
+
+                    if (typeof (this[element][element2]) == "object" && this[element][element2].mantissa == undefined) sg[element][element2] = Object.assign({}, this[element][element2], sg[element][element2]);
                 }
                 this[element] = Object.assign({}, this[element], sg[element]);
             }
             else this[element] = sg[element];
+        }
+
+        // break infinity loader
+        for (let cur in currencies) {
+            this[cur]["amount"] = numberLoader(this[cur]["amount"]);
+        }
+        for (let cur in this.stats) {
+            if (cur.substr(0, 4) == "most" || cur.substr(0, 5) == "total") this.stats[cur] = numberLoader(this.stats[cur]);
         }
     }
 }
@@ -83,7 +102,7 @@ var game = new SaveGame();
 game.new();
 
 function save() {
-    localStorage.setItem("RAINCOL1", "rain601" + btoa(JSON.stringify(game)));
+    localStorage.setItem("RAINCOL1", saveGame(game));
 
     if (objects["header"] != undefined) {
         objects["header"].preSaveText = objects["header"].text;
@@ -91,11 +110,28 @@ function save() {
     }
 }
 
-function exportGame() {
-    let save = game;
+function saveGame(toSave) {
+    let save = new SaveGame();
+    save.new();
+    save.loadFromSaveGame(toSave, true);
+
+    // break infinity saver
+    for (let cur in currencies) {
+        save[cur]["amount"] = numberSaver(save[cur]["amount"]);
+    }
+    for (let cur in save.stats) {
+        if (cur.substr(0, 4) == "most" || cur.substr(0, 5) == "total") save.stats[cur] = numberSaver(save.stats[cur]);
+    }
+
+    // heaueh uaehaeuh
     save = JSON.stringify(save);
     save = "rain601" + btoa(save);
-    navigator.clipboard.writeText(save);
+
+    return save;
+}
+
+function exportGame() {
+    navigator.clipboard.writeText(saveGame(game));
     alert("The save has been copied to your clipboard!");
 }
 

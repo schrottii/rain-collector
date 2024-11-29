@@ -101,17 +101,46 @@ function wggjLoadImages() {
     }
 }
 
+
+// EDITED!!!!!!!
+var wggjMouseDown = false;
 wggjCanvas.addEventListener("pointerdown", onClick);
+wggjCanvas.addEventListener("pointerup", onPointerUp);
+wggjCanvas.addEventListener("pointerleave", onPointerUp);
+wggjCanvas.addEventListener("pointermove", onPointerMove);
 function onClick(e) {
+    wggjMouseDown = true;
+
     let mouseX = e.clientX;
     let mouseY = e.clientY;
 
-    for (c in clickables) {
+    for (let c in clickables) {
         if (clickables[c] == undefined) return false;
         if (mouseX > clickables[c][0] && mouseY > clickables[c][1]
             && mouseX < clickables[c][0] + clickables[c][2] && mouseY < clickables[c][1] + clickables[c][3]) {
             // is in the hitbox
             clickables[c][4](c);
+        }
+    }
+}
+
+function onPointerUp(e) {
+    wggjMouseDown = false;
+}
+
+function onPointerMove(e) {
+    if (wggjMouseDown) {
+        let mouseX = e.clientX;
+        let mouseY = e.clientY;
+
+        for (let c in objects) {
+            if (objects[c] == undefined) return false;
+            if (mouseX > objects[c].x * wggjCanvasWidth && mouseY > objects[c].y * wggjCanvasHeight
+                && mouseX < (objects[c].x + objects[c].w) * wggjCanvasWidth && mouseY < (objects[c].y + objects[c].h) * wggjCanvasHeight
+                && objects[c].onHold != undefined            ) {
+                // is in the hitbox
+                objects[c].onHold(c);
+            }
         }
     }
 }
@@ -171,6 +200,7 @@ class Picture {
         this.quadratic = config.quadratic ? config.quadratic : false;
         this.centered = config.centered ? config.centered : false;
         this.power = config.power ? config.power : true;
+        this.onHold = config.onHold ? config.onHold : undefined; // EDITED
 
         this.config = config;
     }

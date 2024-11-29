@@ -1,9 +1,12 @@
 class Currency {
-    constructor(name, image, unlock, onCollect) {
+    constructor(name, image, unlock, onCollect, sizeMulti, speedMulti) {
         this.name = name;
         this.image = image;
         this.unlock = unlock;
         this.onCollect = onCollect;
+
+        this.sizeMulti = sizeMulti;
+        this.speedMulti = speedMulti;
     }
 
     isUnlocked() {
@@ -35,6 +38,38 @@ function getFallingX() {
     }
 }
 
+function createFallingItem(item) {
+    for (let i = 1; i <= ITEM_LIMIT; i++) {
+        if (objects["drop" + i].power == false) {
+            objects["drop" + i].x = getFallingX();
+            objects["drop" + i].y = -0.1;
+            objects["drop" + i].w = 0.1 * currencies[item].sizeMulti;
+            objects["drop" + i].h = 0.1 * currencies[item].sizeMulti;
+
+
+            objects["drop" + i].image = "currencies/" + currencies[item].image;
+            objects["drop" + i].currency = item;
+
+            objects["drop" + i].autod = false;
+            objects["drop" + i].power = true;
+            break;
+        }
+    }
+}
+
+function clearFallingItems() {
+    if (objects["drop4"] != undefined) {
+        for (let i = 1; i <= 20; i++) {
+            objects["drop" + i].power = false;
+        }
+    }
+}
+
+function getItemCur(index) {
+    // returns the currency for an item, so its onClick, speed and other can be accessed
+    return currencies[objects["drop" + index].currency];
+}
+
 const currencies = {
     raindrop: new Currency("raindrop", "raindrop", () => true, () => {
         let amount = (game.raindrop.upgrades.worth + 1)
@@ -42,30 +77,33 @@ const currencies = {
             * (1 + game.raingold.amount / 100);
         amount = Math.ceil(amount);
 
-        game.raindrop.amount += amount;
-        game.stats.totalRaindrops += amount;
+        game.raindrop.amount = game.raindrop.amount.add(amount);
+        game.stats.totalRaindrops = game.stats.totalRaindrops.add(amount);
         if (game.raindrop.amount > game.stats.mostRaindrops) game.stats.mostRaindrops = game.raindrop.amount;
+        game.stats.itemRaindrops += 1;
 
         game.watercoin.fill++;
-    }),
+    }, 1, 1),
     watercoin: new Currency("watercoin", "watercoin", () => true, () => {
         game.watercoin.fill = 0;
 
         let amount = 1;
 
-        game.watercoin.amount += amount;
-        game.stats.totalWatercoins += amount;
+        game.watercoin.amount = game.watercoin.amount.add(amount);
+        game.stats.totalWatercoins = game.stats.totalWatercoins.add(amount);
         if (game.watercoin.amount > game.stats.mostWatercoins) game.stats.mostWatercoins = game.watercoin.amount;
-    }),
-    raingold: new Currency("raingold", "raingold", () => game.raindrop.amount > 1e4 || game.raingold.amount > 0, () => {
+        game.stats.itemWatercoins += 1;
+    }, 1, 0.8),
+    raingold: new Currency("raingold", "raingold", () => game.raindrop.amount > 1e4 || postPrestige[0] > 0 || game.raingold.amount > 0, () => {
         if (postPrestige[0] < 1) return false;
 
         let amount = Math.ceil(postPrestige[1]);
 
-        game.raingold.amount += amount;
-        game.stats.totalRaingold += amount;
+        game.raingold.amount = game.raingold.amount.add(amount);
+        game.stats.totalRaingold = game.stats.totalRaingold.add(amount);
         if (game.raingold.amount > game.stats.mostRaingold) game.stats.mostRaingold = game.raingold.amount;
+        game.stats.itemRaingold += 1;
 
         game.watercoin.fill++;
-    })
+    }, 1.2, 0.5)
 };

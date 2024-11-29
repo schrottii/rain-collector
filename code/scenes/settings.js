@@ -6,9 +6,14 @@ scenes["settings"] = new Scene(
 
         createText("header", 0.5, 0.06, "Settings", { size: 60, color: "white" });
 
-        // Go back
-        createClickable("bgSquare2", 0, 0.9, 1, 0.1, () => { loadScene("mainmenu") });
-        createText("backText", 0.5, 0.975, "Go back", { color: "black", size: 40 });
+        // Buttons
+        createButton("sceneButton1", 0, 0.9, 1 / 3, 0.1, "button", () => { loadScene("stats") });
+        createButton("sceneButton2", 0 + 1 / 3, 0.9, 1 / 3, 0.1, "button", () => { loadScene("achievements") });
+        createButton("sceneButton3", 0 + 1 / 3 * 2, 0.9, 1 / 3, 0.1, "button", () => { loadScene("mainmenu") });
+
+        createImage("sceneImage1", 1 / 6, 0.91, 0.08, 0.08, "stats", { quadratic: true, centered: true });
+        createImage("sceneImage2", 1 / 6 * 3, 0.91, 0.08, 0.08, "achievements", { quadratic: true, centered: true });
+        createImage("sceneImage3", 1 / 6 * 5, 0.91, 0.08, 0.08, "back", { quadratic: true, centered: true });
 
         // User
         createText("settingTextUser", 0.5, 0.1, "User", { color: "white", size: 32 });
@@ -45,16 +50,36 @@ scenes["settings"] = new Scene(
 
         // Music
         createText("settingTextMusic", 0.25, 0.65, "Toggle Music", { color: "white", size: 32 });
-        createButton("musicButton", 0.25, 0.7, 0.15, 0.15, "music", () => {
+        createButton("musicButton", 0.25, 0.7, 0.1, 0.1, "music", () => {
             game.settings.music = !game.settings.music;
 
             if (game.settings.music) wggjAudio.play();
             else wggjAudio.pause();
         }, { quadratic: true, centered: true });
 
+        // Notation
+        createText("settingTextNotation", 0.5, 0.675, "Notation: normal", { color: "white", size: 32 });
+        createText("settingTextNotation2", 0.5, 0.695, "", { color: "white", size: 32 });
+        createButton("notationButton", 0.5, 0.7, 0.1, 0.1, "notation", () => {
+            switch (game.settings.notation) {
+                case "normal":
+                    game.settings.notation = "scientific";
+                    break;
+                case "scientific":
+                    game.settings.notation = "engineering";
+                    break;
+                case "engineering":
+                    game.settings.notation = "alphabet";
+                    break;
+                case "alphabet":
+                    game.settings.notation = "normal";
+                    break;
+            }
+        }, { quadratic: true, centered: true });
+
         // Background
         createText("settingTextBackground", 0.75, 0.65, "Toggle Background", { color: "white", size: 32 });
-        createButton("backgroundButton", 0.75, 0.7, 0.15, 0.15, "background", () => {
+        createButton("backgroundButton", 0.75, 0.7, 0.1, 0.1, "background", () => {
             game.settings.bg = !game.settings.bg;
         }, { quadratic: true, centered: true });
     },
@@ -66,5 +91,8 @@ scenes["settings"] = new Scene(
         objects["userText1"].text = "ID: " + game.id.substr(0, 6);
         objects["userText2"].text = "Name: " + game.name;
         objects["userText3"].text = "Started in: " + game.startVer;
+
+        objects["settingTextNotation"].text = "Notation: " + game.settings.notation;
+        objects["settingTextNotation2"].text = "(" + fn(1e6) + ", " + fn(1e9) + ", " + fn(1e12) + ")";
     }
 );

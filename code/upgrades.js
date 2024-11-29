@@ -53,7 +53,7 @@ class Upgrade {
         createButton(this.me() + "button", 0.025, 0.1 + index * 0.1, 0.1, 0.1, "upgrades", () => {
             for (let i = 0; i < multiBuy; i++) {
                 if (game[this.currency].amount >= this.getPrice() && this.getLevel() < this.getMaxLevel()) {
-                    game[this.currency].amount -= this.getPrice();
+                    game[this.currency].amount = game[this.currency].amount.sub(this.getPrice());
                     game[this.currency].upgrades[this.name]++;
 
                     if (this.onBuy) this.onBuy(this);

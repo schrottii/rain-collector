@@ -5,6 +5,7 @@ October - December 2024:
 1.0.1
 1.1
 1.1.1
+1.2
 
 2024/11/02 1.0:
 - Release
@@ -60,3 +61,47 @@ v1.1.1:
 - Changed Raindrop Worth's formula, it grows faster beyond level 100 now
 - This was needed as the previous formula struggled handling any boosts
 - Fixed Raingold item exploit
+
+
+
+2024/11/29 1.2:
+v1.2 EASNIR Update:
+-> Essential:
+- Items are now collected by swiping/holding rather than direct clicks
+- Added Achievements, Stats and more
+
+-> Achievements:
+- New feature: Achievements!
+- Added 21 Achievements (5x Raindrops, 5x Water Coins, 5x Raingold, 6x other)
+- Achievements can be seen in a 5x5 grid, and selected by clicking
+- Every Achievement gives a Raingold boost of 2% (up to 42%)
+
+-> Stats:
+- Stats can now be seen
+- This includes play time, prestiges, and total and amount for all 3 currencies
+- Your name and ID are also displayed... for bragging purposes!
+- New stats: Collected Raindrops/Water Coins/Raingold (increases by 1 per item)
+
+-> Numbers:
+- Added support for notations
+- Added 4 notations: normal, scientific, engineering, alphabet
+- Implemented break infinity
+- Supported by all 3 currencies and their stats
+
+-> Items:
+- Items can now have different speeds and sizes
+- Raindrops are 100% speed, 100% size
+- Water Coins are 80% speed, 100% size
+- Raingold is 50% speed, 120% size
+
+-> Raingold:
+- Raingold gain displayed is now completely accurate
+- Raingold is easier to earn due to its now slower speed, bigger size and swiping
+- Changed Prestige text to clarify they have to be collected
+
+-> Other:
+- Added a cute Raindrop favicon
+- The third button in the main scene now leads to Stats rather than Settings
+- Multi Buy now highlights the current choice in green
+- Slightly changed Water Coin image
+- Code improvements

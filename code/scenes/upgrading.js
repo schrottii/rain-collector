@@ -43,7 +43,12 @@ scenes["upgrading"] = new Scene(
             watercoinUpgrades[upg].updateObjects();
         }
 
-        objects["currencyDisplay"].text = game.raindrop.amount;
+        // Multi buy
+        for (let i = 1; i <= 4; i++) {
+            objects["multiBuyText" + i].color = multiBuy == [1, 5, 25, 100][i - 1] ? "green" : "white";
+        }
+
+        objects["currencyDisplay"].text = fn(game.raindrop.amount);
 
         if (game.stats.prestiges > 0) {
             for (let i = 1; i < 5; i++) {
