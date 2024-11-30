@@ -104,10 +104,12 @@ function wggjLoadImages() {
 
 // EDITED!!!!!!!
 var wggjMouseDown = false;
+
 wggjCanvas.addEventListener("pointerdown", onClick);
 wggjCanvas.addEventListener("pointerup", onPointerUp);
 wggjCanvas.addEventListener("pointerleave", onPointerUp);
 wggjCanvas.addEventListener("pointermove", onPointerMove);
+
 function onClick(e) {
     wggjMouseDown = true;
 
@@ -134,10 +136,11 @@ function onPointerMove(e) {
         let mouseY = e.clientY;
 
         for (let c in objects) {
-            if (objects[c] == undefined) return false;
-            if (mouseX > objects[c].x * wggjCanvasWidth && mouseY > objects[c].y * wggjCanvasHeight
-                && mouseX < (objects[c].x + objects[c].w) * wggjCanvasWidth && mouseY < (objects[c].y + objects[c].h) * wggjCanvasHeight
-                && objects[c].onHold != undefined            ) {
+            if (objects[c] == undefined) continue;
+            if (objects[c].onHold == undefined) continue;
+
+            if (mouseX > (objects[c].centered ? objects[c].x - objects[c].w : objects[c].x) * wggjCanvasWidth && mouseY > objects[c].y * wggjCanvasHeight
+                && mouseX < (objects[c].x * wggjCanvasWidth) + (objects[c].quadratic ? objects[c].h * wggjCanvasHeight : objects[c].w * wggjCanvasWidth) && mouseY < (objects[c].y + objects[c].h) * wggjCanvasHeight) {
                 // is in the hitbox
                 objects[c].onHold(c);
             }

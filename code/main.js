@@ -1,6 +1,6 @@
 // game made by schrottii, do not steal/copy bla bla bla
 
-const GAMEVERSION = "1.2";
+const GAMEVERSION = "1.2.1";
 
 images = {
     button: "button.png",
@@ -57,8 +57,6 @@ var autoSaveTime = 0;
 function loop(delta) {
     game.stats.playTime += delta;
     autoSaveTime += delta / 1000;
-    game.watercoin.tempBoostTime -= delta / 1000;
-    game.watercoin.superAutoTime -= delta / 1000;
 
     if (autoSaveTime >= 5) {
         save();

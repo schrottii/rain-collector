@@ -8,6 +8,7 @@ class Upgrade {
         this.description = description;
 
         this.price = price;
+        this.cachedPriceDisplay = [0, false, 0];
         this.effect = effect;
         this.maxLevel = maxLevel;
 
@@ -21,8 +22,57 @@ class Upgrade {
         return this.currency + this.name;
     }
 
+    canAfford(level = this.getLevel()) {
+        return game[this.currency].amount.gte(this.getPrice());
+    }
+
     getLevel() {
         return game[this.currency]["upgrades"][this.name];
+    }
+
+    getVisualPrice(level = this.getLevel()) {
+        if (level == this.getMaxLevel()) {
+            // upgrade is maxed
+            return "MAX";
+        }
+        else if (this.cachedPriceDisplay[1] == true && this.cachedPriceDisplay[2] == multiBuy) {
+            // the price display was cached, and multi buy or level haven't changed since, so return that
+            return fn(this.cachedPriceDisplay[0]);
+        }
+        else {
+            // recalculate
+            let amount = new Decimal(0);
+
+            if (multiBuy == 1) {
+                // no multi buy, well, this is gonna be pretty easy
+                amount = this.getPrice(level);
+            }
+            else {
+                // calculate all multi buy levels
+                for (let iLevel = level; iLevel < level + multiBuy && iLevel < this.getMaxLevel(); iLevel++) {
+                    amount = amount.add(this.getPrice(iLevel));
+                }
+            }
+
+            // set cache and return amount directly
+            this.cachedPriceDisplay = [amount, true, multiBuy];
+            return fn(amount);
+        }
+    }
+
+    getVisualPriceColor(level = this.getLevel()) {
+        if (!this.canAfford() || level == this.getMaxLevel()) {
+            // red - can not afford
+            return "#FF584C";
+        }
+        else if (multiBuy > 1 && this.canAfford() && game[this.currency].amount.lt(this.cachedPriceDisplay[0])) {
+            // yellow - can afford at least one level, but not all (multi buy only)
+            return "#FFFFC9";
+        }
+        else {
+            // green - can afford
+            return "#9BFF82";
+        }
     }
 
     getPrice(level = this.getLevel()) {
@@ -52,9 +102,13 @@ class Upgrade {
 
         createButton(this.me() + "button", 0.025, 0.1 + index * 0.1, 0.1, 0.1, "upgrades", () => {
             for (let i = 0; i < multiBuy; i++) {
-                if (game[this.currency].amount >= this.getPrice() && this.getLevel() < this.getMaxLevel()) {
+                if (this.canAfford() && this.getLevel() < this.getMaxLevel()) {
+                    // reduce currency amount
                     game[this.currency].amount = game[this.currency].amount.sub(this.getPrice());
+
+                    // get a level, disable cache
                     game[this.currency].upgrades[this.name]++;
+                    this.cachedPriceDisplay[1] = false;
 
                     if (this.onBuy) this.onBuy(this);
                 }
@@ -74,7 +128,8 @@ class Upgrade {
 
     updateObjects() {
         objects[this.me() + "level"].text = "L" + this.getLevel() + (this.maxLevel != 0 ? "/" + this.maxLevel : "");
-        objects[this.me() + "price"].text = this.getPrice();
+        objects[this.me() + "price"].text = this.getVisualPrice();
+        objects[this.me() + "price"].color = this.getVisualPriceColor();
 
         objects[this.me() + "desc"].text = this.getDescription(this.getLevel(), 1);
         objects[this.me() + "desc2"].text = this.getDescription(this.getLevel(), 2);

@@ -120,7 +120,6 @@ scenes["mainmenu"] = new Scene(
                 game.raindrop.time = 0;
                 postPrestige[0] -= 1;
 
-                console.log("nautious")
                 createFallingItem("raingold");
             }
         }
@@ -129,7 +128,7 @@ scenes["mainmenu"] = new Scene(
             createFallingItem(game.selCur);
         }
 
-        if (game.watercoin.time >= 5 && game.watercoin.fill >= 100) {
+        if (game.watercoin.time >= 5 && game.watercoin.fill >= game.watercoin.fillNeeded) {
             game.watercoin.time = 0;
             createFallingItem("watercoin");
         }
@@ -151,6 +150,9 @@ scenes["mainmenu"] = new Scene(
             }
         }
 
-        objects["waterFill"].w = Math.min(1, 1 * (0.01 * game.watercoin.fill));
+        objects["waterFill"].w = Math.min(1, game.watercoin.fill / game.watercoin.fillNeeded);
+
+        game.watercoin.tempBoostTime -= tick;
+        game.watercoin.superAutoTime -= tick;
     }
 );

@@ -86,6 +86,7 @@ const currencies = {
     }, 1, 1),
     watercoin: new Currency("watercoin", "watercoin", () => true, () => {
         game.watercoin.fill = 0;
+        game.watercoin.fillNeeded += 5;
 
         let amount = 1;
 
@@ -95,7 +96,7 @@ const currencies = {
         game.stats.itemWatercoins += 1;
     }, 1, 0.8),
     raingold: new Currency("raingold", "raingold", () => game.raindrop.amount > 1e4 || postPrestige[0] > 0 || game.raingold.amount > 0, () => {
-        if (postPrestige[0] < 1) return false;
+        // if (postPrestige[0] < 1) return false;
 
         let amount = Math.ceil(postPrestige[1]);
 

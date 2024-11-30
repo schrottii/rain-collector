@@ -1,6 +1,6 @@
 var postPrestige = [0, 0]; // amount, worth
 
-function calcRaingoldGain() {
+function calcRaingoldGainRough() {
     if (game.raindrop.amount < 1e4) return new Decimal(0);
     let amount = new Decimal(game.raindrop.amount.ln());
     let totalLevels = 0;
@@ -18,7 +18,25 @@ function calcRaingoldGain() {
 }
 
 function calcRaingoldAmount() {
-    return new Decimal(calcRaingoldGain().ln()).ceil().add(5);
+    // how many items will fall
+    if (game.raindrop.amount < 1e4) return new Decimal(0);
+    return new Decimal(calcRaingoldGainRough().ln()).ceil().add(5);
+}
+
+function calcRaingoldGainItems() {
+    // gains from items
+    if (game.raindrop.amount < 1e4) return new Decimal(0);
+    return calcRaingoldGainRough().div(1.25).div(calcRaingoldAmount()).ceil().mul(calcRaingoldAmount());
+}
+
+function calcRaingoldGainInstant() {
+    if (game.raindrop.amount < 1e4) return new Decimal(0);
+    return calcRaingoldGainRough().mul(0.25).ceil();
+}
+
+function calcRaingoldGainTotal() {
+    if (game.raindrop.amount < 1e4) return new Decimal(0);
+    return calcRaingoldGainItems().add(calcRaingoldGainInstant());
 }
 
 scenes["prestige"] = new Scene(
@@ -42,24 +60,34 @@ scenes["prestige"] = new Scene(
         createText("infoText", 0.5, 0.1, "Press the button below to prestige.", { color: "white", size: 32 });
         createText("infoText2", 0.5, 0.125, "Raindrops, their upgrades & Waster Coins are lost,", { color: "white", size: 32 });
         createText("infoText3", 0.5, 0.15, "Water Coin upgrades, Raingold and stats are not", { color: "white", size: 32 });
-        createText("infoText4", 0.5, 0.175, "0", { color: "white", size: 32 });
-        createText("infoText5", 0.5, 0.2, "(They have to be caught too!)", { color: "white", size: 32 });
-        createButton("prestigeButton", 0.5, 0.2, 0.2, 0.2, "prestige", () => {
+
+        createText("infoText4", 0.5, 0.2, "0", { color: "white", size: 32 });
+        createText("infoText5", 0.5, 0.225, "0", { color: "white", size: 32 });
+        createText("infoText6", 0.5, 0.25, "0", { color: "white", size: 32 });
+
+        createButton("prestigeButton", 0.5, 0.25, 0.2, 0.2, "prestige", () => {
             if (game.raindrop.amount < 1e4) {
                 alert("You need at least 10 000 Raindrops!");
                 return false;
             }
 
-            if (confirm("Do you really want to prestige for up to " + calcRaingoldGain().div(calcRaingoldAmount()).ceil().mul(calcRaingoldAmount()) + " Raingold?")) {
+            if (confirm("Do you really want to prestige for up to " + calcRaingoldGainTotal() + " Raingold?")) {
+                // calculate and set the RG gains - this has to be done before anything else
+                postPrestige = [calcRaingoldAmount() * 1, calcRaingoldGainItems().div(calcRaingoldAmount())]
+
                 // Increase
                 game.stats.prestiges += 1;
 
-                postPrestige = [calcRaingoldAmount() * 1, calcRaingoldGain().div(calcRaingoldAmount()).ceil()]
+                let amount = calcRaingoldGainInstant();
+                game.raingold.amount = game.raingold.amount.add(amount);
+                game.stats.totalRaingold = game.stats.totalRaingold.add(amount);
+                if (game.raingold.amount > game.stats.mostRaingold) game.stats.mostRaingold = game.raingold.amount;
 
                 // Decrease
                 game.raindrop.amount = new Decimal(0);
                 game.watercoin.amount = new Decimal(0);
                 game.watercoin.fill = 0;
+                game.watercoin.fillNeeded = 100;
 
                 clearFallingItems();
 
@@ -68,15 +96,19 @@ scenes["prestige"] = new Scene(
                 }
             }
         }, { quadratic: true, centered: true });
-        createText("infoText5", 0.5, 0.45, "Every Raingold boosts your Raindrop gains by 1%", { color: "white", size: 32 });
-        createText("infoText6", 0.5, 0.475, "0", { color: "white", size: 32 });
-        createText("infoText7", 0.5, 0.5, "0", { color: "white", size: 32 });
+        createText("infoText7", 0.5, 0.5, "Every Raingold boosts your Raindrop gains by 1%", { color: "white", size: 32 });
+        createText("infoText8", 0.5, 0.525, "0", { color: "white", size: 32 });
+        createText("infoText9", 0.5, 0.55, "0", { color: "white", size: 32 });
     },
     (tick) => {
         // Loop
         objects["currencyDisplay"].text = fn(game.raingold.amount);
-        objects["infoText4"].text = "You will earn: up to " + fn(calcRaingoldGain().div(calcRaingoldAmount()).ceil().mul(calcRaingoldAmount())) + " Raingold!";
-        objects["infoText6"].text = "Current boost: x" + (1 + game.raingold.amount / 100);
-        objects["infoText7"].text = "Total prestiges: " + game.stats.prestiges;
+
+        objects["infoText4"].text = "You can earn: " + fn(calcRaingoldGainTotal()) + " Raingold!";
+        objects["infoText5"].text = fn(calcRaingoldGainItems()) + " will fall (" + calcRaingoldAmount() + " items)";
+        objects["infoText6"].text = fn(calcRaingoldGainInstant()) + " are awarded instantly";
+
+        objects["infoText8"].text = "Current boost: x" + (1 + game.raingold.amount / 100);
+        objects["infoText9"].text = "Total prestiges: " + game.stats.prestiges;
     }
 );

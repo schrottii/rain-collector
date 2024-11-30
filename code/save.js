@@ -22,6 +22,7 @@ class SaveGame {
         this.watercoin = {
             amount: new Decimal(0),
             fill: 0,
+            fillNeeded: 100,
             time: 0,
 
             tempBoostTime: 0,

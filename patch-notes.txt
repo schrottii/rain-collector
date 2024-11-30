@@ -6,6 +6,9 @@ October - December 2024:
 1.1
 1.1.1
 1.2
+1.2.1
+
+
 
 2024/11/02 1.0:
 - Release
@@ -105,3 +108,26 @@ v1.2 EASNIR Update:
 - Multi Buy now highlights the current choice in green
 - Slightly changed Water Coin image
 - Code improvements
+
+
+
+2024/11/30 1.2.1:
+v1.2.1:
+-> Upgrade prices:
+- Prices now use notations (above a million)
+- When using multi buy, the price will show the total costs for those levels
+- If an upgrade is maxed, it says MAX instead of a number
+- Added colors for the price:
+- Green if all levels can be bought
+- Yellow if multi buy is being used, and only some levels can be bought, but not all
+- Red if not a single level can be bought
+
+-> Raingold:
+- 25% of Raingold is now awarded instantly, meaning items are only 75%
+- Added Raingold gain breakdown (how much per item, how much instant, amount of items)
+- Fixed Raingold not awarding anything if collected after the last item spawned
+
+-> Other:
+- Improved collecting by swiping/holding
+- Every Water Coin collected now increases the requirement during that prestige by 5 (starting at 100, same as before)
+- Temporary Boost and Super Auto timers are now only active while collecting (main screen)
