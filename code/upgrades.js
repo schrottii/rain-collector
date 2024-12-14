@@ -170,6 +170,6 @@ const bubbleUpgrades = {
 };
 
 const snowflakeUpgrades = {
-    slowfall: new Upgrade("snowflake", "slowfall", "Slow Fall", level => "Everything falls slower during the Christmas Event. Slowdown: x" + (1 + level * 0.01), level => 1 * level + 1, level => isChristmas() ? 1 + level * 0.01 : 1, 400),
+    slowfall: new Upgrade("snowflake", "slowfall", "Slow Fall", level => "Everything falls slower during the Christmas Event. Slowdown: x" + (1 + level * 0.01), level => Math.floor(level / 10) + 1, level => isChristmas() ? 1 + level * 0.01 : 1, 400),
     freezedown: new Upgrade("snowflake", "freezedown", "Freeze Down", level => "Collecting during the Christmas Event can freeze all others for 0.5s. Chance: " + (level / 10) + "%", level => 8 * level + 8, level => isChristmas() ? level / 10 : 0, 40)
 }
