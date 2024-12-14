@@ -7,16 +7,21 @@ October - December 2024:
 1.1.1
 1.2
 1.2.1
+1.3
 
 
 
 2024/11/02 1.0:
 - Release
 
+
+
 2024/11/02 1.0.1:
 - Fixed spawn speed issue
 - Fixed Temporary Boost being applied incorrectly
 - Fixed float issue
+
+
 
 2024/11/20 1.1:
 v1.1 Raingold Update:
@@ -52,6 +57,8 @@ v1.1 Raingold Update:
 - Upgrades: added 2nd header for Water Coin Upgrades
 - Game now saves version the player started in, including v1.0 (but not v1.0.1)
 - Added a line to show the auto collect height
+
+
 
 2024/11/20 1.1.1:
 v1.1.1:
@@ -112,7 +119,7 @@ v1.2 EASNIR Update:
 
 
 2024/11/30 1.2.1:
-v1.2.1:
+v1.2.1 2 EAS 4 NIR Update:
 -> Upgrade prices:
 - Prices now use notations (above a million)
 - When using multi buy, the price will show the total costs for those levels
@@ -131,3 +138,34 @@ v1.2.1:
 - Improved collecting by swiping/holding
 - Every Water Coin collected now increases the requirement during that prestige by 5 (starting at 100, same as before)
 - Temporary Boost and Super Auto timers are now only active while collecting (main screen)
+
+
+
+2024/12/14 1.3:
+v1.3 Bubble Freeze:
+-> Currencies:
+- Two new currencies: Bubbles and Snowflakes
+- Added the Currency Selection
+- It's unlocked at 500 Raingold, but not useful until 2000 Raingold
+- Here currencies other than Raindrops can be selected, that will then fall instead
+
+-> Events:
+- Events are unlocked at 2000 Raingold
+- Added the Christmas Event
+- Active from December 14th to December 28th
+- During the event, Snowflakes can be collected
+
+-> Bubbles:
+- New currency, unlocked at 2000 Raingold
+- Falls slowly and varies strongly in size
+- How much they are worth also depends on their size
+- 3 upgrades: Worth, Time and Auto
+
+-> Snowflakes:
+- New currency, available during the Christmas Event
+- 2 upgrades: Slow Fall and Freeze Down
+- These upgrades affect other currencies as long as the event is still active
+
+-> Achievements:
+- Added Achievement pages
+- Added 9 new Achievements (30 total)

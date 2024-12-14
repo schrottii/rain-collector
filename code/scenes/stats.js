@@ -1,4 +1,4 @@
-var statNames = ["Play Time", "Prestiges", "Total Raindrops", "Most Raindrops", "Collected Raindrops", "Total Water Coins", "Most Water Coins", "Collected Water Coins", "Total Raingold", "Most Raingold", "Collected Raingold"];
+var statNames = ["Play Time", "Prestiges", "Total Raindrops", "Most Raindrops", "Collected Raindrops", "Total Water Coins", "Most Water Coins", "Collected Water Coins", "Total Raingold", "Most Raingold", "Collected Raingold", "Total Bubbles", "Most Bubbles", "Collected Bubbles", "Total Snowflakes", "Most Snowflakes", "Collected Snowflakes"];
 
 scenes["stats"] = new Scene(
     () => {
@@ -20,7 +20,7 @@ scenes["stats"] = new Scene(
         createImage("sceneImage3", 1 / 6 * 5, 0.91, 0.08, 0.08, "back", { quadratic: true, centered: true });
 
         // Stats
-        for (let statCount = 0; statCount < 11; statCount++) {
+        for (let statCount = 0; statCount < 17; statCount++) {
             createText("stat" + statCount, 0.2, 0.2 + 0.032 * statCount, "...", { align: "left", size: 32, color: "white" });
         }
     },
@@ -29,7 +29,7 @@ scenes["stats"] = new Scene(
         objects["userName"].text = game.name;
         objects["userID"].text = "(ID: " + game.id.substr(0, 6) + ") ";
 
-        for (let statCount = 0; statCount < 11; statCount++) {
+        for (let statCount = 0; statCount < 17; statCount++) {
             objects["stat" + statCount].text = statNames[statCount] + ": " + fn(game.stats[Object.keys(game.stats)[statCount]]);
         }
     }

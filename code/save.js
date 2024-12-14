@@ -38,6 +38,30 @@ class SaveGame {
             amount: new Decimal(0),
         }
 
+        this.bubble = {
+            amount: new Decimal(0),
+            time: 0,
+
+            upgrades: {
+                worth: 0,
+                time: 0,
+                auto: 0,
+            }
+        }
+
+        // event currencies
+
+        this.snowflake = {
+            amount: new Decimal(0),
+            time: 0,
+            freezedowntime: 0,
+
+            upgrades: {
+                slowfall: 0,
+                freezedown: 0
+            }
+        }
+
         // currencies over
 
         this.achievements = [];
@@ -58,6 +82,14 @@ class SaveGame {
             totalRaingold: 0,
             mostRaingold: 0,
             itemRaingold: 0,
+
+            totalBubbles: 0,
+            mostBubbles: 0,
+            itemBubbles: 0,
+
+            totalSnowflakes: 0,
+            mostSnowflakes: 0,
+            itemSnowflakes: 0,
         }
 
         this.settings = {
@@ -158,6 +190,7 @@ function deleteGame() {
                 game = new SaveGame();
                 game.new();
                 game.startVer = GAMEVERSION;
+                game.loadFromSaveGame(game);
 
                 loadScene("mainmenu");
 

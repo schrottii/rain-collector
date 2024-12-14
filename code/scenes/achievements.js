@@ -21,6 +21,7 @@ function checkAchievements() {
 }
 
 var selectedAchievement = 0;
+var achievementsPage = 0;
 
 const achievements = [
     new Achievement(1, "currencies/raindrop", "Collector I", "Gather 100 Raindrops!", () => game.raindrop.amount.gte(100)),
@@ -47,6 +48,17 @@ const achievements = [
     new Achievement(19, "currencies/raindrop", "Right On Time", "Max. Raindrop Time", () => raindropUpgrades.time.getLevel() == raindropUpgrades.time.getMaxLevel()),
     new Achievement(20, "currencies/raindrop", "Automation", "Max. Raindrop Auto", () => raindropUpgrades.auto.getLevel() == raindropUpgrades.auto.getMaxLevel()),
     new Achievement(21, "achievements", "Early Rain", "Finish the game in v1.0", () => game.startVer == "**1.0**"),
+
+    new Achievement(22, "currencies/snowflake", "Gift Collector", "Play during the Christmas Event", () => isChristmas()),
+    new Achievement(23, "currencies/snowflake", "Counter Celsius I", "Gather 100 Snowflakes!", () => game.snowflake.amount.gte(100)),
+    new Achievement(24, "currencies/snowflake", "Counter Celsius II", "Gather 1000 Snowflakes!", () => game.snowflake.amount.gte(1000)),
+    new Achievement(25, "currencies/snowflake", "Special Snowflake", "Max. a Snowflake Upgrade", () => snowflakeUpgrades.slowfall.isMaxed() || snowflakeUpgrades.freezedown.isMaxed()),
+
+    new Achievement(26, "currencies/bubble", "Colandpop I", "Gather 20 Bubbles!", () => game.bubble.amount.gte(20)),
+    new Achievement(27, "currencies/bubble", "Colandpop II", "Gather 400 Bubbles!", () => game.bubble.amount.gte(400)),
+    new Achievement(28, "currencies/bubble", "Colandpop III", "Gather 20000 Bubbles!", () => game.bubble.amount.gte(20000)),
+    new Achievement(29, "currencies/bubble", "Colandpop IV", "Gather 1e6 Bubbles!", () => game.bubble.amount.gte(1e6)),
+    new Achievement(30, "currencies/bubble", "Colandpop V", "Gather 1e8 Bubbles!", () => game.bubble.amount.gte(1e8)),
 ];
 
 scenes["achievements"] = new Scene(
@@ -82,11 +94,21 @@ scenes["achievements"] = new Scene(
         for (let y = 0; y < 5; y++) {
             for (let x = 0; x < 5; x++) {
                 createButton("ach-" + x + "-" + y, 0 + 0.2 * x, 0.15 + 0.1 * y, 0.09, 0.09, "locked", () => {
-                    selectedAchievement = x + (y * 5);
+                    selectedAchievement = x + (y * 5) + (achievementsPage * 25);
                 }, { quadratic: true });
                 createImage("achbg-" + x + "-" + y, 0 + 0.2 * x, 0.15 + 0.1 * y, 0.09, 0.09, "achbg", { quadratic: true });
             }
         }
+
+        // Page Buttons
+        createButton("pageButtonL", 0, 0.1, 0.05, 0.05, "button", () => {
+            if (achievementsPage > 0) achievementsPage--;
+        });
+        createText("pblt", 0.025, 0.14, "<", { size: 40 });
+        createButton("pageButtonR", 0.95, 0.1, 0.05, 0.05, "button", () => {
+            if (achievementsPage < Math.ceil(achievements.length / 25) - 1) achievementsPage++;
+        });
+        createText("pbrt", 0.975, 0.14, ">", { size: 40 });
     },
     (tick) => {
         // Loop
@@ -111,13 +133,13 @@ scenes["achievements"] = new Scene(
         // Achievement 5x5
         for (let y = 0; y < 5; y++) {
             for (let x = 0; x < 5; x++) {
-                if (x + (y * 5) > achievements.length - 1) {
+                if (x + (y * 5) + (achievementsPage * 25) > achievements.length - 1) {
                     objects["achbg-" + x + "-" + y].image = "locked";
                     objects["ach-" + x + "-" + y].image = "locked";
                 }
                 else {
-                    objects["achbg-" + x + "-" + y].image = achievements[x + (y * 5)].isUnlocked() ? "achbg" : "locked";
-                    objects["ach-" + x + "-" + y].image = achievements[x + (y * 5)].image;
+                    objects["achbg-" + x + "-" + y].image = achievements[x + (y * 5) + (achievementsPage * 25)].isUnlocked() ? "achbg" : "locked";
+                    objects["ach-" + x + "-" + y].image = achievements[x + (y * 5) + (achievementsPage * 25)].image;
                 }
             }
         }

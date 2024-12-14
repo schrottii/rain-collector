@@ -5,18 +5,20 @@ scenes["upgrading"] = new Scene(
         createSquare("bgSquare2", 0, 0.9, 1, 0.1, "darkgray");
 
         createText("header", 0.5, 0.06, "Raindrop Upgrades", { size: 60, color: "white" });
-        createText("header2", 0.5, 0.46, "Water Coin Upgrades", { size: 60, color: "white" });
 
         // Go back
-        createClickable("bgSquare2", 0, 0.9, 1, 0.1, () => { loadScene("mainmenu") });
+        createClickable("bgSquare3", 0, 0.9, 1, 0.1, () => { loadScene("mainmenu") });
         createText("backText", 0.5, 0.975, "Go back", { color: "black", size: 40 });
 
         // Upgrades
-        for (let upg in raindropUpgrades) {
-            raindropUpgrades[upg].createObjects(Object.keys(raindropUpgrades).indexOf(upg));
+        for (let upg in cc().upgrades()) {
+            cc().upgrades()[upg].createObjects(Object.keys(cc().upgrades()).indexOf(upg));
         }
-        for (let upg in watercoinUpgrades) {
-            watercoinUpgrades[upg].createObjects(4 + Object.keys(watercoinUpgrades).indexOf(upg));
+        if (game.selCur == "raindrop") {
+            createText("header2", 0.5, 0.46, "Water Coin Upgrades", { size: 60, color: "white" });
+            for (let upg in watercoinUpgrades) {
+                watercoinUpgrades[upg].createObjects(4 + Object.keys(watercoinUpgrades).indexOf(upg));
+            }
         }
 
         // Multi buy
@@ -36,11 +38,13 @@ scenes["upgrading"] = new Scene(
     },
     (tick) => {
         // Loop
-        for (let upg in raindropUpgrades) {
-            raindropUpgrades[upg].updateObjects();
+        for (let upg in cc().upgrades()) {
+            cc().upgrades()[upg].updateObjects();
         }
-        for (let upg in watercoinUpgrades) {
-            watercoinUpgrades[upg].updateObjects();
+        if (game.selCur == "raindrop") {
+            for (let upg in watercoinUpgrades) {
+                watercoinUpgrades[upg].updateObjects();
+            }
         }
 
         // Multi buy
@@ -48,19 +52,20 @@ scenes["upgrading"] = new Scene(
             objects["multiBuyText" + i].color = multiBuy == [1, 5, 25, 100][i - 1] ? "green" : "white";
         }
 
-        objects["currencyDisplay"].text = fn(game.raindrop.amount);
+        objects["header"].text = cc().renderName() + " Upgrades";
+
+        objects["currencyDisplay"].text = fn(cc().getAmount());
+        objects["currency2"].image = "currencies/" + cc().image;
 
         if (game.stats.prestiges > 0) {
             for (let i = 1; i < 5; i++) {
                 objects["multiBuyButton" + i].y = 0.705;
-                clickables["multiBuyButton" + i][1] = 0.705 * wggjCanvasHeight;
                 objects["multiBuyText" + i].y = 0.74;
             }
         }
         else {
             for (let i = 1; i < 5; i++) {
                 objects["multiBuyButton" + i].y = 10;
-                clickables["multiBuyButton" + i][1] = 10 * wggjCanvasHeight;
                 objects["multiBuyText" + i].y = 10;
             }
             multiBuy = 1;

@@ -1,6 +1,6 @@
 // game made by schrottii, do not steal/copy bla bla bla
 
-const GAMEVERSION = "1.2.1";
+const GAMEVERSION = "1.3";
 
 images = {
     button: "button.png",
@@ -15,6 +15,8 @@ images = {
     stats: "stats.png",
     settings: "settings.png",
     achievements: "achievements.png",
+    switch: "switch.png",
+    switch2: "switch2.png",
 
     pencil: "pencil.png",
     music: "music.png",
@@ -30,6 +32,8 @@ images = {
     "currencies/raindrop": "currencies/raindrop.png",
     "currencies/watercoin": "currencies/watercoin.png",
     "currencies/raingold": "currencies/raingold.png",
+    "currencies/bubble": "currencies/bubble.png",
+    "currencies/snowflake": "currencies/snowflake.png",
 }
 GAMENAME = "Rain Collector";
 FONT = "Quicksand";
@@ -180,4 +184,37 @@ function numberLoader(number) {
     // same thing but load the saved string
     // 1.2e10 -> mantissa: 1.2, exponent: 10
     return new Decimal("" + number);
+}
+
+function today() {
+    // returns today's date
+    // 20240615
+
+    let today = new Date();
+    return (1900 + today.getYear()) + "" + ((today.getUTCMonth() + 1).toString().length == 1 ? "0" + (today.getUTCMonth() + 1) : (today.getUTCMonth() + 1)) + (today.getUTCDate().toString().length == 1 ? "0" + today.getUTCDate() : today.getUTCDate());
+}
+
+function formatDate(date) {
+    // formats a date
+    // June 15th 2024
+
+    date = date.toString();
+    let months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    let postDay = "th";
+
+    if (date.substr(6, 1) != "1") { // <-- 11, 12, 13
+        if (date.substr(7, 1) == "1") postDay = "st";
+        if (date.substr(7, 1) == "2") postDay = "nd";
+        if (date.substr(7, 1) == "3") postDay = "rd";
+    }
+
+    return months[date.substr(4, 2) - 1] + " " + date.substr(6, 2) + postDay + " " + date.substr(0, 4);
+}
+
+function isChristmas() {
+    if (game.stats.totalRaingold < 2000) return false;
+
+    let currentDate = parseInt(today().substr(4));
+    if (currentDate >= 1214 && currentDate <= 1228) return true;
+    return false;
 }

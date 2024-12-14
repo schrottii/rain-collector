@@ -87,6 +87,10 @@ class Upgrade {
         return this.maxLevel == 0 ? 9999999999999999999 : this.maxLevel;
     }
 
+    isMaxed() {
+        return this.getLevel() == this.getMaxLevel();
+    }
+
     getDescription(level = this.getLevel(), part = 1) {
         let baseDescription = typeof (this.description) == "function" ? this.description(level) : this.description;
         let charLength = isMobile() ? 36 : 78;
@@ -157,4 +161,15 @@ const watercoinUpgrades = {
             }
         }
     }),
+};
+
+const bubbleUpgrades = {
+    worth: new Upgrade("bubble", "worth", "Bubble Worth", level => "Bubbles are worth more. Current worth: +" + level, level => 10 * Math.pow(level + 1, 1.06) * (level > 99 ? Math.pow(1.006, level - 99) : 1), level => level, 0),
+    time: new Upgrade("bubble", "time", "Bubble Time", level => "Bubbles spawn more often. Current time: " + bubbleUpgrades.time.getEffect(level).toFixed(2) + "s", level => 40 * Math.pow(level + 1, 1.4), level => (2 / ((level / 10) + 1)), 25),
+    auto: new Upgrade("bubble", "auto", "Bubble Auto", level => "Bubbles can be collected automatically. Chance: " + level + "%", level => 20 * Math.pow(level + 1, 1.4), level => level, 25),
+};
+
+const snowflakeUpgrades = {
+    slowfall: new Upgrade("snowflake", "slowfall", "Slow Fall", level => "Everything falls slower during the Christmas Event. Slowdown: x" + (1 + level * 0.01), level => 1 * level + 1, level => isChristmas() ? 1 + level * 0.01 : 1, 400),
+    freezedown: new Upgrade("snowflake", "freezedown", "Freeze Down", level => "Collecting during the Christmas Event can freeze all others for 0.5s. Chance: " + (level / 10) + "%", level => 8 * level + 8, level => isChristmas() ? level / 10 : 0, 40)
 }

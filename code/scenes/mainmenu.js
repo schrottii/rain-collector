@@ -1,8 +1,10 @@
-const ITEM_LIMIT = 20;
+const ITEM_LIMIT = 128;
 
 function collectItem(i, isAuto = false) {
     if (objects["drop" + i].power == false) return false;
     objects["drop" + i].power = false;
+
+    if (!isAuto && Math.random() * 100 < snowflakeUpgrades.freezedown.getEffect()) game.snowflake.freezedowntime = 0;
 
     if (isAuto == true) {
         objects["collected2"].power = true;
@@ -17,7 +19,7 @@ function collectItem(i, isAuto = false) {
         objects["collected"].timer = 0.25;
     }
 
-    getItemCur(i).onCollect();
+    getItemCur(i).onCollect(objects["drop" + i]);
 }
 
 scenes["mainmenu"] = new Scene(
@@ -47,12 +49,17 @@ scenes["mainmenu"] = new Scene(
 
         // Buttons
         createButton("sceneButton1", 0, 0.9, 1 / 3, 0.1, "button", () => { loadScene("upgrading") });
-        createButton("sceneButton2", 0 + 1 / 3, 0.9, 1 / 3, 0.1, "button", () => { game.raindrop.amount < 1e4 && game.raingold.amount < 1 ? alert("Unlocked at 10 000 Raindrops!") : loadScene("prestige") });
+        createButton("sceneButton2", 0 + 1 / 3, 0.9, 1 / 3, 0.1, "button", () => { game.selCur == "raindrop" ? game.raindrop.amount < 1e4 && game.raingold.amount < 1 ? alert("Unlocked at 10 000 Raindrops!") : loadScene("prestige") : alert("Currently only available for Raindrops!") });
         createButton("sceneButton3", 0 + 1 / 3 * 2, 0.9, 1 / 3, 0.1, "button", () => { loadScene("stats") });
 
         createImage("sceneImage1", 1 / 6, 0.91, 0.08, 0.08, "upgrades", { quadratic: true, centered: true });
         createImage("sceneImage2", 1 / 6 * 3, 0.91, 0.08, 0.08, "prestige", { quadratic: true, centered: true });
         createImage("sceneImage3", 1 / 6 * 5, 0.91, 0.08, 0.08, "stats", { quadratic: true, centered: true });
+
+        createButton("currencySelectionButton", 0.825, 0.8, 0.15, 0.05, "button", () => { loadScene("currencyselection") });
+        createImage("currencySelectionButtonImg", 0.9, 0.8, 0.05, 0.05, "switch", { quadratic: true, centered: true });
+        objects["currencySelectionButton"].power = false;
+        objects["currencySelectionButtonImg"].power = false;
 
         // Currency display
         createSquare("currency1", 0.2, 0.775, 0.6, 0.1, "#560000");
@@ -94,11 +101,13 @@ scenes["mainmenu"] = new Scene(
         }
 
         // Currency displays
-        objects["currencyDisplay"].text = fn(game.raindrop.amount);
+        objects["currencyDisplay"].text = fn(cc().getAmount());
+        objects["currency2"].image = "currencies/" + cc().image;
+
         objects["currencyDisplay2"].text = fn(game.watercoin.amount);
 
         // Render falling drops
-        game.raindrop.time += tick;
+        gc().time += tick;
         game.watercoin.time += tick;
 
         // Collect animations
@@ -116,16 +125,24 @@ scenes["mainmenu"] = new Scene(
         }
 
         if (postPrestige[0] > 0) {
-            if (game.raindrop.time >= 0.5) {
-                game.raindrop.time = 0;
+            if (gc().time >= 0.5) {
+                gc().time = 0;
                 postPrestige[0] -= 1;
 
                 createFallingItem("raingold");
             }
         }
-        else if (game.raindrop.time >= raindropUpgrades.time.getEffect()) {
-            game.raindrop.time = 0;
+        else if (gc().time >= cc().spawntime()) {
+            gc().time = 0;
             createFallingItem(game.selCur);
+        }
+
+        if (isChristmas()) {
+            if (game.snowflake.freezedowntime != -1) game.snowflake.freezedowntime += tick;
+
+            if (game.snowflake.freezedowntime >= 0.5) {
+                game.snowflake.freezedowntime = -1;
+            }
         }
 
         if (game.watercoin.time >= 5 && game.watercoin.fill >= game.watercoin.fillNeeded) {
@@ -133,15 +150,18 @@ scenes["mainmenu"] = new Scene(
             createFallingItem("watercoin");
         }
 
-        for (let i = 1; i <= 10; i++) {
-            if (objects["drop" + i].power) {
-                objects["drop" + i].y += tick * getItemCur(i).speedMulti;
-                clickables["drop" + i][0] = objects["drop" + i].x * wggjCanvasWidth;
-                clickables["drop" + i][1] = objects["drop" + i].y * wggjCanvasHeight;
+        if (/*currencies.bubble.isUnlocked()*/ game.stats.totalRaingold >= 500) {
+            objects["currencySelectionButton"].power = true;
+            objects["currencySelectionButtonImg"].power = true;
+        }
 
-                if (objects["drop" + i].y > 0.1 && !objects["drop" + i].autod && objects["drop" + i].currency == "raindrop" && game.raindrop.upgrades.auto > 0) {
-                    if (Math.random() * 100 <= game.raindrop.upgrades.auto || game.watercoin.superAutoTime > 0) {
-                        clickables["drop" + i][4](true);
+        for (let i = 1; i <= ITEM_LIMIT; i++) {
+            if (objects["drop" + i].power) {
+                if (game.snowflake.freezedowntime <= 0) objects["drop" + i].y += tick * getItemCur(i).speedMulti / snowflakeUpgrades.slowfall.getEffect();
+
+                if (objects["drop" + i].y > 0.1 && !objects["drop" + i].autod && objects["drop" + i].currency != "raingold" && objects["drop" + i].currency != "watercoin" && cc().auto() > 0) {
+                    if (Math.random() * 100 <= cc().auto() || game.watercoin.superAutoTime > 0) {
+                        objects["drop" + i].onClick(true);
                     }
                     objects["drop" + i].autod = true;
                 }
