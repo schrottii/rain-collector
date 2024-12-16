@@ -30,7 +30,8 @@ scenes["stats"] = new Scene(
         objects["userID"].text = "(ID: " + game.id.substr(0, 6) + ") ";
 
         for (let statCount = 0; statCount < 17; statCount++) {
-            objects["stat" + statCount].text = statNames[statCount] + ": " + fn(game.stats[Object.keys(game.stats)[statCount]]);
+            if (statCount == 0) objects["stat" + statCount].text = statNames[statCount] + ": " + Math.floor(game.stats[Object.keys(game.stats)[statCount]] / 1000 / 60 / 60) + " hours " + Math.floor(game.stats[Object.keys(game.stats)[statCount]] / 1000 / 60 % 60) + " minutes";
+            else objects["stat" + statCount].text = statNames[statCount] + ": " + fn(game.stats[Object.keys(game.stats)[statCount]]);
         }
     }
 );

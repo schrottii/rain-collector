@@ -1,6 +1,6 @@
 // game made by schrottii, do not steal/copy bla bla bla
 
-const GAMEVERSION = "1.3";
+const GAMEVERSION = "1.3.1";
 
 images = {
     button: "button.png",

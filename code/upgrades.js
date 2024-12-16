@@ -80,6 +80,7 @@ class Upgrade {
     }
 
     getEffect(level = this.getLevel()) {
+        if (this.disabled) level = 0;
         return typeof (this.effect) == "function" ? this.effect(level) : this.effect;
     }
 
@@ -128,6 +129,17 @@ class Upgrade {
         createText(this.me() + "level", 0.97, 0.13 + index * 0.1 + (isMobile() ? 0 : 0.01), "L", { color: "white", size: 40, align: "right" });
         createText(this.me() + "price", 0.95, 0.15 + index * 0.1 + (isMobile() ? 0 : 0.01), "0", { color: "white", size: 32, align: "right" });
         createImage(this.me() + "price2", 0.95, 0.13 + index * 0.1 + (isMobile() ? 0 : 0.01), 0.02, 0.02, "currencies/" + currencies[this.currency].image, { quadratic: true });
+
+        if (this.currency == "snowflake") createButton(this.me() + "disable", 0.975, 0.19 + index * 0.1, 0.025, 0.01, this.disabled ? "#FF584C" : "#9BFF82", () => {
+            if (this.disabled == undefined || this.disabled == false) {
+                this.disabled = true;
+                objects[this.me() + "disable"].color = "#FF584C";
+            }
+            else {
+                this.disabled = false;
+                objects[this.me() + "disable"].color = "#9BFF82";
+            }
+        });
     }
 
     updateObjects() {

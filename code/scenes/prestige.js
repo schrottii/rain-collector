@@ -19,7 +19,7 @@ function calcRaingoldGainRough() {
 
 function calcRaingoldAmount() {
     // how many items will fall
-    if (game.raindrop.amount < 1e4) return new Decimal(0);
+    if (game.raindrop.amount < 1e4 || calcRaingoldGainRough() < 1) return new Decimal(0);
     return new Decimal(calcRaingoldGainRough().ln()).ceil().add(5);
 }
 
@@ -68,6 +68,10 @@ scenes["prestige"] = new Scene(
         createButton("prestigeButton", 0.5, 0.25, 0.2, 0.2, "prestige", () => {
             if (game.raindrop.amount < 1e4) {
                 alert("You need at least 10 000 Raindrops!");
+                return false;
+            }
+            if (calcRaingoldAmount() < 1) {
+                alert("You can't prestige for 0 Raingold! Keep progressing!");
                 return false;
             }
 

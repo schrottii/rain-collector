@@ -70,7 +70,7 @@ scenes["mainmenu"] = new Scene(
         createSquare("waterFillBg", 0, 0.875, 1, 0.03, "black");
         createSquare("waterFill", 0, 0.875, 0, 0.03, "#02F8FD");
         createImage("currency3", 0.05, 0.875, 0.03, 0.03, "currencies/watercoin", { quadratic: true, centered: true });
-        createText("currencyDisplay2", 0.1, 0.875 + 0.05 * 0.66, "", { color: "black", size: 64, align: "left" });
+        createText("currencyDisplay2", 0.1, 0.875 + 0.05 * 0.66, "", { color: "blue", size: 64, align: "left" });
 
         // Music
         wggjAudio.src = "audio/lofi-relax-music-lofium-123264.mp3";

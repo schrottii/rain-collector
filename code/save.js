@@ -71,24 +71,24 @@ class SaveGame {
             prestiges: 0,
 
             // currencies
-            totalRaindrops: 0,
-            mostRaindrops: 0,
+            totalRaindrops: new Decimal(0),
+            mostRaindrops: new Decimal(0),
             itemRaindrops: 0,
 
-            totalWatercoins: 0,
-            mostWatercoins: 0,
+            totalWatercoins: new Decimal(0),
+            mostWatercoins: new Decimal(0),
             itemWatercoins: 0,
 
-            totalRaingold: 0,
-            mostRaingold: 0,
+            totalRaingold: new Decimal(0),
+            mostRaingold: new Decimal(0),
             itemRaingold: 0,
 
-            totalBubbles: 0,
-            mostBubbles: 0,
+            totalBubbles: new Decimal(0),
+            mostBubbles: new Decimal(0),
             itemBubbles: 0,
 
-            totalSnowflakes: 0,
-            mostSnowflakes: 0,
+            totalSnowflakes: new Decimal(0),
+            mostSnowflakes: new Decimal(0),
             itemSnowflakes: 0,
         }
 
@@ -101,7 +101,7 @@ class SaveGame {
     loadFromSaveGame(sg, passive = false) {
         if (sg.startVer == undefined) {
             sg.startVer = "1.0";
-            if (game.raindrop.upgrades.time >= 100 && game.raindrop.upgrades.auto >= 50) sg.startVer = "**1.0**";
+            // if (game.raindrop.upgrades.time >= 100 && game.raindrop.upgrades.auto >= 50) sg.startVer = "**1.0**";
         }
         else if (sg.startVer == "") sg.startVer = GAMEVERSION;
 
@@ -111,14 +111,15 @@ class SaveGame {
         }
 
         for (let element in sg) {
-            if (typeof (this[element]) == "object" && this[element].length == undefined) {
+            if (typeof (this[element]) == "object" && this[element].length == undefined) { // is {}
                 for (let element2 in this[element]) {
-
+                    // if it's {} inside {}, take care of that
                     if (typeof (this[element][element2]) == "object" && this[element][element2].mantissa == undefined) sg[element][element2] = Object.assign({}, this[element][element2], sg[element][element2]);
                 }
+                // if it's number/breakinf/whatev inside {}, do it like that
                 this[element] = Object.assign({}, this[element], sg[element]);
             }
-            else this[element] = sg[element];
+            else this[element] = sg[element]; // not {}, simply set it. breakinf not supported on this layer
         }
 
         // break infinity loader
@@ -127,6 +128,7 @@ class SaveGame {
         }
         for (let cur in this.stats) {
             if (cur.substr(0, 4) == "most" || cur.substr(0, 5) == "total") this.stats[cur] = numberLoader(this.stats[cur]);
+            if (cur.substr(0, 4) == "item" && typeof (this.stats[cur]) == "string") this.stats[cur] = this.stats[cur].length > 9 ? 0 : parseInt(this.stats[cur]);
         }
     }
 }
@@ -154,6 +156,9 @@ function saveGame(toSave) {
     }
     for (let cur in save.stats) {
         if (cur.substr(0, 4) == "most" || cur.substr(0, 5) == "total") save.stats[cur] = numberSaver(save.stats[cur]);
+    }
+    for (let cur in save) {
+        if (save[cur].time != undefined) save[cur].time = parseFloat(save[cur].time.toFixed(2));
     }
 
     // heaueh uaehaeuh
