@@ -1,5 +1,5 @@
 class Currency {
-    constructor(name, image, unlock, onCollect, sizeMulti, speedMulti) {
+    constructor(name, image, unlock, onCollect, sizeMulti, speedMulti, config) {
         this.name = name;
         this.image = image;
         this.unlock = unlock;
@@ -7,8 +7,32 @@ class Currency {
 
         this.sizeMulti = sizeMulti;
         this.speedMulti = speedMulti;
+
+        if (config) {
+            this.pluralname = config.pluralname;
+            this.prestigeCurrency = config.prestigeCurrency;
+            this.varyingSize = config.varyingSize;
+
+            this.prestigeFormula = config.prestigeFormula;
+
+            this.config = config;
+        }
     }
 
+    // basic getter setter
+    amount() {
+        return this.getAmount();
+    }
+
+    add(amount) {
+        game[this.name].amount = game[this.name].amount.add(amount);
+    }
+
+    reset() {
+        game[this.name].amount = new Decimal(0);
+    }
+
+    // is methods
     isUnlocked() {
         return this.unlock[0]();
     }
@@ -17,19 +41,65 @@ class Currency {
         return game.selCur == this.name;
     }
 
+    // get methods
     getAmount() {
         return game[this.name].amount;
+    }
+
+    getStat(stat) {
+        // accepts: total | most | item
+        return game.stats[stat + this.renderName(true)];
+    }
+
+    getPrestigeCurrency() {
+        if (this.prestigeCurrency != undefined) {
+            return currencies[this.prestigeCurrency];
+        }
+        else {
+            return undefined;
+        }
     }
 
     getTime() {
         return game[this.name].time;
     }
 
-    renderName() {
-        return this.name.substr(0, 1).toUpperCase() + this.name.substr(1);
+    getTotalUpgradeLevels(max = false) {
+        // if max == false (default), it returns how many levels you HAVE
+        // == true, it returns how many you can GET (max. levels)
+        let amount = 0;
+
+        for (let upg in this.upgrades()) {
+            // don't count upgrades that have no max. level
+            if (this.upgrades()[upg].getMaxLevel() != 9999999999999999999) {
+                if (max) amount += this.upgrades()[upg].getMaxLevel();
+                else amount += this.upgrades()[upg].getLevel();
+            }
+        }
+
+        return amount;
     }
 
-    upgrades() {
+    // name related methods
+    me() {
+        return "cur" + this.name;
+    }
+
+    plural() {
+        // returns the plural name... sigh
+        if (this.pluralname != undefined) {
+            return this.pluralname;
+        }
+        else return this.name; // if there is no plural, it's the same as singular
+    }
+
+    renderName(isPlural = false) {
+        let nameToCut = isPlural ? ("" + this.plural()) : ("" + this.name);
+        return nameToCut.substr(0, 1).toUpperCase() + nameToCut.substr(1);
+    }
+
+    // upgrade related methods
+    upgrades(defaultReturn = false) {
         switch (this.name) {
             case "raindrop":
                 return raindropUpgrades;
@@ -37,8 +107,11 @@ class Currency {
                 return bubbleUpgrades;
             case "snowflake":
                 return snowflakeUpgrades;
+            case "glowble":
+                return glowbleUpgrades;
             default:
-                return raindropUpgrades;
+                if (defaultReturn == false) return raindropUpgrades;
+                else return defaultReturn;
         }
     }
 
@@ -64,10 +137,7 @@ class Currency {
         }
     }
 
-    me() {
-        return "cur" + this.name;
-    }
-     
+    // rendering
     createObjects(index) {
         createSquare(this.me() + "bg", 0, 0.1 + index * 0.1, 1, 0.1, index % 2 == 0 ? "#560000" : "#A83F3F");
         createSquare(this.me() + "bg2", 0, 0.15 + index * 0.1, 1, 0.05, index % 2 == 0 ? "#470000" : "#993A3A");
@@ -75,6 +145,13 @@ class Currency {
         createButton(this.me() + "button", 0.025, 0.1 + index * 0.1, 0.1, 0.1, "switch2", () => {
             if (this.isUnlocked()) {
                 game.selCur = this.name;
+            }
+            else if (this.getStat("total") > 0) {
+                // Let the player see their upgrades even though they currently do not have it unlocked
+                // when they leave the upgrading scene, temporaryUpgrading becomes "none" and the currency is reset
+                game.selTemp = game.selCur;
+                game.selCur = this.name;
+                loadScene("upgrading");
             }
         }, { quadratic: true });
         createImage(this.me() + "pic", 0.125, 0.125 + index * 0.1, 0.05, 0.05, "currencies/" + currencies[this.name].image, { quadratic: true, centered: true });
@@ -89,14 +166,21 @@ class Currency {
 
         createText(this.me() + "pamount", 0.95, 0.15 + index * 0.1 + (isMobile() ? 0 : 0.01), "0", { color: "white", size: 32, align: "right" });
         createImage(this.me() + "pamount2", 0.95, 0.13 + index * 0.1 + (isMobile() ? 0 : 0.01), 0.02, 0.02, "locked", { quadratic: true });
+
+        createText(this.me() + "levelprog", 0.95, 0.17 + index * 0.1 + (isMobile() ? 0 : 0.01), "0", { color: "white", size: 32, align: "right" });
+        createImage(this.me() + "levelprogpic", 0.95, 0.15 + index * 0.1 + (isMobile() ? 0 : 0.01), 0.02, 0.02, "upgrades", { quadratic: true });
     }
 
     updateObjects() {
         //objects[this.me() + "level"].text = "L" + this.getLevel() + (this.maxLevel != 0 ? "/" + this.maxLevel : "");
-        objects[this.me() + "name"].text = this.isUnlocked() ? this.renderName() : "???";
+        objects[this.me() + "name"].text = this.isUnlocked() ? this.renderName(true) : "???";
         objects[this.me() + "amount"].text = this.isUnlocked() ? fn(this.getAmount()) : "Locked";
-        objects[this.me() + "pamount"].text = this.name == "raindrop" && currencies.raingold.isUnlocked() ? fn(currencies.raingold.getAmount()) : "";
-        objects[this.me() + "pamount2"].image = this.name == "raindrop" && currencies.raingold.isUnlocked() ? "currencies/" + currencies["raingold"].image : "locked";
+        objects[this.me() + "pamount"].text = this.getPrestigeCurrency() != undefined ? fn(this.getPrestigeCurrency().getAmount()) : "";
+        objects[this.me() + "pamount2"].image = this.getPrestigeCurrency() != undefined ? "currencies/" + this.getPrestigeCurrency().image : "locked";
+        objects[this.me() + "levelprog"].text = (this.getTotalUpgradeLevels()
+            + (this.getPrestigeCurrency() != undefined && this.getPrestigeCurrency().upgrades("none") != "none" ? this.getPrestigeCurrency().getTotalUpgradeLevels() : ""))
+            + "/" + (this.getTotalUpgradeLevels(true)
+            + (this.getPrestigeCurrency() != undefined && this.getPrestigeCurrency().upgrades("none") != "none" ? this.getPrestigeCurrency().getTotalUpgradeLevels(true) : ""));
 
         objects[this.me() + "desc"].text = this.isUnlocked() ? (this.isSelected() ? "Selected" : "Unlocked") : "Locked (" + this.unlock[1] + ")";
     }
@@ -124,11 +208,18 @@ function getFallingX() {
 
 function createFallingItem(item) {
     for (let i = 1; i <= ITEM_LIMIT; i++) {
-        if (objects["drop" + i].power == false) {
+        if (objects["drop" + i].power == false && currencies[item].isUnlocked()) {
             objects["drop" + i].x = getFallingX();
             objects["drop" + i].y = -0.1;
-            objects["drop" + i].w = objects["drop" + i].h = 0.1 * currencies[item].sizeMulti * (item == "bubble" ? Math.max(0.5, Math.random()) : 1);
+            objects["drop" + i].w = objects["drop" + i].h = 0.1
+                * currencies[item].sizeMulti
+                * (currencies[item].varyingSize == true ? Math.max(0.5, Math.random()) : 1);
 
+            objects["drop" + i].inflated = false;
+            if (glowbleUpgrades.inflatedfall.getLevel() > 0 && Math.random() * 100 <= glowbleUpgrades.inflatedfall.getEffect() && (item == "raindrop" || item == "bubble")) {
+                objects["drop" + i].w = objects["drop" + i].h = objects["drop" + i].w * 1.5;
+                objects["drop" + i].inflated = true;
+            }
 
             objects["drop" + i].image = "currencies/" + currencies[item].image;
             objects["drop" + i].currency = item;
@@ -154,10 +245,11 @@ function getItemCur(index) {
 }
 
 const currencies = {
-    raindrop: new Currency("raindrop", "raindrop", [() => true, "Unlocked"], () => {
+    raindrop: new Currency("raindrop", "raindrop", [() => true, "Unlocked"], (item) => {
         let amount = (game.raindrop.upgrades.worth + 1)
             * (game.watercoin.tempBoostTime > 0 ? watercoinUpgrades.tempboost.getEffect() : 1)
-            * (1 + game.raingold.amount / 100);
+            * (1 + game.raingold.amount / 100)
+            * (item.inflated ? glowbleUpgrades.bigpop.getEffect() : 1);
         amount = Math.ceil(amount);
 
         game.raindrop.amount = game.raindrop.amount.add(amount);
@@ -166,7 +258,10 @@ const currencies = {
         game.stats.itemRaindrops += 1;
 
         game.watercoin.fill++;
-    }, 1, 1),
+    }, 1, 1, {
+        pluralname: "raindrops",
+        prestigeCurrency: "raingold",
+    }),
     watercoin: new Currency("watercoin", "watercoin", [() => true, "Unlocked"], () => {
         game.watercoin.fill = 0;
         game.watercoin.fillNeeded += 5;
@@ -177,11 +272,12 @@ const currencies = {
         game.stats.totalWatercoins = game.stats.totalWatercoins.add(amount);
         if (game.watercoin.amount > game.stats.mostWatercoins) game.stats.mostWatercoins = game.watercoin.amount;
         game.stats.itemWatercoins += 1;
-    }, 1, 0.8),
-    raingold: new Currency("raingold", "raingold", [() => game.raindrop.amount >= 1e4 || postPrestige[0] > 0 || game.raingold.amount >= 1, "1000 Raindrops"], () => {
-        // if (postPrestige[0] < 1) return false;
-
-        let amount = Math.ceil(postPrestige[1]);
+    }, 1, 0.8, {
+        pluralname: "watercoins"
+    }),
+    raingold: new Currency("raingold", "raingold", [() => game.raindrop.amount >= 1e4 || postPrestige.amount > 0 || game.raingold.amount >= 1, "1000 Raindrops"], () => {
+        if (postPrestige.type != "raingold") return false;
+        let amount = Math.ceil(postPrestige.worth);
 
         game.raingold.amount = game.raingold.amount.add(amount);
         game.stats.totalRaingold = game.stats.totalRaingold.add(amount);
@@ -189,18 +285,40 @@ const currencies = {
         game.stats.itemRaingold += 1;
 
         game.watercoin.fill++;
-    }, 1.2, 0.5),
+    }, 1.2, 0.5, {
+        prestigeFormula: () => {
+            let amount = new Decimal(game.raindrop.amount.ln());
+            let totalLevels = 0;
+
+            for (let upg in raindropUpgrades) {
+                totalLevels += raindropUpgrades[upg].getLevel();
+                if (raindropUpgrades[upg].getLevel() == raindropUpgrades[upg].getMaxLevel()) amount = amount.mul(2);
+            }
+
+            amount = amount.mul(totalLevels / 100);
+            amount = amount.mul((game.achievements.length * 2) / 100 + 1);
+
+            return amount;
+        }
+    }),
     bubble: new Currency("bubble", "bubble", [() => game.raingold.amount >= 2000, "2000 Raingold"], (item) => {
-        let amount = (game.bubble.upgrades.worth
+        let amount = ((game.bubble.upgrades.worth + 1)
+            * (1 + game.glowble.amount / 100)
+            * (item.w * 10 > 0.8 ? glowbleUpgrades.bigpop.getEffect() : 1)
             * item.w * 10)
-            + 1;
+            * (game.watercoin.tempBoostTime > 0 ? watercoinUpgrades.tempboost.getEffect() : 1)
+            * (item.inflated ? glowbleUpgrades.bigpop.getEffect() : 1);
         amount = Math.ceil(amount);
 
         game.bubble.amount = game.bubble.amount.add(amount);
         game.stats.totalBubbles = game.stats.totalBubbles.add(amount);
         if (game.bubble.amount > game.stats.mostBubbles) game.stats.mostBubbles = game.bubble.amount;
         game.stats.itemBubbles += 1;
-    }, 1.4, 0.33),
+    }, 1.4, 0.33, {
+        pluralname: "bubbles",
+        varyingSize: true,
+        prestigeCurrency: "glowble"
+    }),
     snowflake: new Currency("snowflake", "snowflake", [() => isChristmas(), "Christmas & 2000 Raingold"], () => {
         let amount = 1;
 
@@ -208,5 +326,35 @@ const currencies = {
         game.stats.totalSnowflakes = game.stats.totalSnowflakes.add(amount);
         if (game.snowflake.amount > game.stats.mostSnowflakes) game.stats.mostSnowflakes = game.snowflake.amount;
         game.stats.itemSnowflakes += 1;
-    }, 1, 0.6),
+    }, 1, 0.6, {
+        pluralname: "snowflakes"
+    }),
+    glowble: new Currency("glowble", "glowble", [() => game.bubble.amount >= 1e5 || game.glowble.amount >= 1, "100 000 Bubbles"], (item) => {
+        if (postPrestige.type != "glowble") return false;
+        let amount = Math.ceil(postPrestige.worth);
+
+        game.glowble.amount = game.glowble.amount.add(amount);
+        game.stats.totalGlowbles = game.stats.totalGlowbles.add(amount);
+        if (game.glowble.amount > game.stats.mostGlowbles) game.stats.mostGlowbles = game.glowble.amount;
+        game.stats.itemGlowbles += 1;
+
+        game.watercoin.fill++;
+    }, 1.2, 0.6, {
+        pluralname: "glowbles",
+        varyingSize: true,
+        prestigeFormula: () => {
+            let amount = new Decimal(game.bubble.amount.ln());
+            let totalLevels = 0;
+
+            for (let upg in bubbleUpgrades) {
+                totalLevels += bubbleUpgrades[upg].getLevel();
+                if (bubbleUpgrades[upg].getLevel() == bubbleUpgrades[upg].getMaxLevel()) amount = amount.mul(1.5);
+            }
+
+            amount = amount.mul(totalLevels / 40);
+            amount = amount.mul((game.achievements.length * 2) / 100 + 1);
+
+            return amount;
+        }
+    }),
 };

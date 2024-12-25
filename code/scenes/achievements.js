@@ -59,13 +59,20 @@ const achievements = [
     new Achievement(28, "currencies/bubble", "Colandpop III", "Gather 20000 Bubbles!", () => game.bubble.amount.gte(20000)),
     new Achievement(29, "currencies/bubble", "Colandpop IV", "Gather 1e6 Bubbles!", () => game.bubble.amount.gte(1e6)),
     new Achievement(30, "currencies/bubble", "Colandpop V", "Gather 1e8 Bubbles!", () => game.bubble.amount.gte(1e8)),
+
+    new Achievement(31, "currencies/glowble", "The Great Low I", "Gather 100 Glowbles!", () => game.glowble.amount.gte(100)),
+    new Achievement(32, "currencies/glowble", "The Great Low II", "Gather 4000 Glowbles!", () => game.glowble.amount.gte(4000)),
+    new Achievement(33, "currencies/glowble", "The Great Low III", "Gather 64000 Glowbles!", () => game.glowble.amount.gte(64000)),
+    new Achievement(34, "currencies/glowble", "The Great Low IV", "Gather 1e6 Glowbles!", () => game.glowble.amount.gte(1e6)),
+    new Achievement(35, "currencies/glowble", "The Great Low V", "Gather 1e9 Glowbles!", () => game.glowble.amount.gte(1e9)),
 ];
 
 scenes["achievements"] = new Scene(
     () => {
         // Init
         createSquare("bgSquare1", 0, 0, 1, 0.9, "black");
-        createSquare("bgSquare2", 0, 0.9, 1, 0.1, "darkgray");
+        if (game.settings.bg) createImage("bgSquare2", 0, 0, 1, 0.9, "bgSettings");
+        createSquare("bgSquare3", 0, 0.9, 1, 0.1, "darkgray");
 
         createText("header", 0.5, 0.06, "Achievements", { size: 60, color: "white" });
 

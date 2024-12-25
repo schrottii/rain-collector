@@ -2,13 +2,14 @@ scenes["currencyselection"] = new Scene(
     () => {
         // Init
         createSquare("bgSquare1", 0, 0, 1, 0.9, "black");
-        createSquare("bgSquare2", 0, 0.9, 1, 0.1, "darkgray");
+        if (game.settings.bg) createImage("bgSquare2", 0, 0, 1, 0.9, "bgShop");
+        createSquare("bgSquare3", 0, 0.9, 1, 0.1, "darkgray");
 
         createText("header", 0.5, 0.06, "Currency Selection", { size: 60, color: "white" });
         createText("header2", 0.5, 0.46, "Event Currencies", { size: 60, color: "white" });
 
         // Go back
-        createClickable("bgSquare3", 0, 0.9, 1, 0.1, () => { loadScene("mainmenu") });
+        createClickable("backSquare", 0, 0.9, 1, 0.1, () => { loadScene("mainmenu") });
         createText("backText", 0.5, 0.975, "Go back", { color: "black", size: 40 });
 
         // Currencies

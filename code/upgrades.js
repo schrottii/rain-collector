@@ -185,3 +185,8 @@ const snowflakeUpgrades = {
     slowfall: new Upgrade("snowflake", "slowfall", "Slow Fall", level => "Everything falls slower during the Christmas Event. Slowdown: x" + (1 + level * 0.01), level => Math.floor(level / 10) + 1, level => isChristmas() ? 1 + level * 0.01 : 1, 400),
     freezedown: new Upgrade("snowflake", "freezedown", "Freeze Down", level => "Collecting during the Christmas Event can freeze all others for 0.5s. Chance: " + (level / 10) + "%", level => 8 * level + 8, level => isChristmas() ? level / 10 : 0, 40)
 }
+
+const glowbleUpgrades = {
+    bigpop: new Upgrade("glowble", "bigpop", "Big Pop", level => "Big Bubbles are worth extra. x" + (1 + level * 0.1).toFixed(1), level => 10 + level * 10 * Math.pow(1.04, level), level => 1 + level * 0.1, 0),
+    inflatedfall: new Upgrade("glowble", "inflatedfall", "Inflated Fall", level => "Adds a chance of big currencies falling (affected by Big Pop). Chance: " + (level * 0.1).toFixed(1) + "%", level => 10 + level * 10 * Math.pow(1.2, level), level => level * 0.1, 100),
+}

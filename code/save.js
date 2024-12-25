@@ -5,6 +5,7 @@ class SaveGame {
         this.startVer = "";
 
         this.selCur = "raindrop";
+        this.selTemp = "none";
 
         // currencies start
 
@@ -49,6 +50,15 @@ class SaveGame {
             }
         }
 
+        this.glowble = {
+            amount: new Decimal(0),
+
+            upgrades: {
+                bigpop: 0,
+                inflatedfall: 0,
+            }
+        }
+
         // event currencies
 
         this.snowflake = {
@@ -90,6 +100,10 @@ class SaveGame {
             totalSnowflakes: new Decimal(0),
             mostSnowflakes: new Decimal(0),
             itemSnowflakes: 0,
+
+            totalGlowbles: new Decimal(0),
+            mostGlowbles: new Decimal(0),
+            itemGlowbles: 0,
         }
 
         this.settings = {
@@ -107,7 +121,7 @@ class SaveGame {
 
         if (!passive) {
             clearFallingItems();
-            postPrestige = [0, 0];
+            resetPostPrestige();
         }
 
         for (let element in sg) {
@@ -159,6 +173,12 @@ function saveGame(toSave) {
     }
     for (let cur in save) {
         if (save[cur].time != undefined) save[cur].time = parseFloat(save[cur].time.toFixed(2));
+    }
+
+    // temporary selection
+    if (save.selTemp != "none") {
+        save.selCur = save.selTemp;
+        save.selTemp = "none";
     }
 
     // heaueh uaehaeuh

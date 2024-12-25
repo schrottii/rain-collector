@@ -9,6 +9,7 @@ October - December 2024:
 1.2.1
 1.3
 1.3.1
+1.4
 
 
 
@@ -180,3 +181,32 @@ v1.3.1:
 - Water Coin amount is now in blue so it's always visible
 - Prestiging for 0 Raingold is no longer possible
 - Savefile related bug fixes and improvements
+
+
+
+2024/12/22 1.4:
+v1.4 Merry Glow:
+-> Glowbles:
+- New currency: Glowbles!
+- Gained from Bubble Prestige, similar to Raingold
+- Different gain formula, and its size variations are purely visual
+- Boosts Bubbles, can be spent on two upgrades
+- Big Pop: Big Bubbles are worth extra
+- Inflated Fall: Adds a chance of big currencies falling (affected by Big Pop)
+
+-> Currencies:
+- Currency Selection: Levels purchased and max levels now displayed
+- Currencies can only fall if they are unlocked
+- If a currency you already earned gets locked (like Snowflakes), you can now at least access their upgrades (but not collect more)
+
+-> Design:
+- Added a display of how much the most recent collect gave
+- Added background for Upgrading, Shop & Currency Selection
+- Added background for Stats, Achievements & Settings
+
+-> Other:
+- Added 5 new Achievements (35 total)
+- Watercoin upgrades are now visible for Bubbles
+- Bubbles are now affected by Temporary Boost (Water Coin Upgrade)
+- Plural name stuff
+- Re-organized some files

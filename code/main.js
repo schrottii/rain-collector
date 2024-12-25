@@ -1,40 +1,45 @@
 // game made by schrottii, do not steal/copy bla bla bla
 
-const GAMEVERSION = "1.3.1";
+const GAMEVERSION = "1.4";
 
 images = {
     button: "button.png",
     achbg: "cool-outline.png",
     locked: "locked.png",
-    bg: "bg.png",
-    bg2: "bg2.png",
 
-    back: "back.png",
-    upgrades: "upgrades.png",
-    prestige: "prestige.png",
-    stats: "stats.png",
-    settings: "settings.png",
-    achievements: "achievements.png",
-    switch: "switch.png",
-    switch2: "switch2.png",
+    bg: "bg/bg.png",
+    bg2: "bg/bg2.png",
+    bgSettings: "bg/settedBg.png",
+    bgShop: "bg/shopBg.png",
 
-    pencil: "pencil.png",
-    music: "music.png",
-    musicoff: "music-off.png",
-    background: "background.png",
-    backgroundoff: "backgroundoff.png",
-    notation: "notation.png",
-    notationoff: "notationoff.png",
+    back: "icons/back.png",
+    upgrades: "icons/upgrades.png",
+    prestige: "icons/prestige.png",
+    stats: "icons/stats.png",
+    settings: "icons/settings.png",
+    achievements: "icons/achievements.png",
+    switch: "icons/switch.png",
+    switch2: "icons/switch2.png",
+    pencil: "icons/pencil.png",
 
-    collected: "collected.png",
-    collected2: "collected2.png",
+    music: "settings/music.png",
+    musicoff: "settings/music-off.png",
+    background: "settings/background.png",
+    backgroundoff: "settings/backgroundoff.png",
+    notation: "settings/notation.png",
+    notationoff: "settings/notationoff.png",
+
+    collected: "effects/collected.png",
+    collected2: "effects/collected2.png",
 
     "currencies/raindrop": "currencies/raindrop.png",
     "currencies/watercoin": "currencies/watercoin.png",
     "currencies/raingold": "currencies/raingold.png",
     "currencies/bubble": "currencies/bubble.png",
     "currencies/snowflake": "currencies/snowflake.png",
+    "currencies/glowble": "currencies/glowble.png",
 }
+
 GAMENAME = "Rain Collector";
 FONT = "Quicksand";
 wggjLoadImages();

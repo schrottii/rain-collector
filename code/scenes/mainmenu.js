@@ -1,3 +1,4 @@
+var amountBefore = 0;
 const ITEM_LIMIT = 128;
 
 function collectItem(i, isAuto = false) {
@@ -19,7 +20,9 @@ function collectItem(i, isAuto = false) {
         objects["collected"].timer = 0.25;
     }
 
+    amountBefore = getItemCur(i).getAmount();
     getItemCur(i).onCollect(objects["drop" + i]);
+    objects["latestGain"].text = "+" + fn(getItemCur(i).getAmount().sub(amountBefore));
 }
 
 scenes["mainmenu"] = new Scene(
@@ -49,7 +52,7 @@ scenes["mainmenu"] = new Scene(
 
         // Buttons
         createButton("sceneButton1", 0, 0.9, 1 / 3, 0.1, "button", () => { loadScene("upgrading") });
-        createButton("sceneButton2", 0 + 1 / 3, 0.9, 1 / 3, 0.1, "button", () => { game.selCur == "raindrop" ? game.raindrop.amount < 1e4 && game.raingold.amount < 1 ? alert("Unlocked at 10 000 Raindrops!") : loadScene("prestige") : alert("Currently only available for Raindrops!") });
+        createButton("sceneButton2", 0 + 1 / 3, 0.9, 1 / 3, 0.1, "button", () => { cc().getPrestigeCurrency().isUnlocked() || cc().getPrestigeCurrency().getAmount().gt(0) ? loadScene("prestige") : alert("Collect more " + cc().renderName(true) + " to unlock!") });
         createButton("sceneButton3", 0 + 1 / 3 * 2, 0.9, 1 / 3, 0.1, "button", () => { loadScene("stats") });
 
         createImage("sceneImage1", 1 / 6, 0.91, 0.08, 0.08, "upgrades", { quadratic: true, centered: true });
@@ -65,6 +68,8 @@ scenes["mainmenu"] = new Scene(
         createSquare("currency1", 0.2, 0.775, 0.6, 0.1, "#560000");
         createImage("currency2", 0.25, 0.775, 0.1, 0.1, "currencies/raindrop", { quadratic: true, centered: true });
         createText("currencyDisplay", 0.775, 0.775 + 0.1 * 0.66, "", { color: "#F78A8A", size: 64, align: "right" });
+
+        createText("latestGain", 0.775, 0.7 + 0.1 * 0.66, "", { color: "white", size: 32, align: "right" });
 
         // Water Coin
         createSquare("waterFillBg", 0, 0.875, 1, 0.03, "black");
@@ -124,12 +129,12 @@ scenes["mainmenu"] = new Scene(
             objects["collected2"].y = -10;
         }
 
-        if (postPrestige[0] > 0) {
+        if (postPrestige.amount > 0) {
             if (gc().time >= 0.5) {
                 gc().time = 0;
-                postPrestige[0] -= 1;
+                postPrestige.amount -= 1;
 
-                createFallingItem("raingold");
+                createFallingItem(postPrestige.type);
             }
         }
         else if (gc().time >= cc().spawntime()) {

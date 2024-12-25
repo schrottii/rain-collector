@@ -4,7 +4,10 @@ scenes["stats"] = new Scene(
     () => {
         // Init
         createSquare("bgSquare1", 0, 0, 1, 0.9, "black");
-        createSquare("bgSquare2", 0, 0.9, 1, 0.1, "darkgray");
+        if (game.settings.bg) createImage("bgSquare2", 0, 0, 1, 0.9, "bgSettings");
+        createSquare("bgSquare3", 0, 0.9, 1, 0.1, "darkgray");
+
+        createSquare("readabilitySquare", 0.1, 0.15, 0.8, 0.6, "black");
 
         createText("header", 0.5, 0.06, "Stats", { size: 60, color: "white" });
         createText("userName", 0.5, 0.1, "", { size: 48, color: "white" });

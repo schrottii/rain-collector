@@ -2,19 +2,31 @@ scenes["upgrading"] = new Scene(
     () => {
         // Init
         createSquare("bgSquare1", 0, 0, 1, 0.9, "black");
-        createSquare("bgSquare2", 0, 0.9, 1, 0.1, "darkgray");
+        if (game.settings.bg) createImage("bgSquare2", 0, 0, 1, 0.9, "bgShop");
+        createSquare("bgSquare3", 0, 0.9, 1, 0.1, "darkgray");
 
         createText("header", 0.5, 0.06, "Raindrop Upgrades", { size: 60, color: "white" });
 
         // Go back
-        createClickable("bgSquare3", 0, 0.9, 1, 0.1, () => { loadScene("mainmenu") });
+        createClickable("backSquare", 0, 0.9, 1, 0.1, () => {
+            if (game.selTemp != "none") {
+                // player is here temporarily, currency is locked
+                game.selCur = game.selTemp;
+                game.selTemp = "none";
+                loadScene("currencyselection")
+            }
+            else {
+                // normal return
+                loadScene("mainmenu")
+            }
+        });
         createText("backText", 0.5, 0.975, "Go back", { color: "black", size: 40 });
 
         // Upgrades
         for (let upg in cc().upgrades()) {
             cc().upgrades()[upg].createObjects(Object.keys(cc().upgrades()).indexOf(upg));
         }
-        if (game.selCur == "raindrop") {
+        if (cc().prestigeCurrency != undefined) {
             createText("header2", 0.5, 0.46, "Water Coin Upgrades", { size: 60, color: "white" });
             for (let upg in watercoinUpgrades) {
                 watercoinUpgrades[upg].createObjects(4 + Object.keys(watercoinUpgrades).indexOf(upg));
@@ -41,7 +53,7 @@ scenes["upgrading"] = new Scene(
         for (let upg in cc().upgrades()) {
             cc().upgrades()[upg].updateObjects();
         }
-        if (game.selCur == "raindrop") {
+        if (cc().prestigeCurrency != undefined) {
             for (let upg in watercoinUpgrades) {
                 watercoinUpgrades[upg].updateObjects();
             }
