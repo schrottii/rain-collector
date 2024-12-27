@@ -1,4 +1,5 @@
 var multiBuy = 1;
+var economicBubbleBoost = 0;
 
 class Upgrade {
     constructor(currency, name, displayName, description, price, effect, maxLevel, config) {
@@ -14,12 +15,18 @@ class Upgrade {
 
         if (config) {
             this.config = config;
+            if (config.unlock) this.unlock = config.unlock;
             if (config.onBuy) this.onBuy = config.onBuy;
         }
     }
 
     me() {
         return this.currency + this.name;
+    }
+
+    isUnlocked() {
+        if (this.unlock == undefined) return true;
+        return this.unlock();
     }
 
     canAfford(level = this.getLevel()) {
@@ -94,7 +101,7 @@ class Upgrade {
 
     getDescription(level = this.getLevel(), part = 1) {
         let baseDescription = typeof (this.description) == "function" ? this.description(level) : this.description;
-        let charLength = isMobile() ? 36 : 78;
+        let charLength = isMobile() ? 50 : 90;
 
         if (part == 1) return baseDescription.length > charLength ? baseDescription.substr(0, baseDescription.substr(0, charLength).lastIndexOf(" ")) : baseDescription;
         if (part == 2) return baseDescription.length > charLength ? baseDescription.substr(baseDescription.substr(0, charLength).lastIndexOf(" ") + 1) : "";
@@ -105,6 +112,7 @@ class Upgrade {
         createSquare(this.me() + "bg", 0, 0.1 + index * 0.1, 1, 0.1, index % 2 == 0 ? "#560000" : "#A83F3F");
         createSquare(this.me() + "bg2", 0, 0.15 + index * 0.1, 1, 0.05, index % 2 == 0 ? "#470000" : "#993A3A");
 
+        if (!this.isUnlocked()) return false;
         createButton(this.me() + "button", 0.025, 0.1 + index * 0.1, 0.1, 0.1, "upgrades", () => {
             for (let i = 0; i < multiBuy; i++) {
                 if (this.canAfford() && this.getLevel() < this.getMaxLevel()) {
@@ -143,6 +151,7 @@ class Upgrade {
     }
 
     updateObjects() {
+        if (!this.isUnlocked()) return false;
         objects[this.me() + "level"].text = "L" + this.getLevel() + (this.maxLevel != 0 ? "/" + this.maxLevel : "");
         objects[this.me() + "price"].text = this.getVisualPrice();
         objects[this.me() + "price"].color = this.getVisualPriceColor();
@@ -173,6 +182,8 @@ const watercoinUpgrades = {
             }
         }
     }),
+    economicbubble: new Upgrade("watercoin", "economicbubble", "Economic Bubble", level => "Every falling currency collect is worth " + level + "% more (additive). 10% reset chance every collect. No auto.", level => 10 + 5 * level, level => level, 200, { unlock: () => currencies.bubble.isUnlocked() }),
+    coinpop: new Upgrade("watercoin", "coinpop", "Coin Pop", level => (level / 20) + "% chance of Bubbles dropping a Water Coin after collected. No auto.", level => 4 + 2 * level, level => level / 20, 100, { unlock: () => currencies.glowble.isUnlocked() }),
 };
 
 const bubbleUpgrades = {

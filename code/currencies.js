@@ -103,6 +103,8 @@ class Currency {
         switch (this.name) {
             case "raindrop":
                 return raindropUpgrades;
+            case "watercoin":
+                return watercoinUpgrades;
             case "bubble":
                 return bubbleUpgrades;
             case "snowflake":
@@ -151,6 +153,7 @@ class Currency {
                 // when they leave the upgrading scene, temporaryUpgrading becomes "none" and the currency is reset
                 game.selTemp = game.selCur;
                 game.selCur = this.name;
+                viewUpgrades = game.selCur;
                 loadScene("upgrading");
             }
         }, { quadratic: true });
@@ -224,9 +227,11 @@ function createFallingItem(item) {
             objects["drop" + i].image = "currencies/" + currencies[item].image;
             objects["drop" + i].currency = item;
 
+            objects["drop" + i].isAuto = false;
             objects["drop" + i].autod = false;
             objects["drop" + i].power = true;
-            break;
+
+            return i; // can be used
         }
     }
 }
@@ -249,6 +254,7 @@ const currencies = {
         let amount = (game.raindrop.upgrades.worth + 1)
             * (game.watercoin.tempBoostTime > 0 ? watercoinUpgrades.tempboost.getEffect() : 1)
             * (1 + game.raingold.amount / 100)
+            * (item.isAuto ? 1 : watercoinUpgrades.economicbubble.getEffect() * economicBubbleBoost + 1)
             * (item.inflated ? glowbleUpgrades.bigpop.getEffect() : 1);
         amount = Math.ceil(amount);
 
@@ -307,6 +313,7 @@ const currencies = {
             * (item.w * 10 > 0.8 ? glowbleUpgrades.bigpop.getEffect() : 1)
             * item.w * 10)
             * (game.watercoin.tempBoostTime > 0 ? watercoinUpgrades.tempboost.getEffect() : 1)
+            * (item.isAuto ? 1 : watercoinUpgrades.economicbubble.getEffect() * economicBubbleBoost + 1)
             * (item.inflated ? glowbleUpgrades.bigpop.getEffect() : 1);
         amount = Math.ceil(amount);
 
@@ -314,6 +321,8 @@ const currencies = {
         game.stats.totalBubbles = game.stats.totalBubbles.add(amount);
         if (game.bubble.amount > game.stats.mostBubbles) game.stats.mostBubbles = game.bubble.amount;
         game.stats.itemBubbles += 1;
+
+        game.watercoin.fill++;
     }, 1.4, 0.33, {
         pluralname: "bubbles",
         varyingSize: true,

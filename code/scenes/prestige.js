@@ -45,13 +45,12 @@ scenes["prestige"] = new Scene(
         // Init
         createSquare("bgSquare1", 0, 0, 1, 0.9, "black");
         if (game.settings.bg) createImage("bgSquare2", 0, 0, 1, 0.9, "bgShop");
-        createSquare("bgSquare3", 0, 0.9, 1, 0.1, "darkgray");
 
         createText("header", 0.5, 0.06, "Prestige", { size: 60, color: "white" });
 
         // Go back
-        createClickable("backSquare", 0, 0.9, 1, 0.1, () => { loadScene("mainmenu") });
-        createText("backText", 0.5, 0.975, "Go back", { color: "black", size: 40 });
+        createButton("backSquare", 0, 0.9, 1, 0.1, "button", () => { loadScene("mainmenu") });
+        createText("backText", 0.5, 0.9625, "Go back", { color: "black", size: 40 });
 
         // Currency display
         createSquare("currency1", 0.2, 0.775, 0.6, 0.1, "#560000");
@@ -95,9 +94,13 @@ scenes["prestige"] = new Scene(
 
                 // Decrease
                 cc().reset();
+
                 game.watercoin.amount = new Decimal(0);
                 game.watercoin.fill = 0;
                 game.watercoin.fillNeeded = 100;
+
+                game.watercoin.tempBoostTime = 0;
+                game.watercoin.superAutoTime = 0;
 
                 clearFallingItems();
 
@@ -112,8 +115,7 @@ scenes["prestige"] = new Scene(
 
         if (game.selCur == "bubble") {
             createButton("upgradesAccess", 0.5, 0.6, 0.1, 0.1, "upgrades", () => {
-                game.selTemp = game.selCur;
-                game.selCur = "glowble";
+                viewUpgrades = "glowble",
                 loadScene("upgrading");
             }, { quadratic: true, centered: true });
         }

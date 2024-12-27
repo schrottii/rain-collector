@@ -12,12 +12,27 @@ function collectItem(i, isAuto = false) {
         objects["collected2"].x = objects["drop" + i].x;
         objects["collected2"].y = objects["drop" + i].y;
         objects["collected2"].timer = 0.25;
+        objects["collected2"].image = "autocollected";
     }
     else {
         objects["collected"].power = true;
         objects["collected"].x = objects["drop" + i].x;
         objects["collected"].y = objects["drop" + i].y;
         objects["collected"].timer = 0.25;
+        objects["collected"].image = "collected";
+    }
+
+    if (!isAuto && watercoinUpgrades.economicbubble.getLevel() > 0) {
+        economicBubbleBoost += 1;
+        if (Math.random() <= 0.1) economicBubbleBoost = 0;
+    }
+
+    if (!isAuto && getItemCur(i).name == "bubble" && watercoinUpgrades.coinpop.getLevel() > 0 && Math.random() * 100 <= watercoinUpgrades.coinpop.getEffect()) {
+        setTimeout((x = objects["drop" + i].x, y = objects["drop" + i].y - 0.1) => {
+            let spawnedCoin = createFallingItem("watercoin");
+            objects["drop" + spawnedCoin].x = x;
+            objects["drop" + spawnedCoin].y = y;
+        }, 250);
     }
 
     amountBefore = getItemCur(i).getAmount();
@@ -30,15 +45,14 @@ scenes["mainmenu"] = new Scene(
         // Init
         createSquare("bgSquare1", 0, 0, 1, 0.9, "black");
         if (game.settings.bg) createImage("bgSquare2", 0, 0, 1, 0.9, "bg");
-        createSquare("bgSquare3", 0, 0.9, 1, 0.1, "darkgray");
 
         createSquare("autoCollectHeight", 0, 0.15, 1, 0.003, "white");
 
         createText("header", 0.5, 0.06, "Rain Collector v" + GAMEVERSION, { size: 60, color: "white" });
 
         for (let i = 1; i <= ITEM_LIMIT; i++) {
-            createButton("drop" + i, -10, -10, 0.1, 0.1, "currencies/raindrop", (isAuto = false) => {
-                collectItem(i, isAuto);
+            createButton("drop" + i, -10, -10, 0.1, 0.1, "currencies/raindrop", () => {
+                collectItem(i, false);
             }, { power: false, quadratic: true, centered: true, onHold: () => { collectItem(i, false) } });
             objects["drop" + i].power = false;
         }
@@ -47,17 +61,26 @@ scenes["mainmenu"] = new Scene(
 
         createImage("collected", -10, -10, 0.1, 0.1, "collected", { quadratic: true, centered: true, power: false });
         objects["collected"].timer = 0;
-        createImage("collected2", -10, -10, 0.1, 0.1, "collected2", { quadratic: true, centered: true, power: false });
+        createImage("collected2", -10, -10, 0.1, 0.1, "autocollected", { quadratic: true, centered: true, power: false });
         objects["collected2"].timer = 0;
 
         // Buttons
-        createButton("sceneButton1", 0, 0.9, 1 / 3, 0.1, "button", () => { loadScene("upgrading") });
-        createButton("sceneButton2", 0 + 1 / 3, 0.9, 1 / 3, 0.1, "button", () => { cc().getPrestigeCurrency().isUnlocked() || cc().getPrestigeCurrency().getAmount().gt(0) ? loadScene("prestige") : alert("Collect more " + cc().renderName(true) + " to unlock!") });
+        createButton("sceneButton1", 0, 0.9, 1 / 3, 0.1, "button", () => {
+            viewUpgrades = game.selCur;
+            loadScene("upgrading")
+        });
+        createButton("sceneButton2", 0 + 1 / 3, 0.9, 1 / 3, 0.1, "button", () => {
+            if (cc().getPrestigeCurrency() == undefined) alert("There is no prestige for this currency!");
+            else if (cc().getPrestigeCurrency().isUnlocked() || cc().getPrestigeCurrency().getAmount().gt(0)) loadScene("prestige");
+            else alert("Collect more " + cc().renderName(true) + " to unlock!");
+        });
         createButton("sceneButton3", 0 + 1 / 3 * 2, 0.9, 1 / 3, 0.1, "button", () => { loadScene("stats") });
 
         createImage("sceneImage1", 1 / 6, 0.91, 0.08, 0.08, "upgrades", { quadratic: true, centered: true });
         createImage("sceneImage2", 1 / 6 * 3, 0.91, 0.08, 0.08, "prestige", { quadratic: true, centered: true });
         createImage("sceneImage3", 1 / 6 * 5, 0.91, 0.08, 0.08, "stats", { quadratic: true, centered: true });
+
+        createImage("sceneButton2locked", 0 + 1 / 3, 0.9, 1 / 3, 0.1, "locked", { power: false });
 
         createButton("currencySelectionButton", 0.825, 0.8, 0.15, 0.05, "button", () => { loadScene("currencyselection") });
         createImage("currencySelectionButtonImg", 0.9, 0.8, 0.05, 0.05, "switch", { quadratic: true, centered: true });
@@ -72,10 +95,10 @@ scenes["mainmenu"] = new Scene(
         createText("latestGain", 0.775, 0.7 + 0.1 * 0.66, "", { color: "white", size: 32, align: "right" });
 
         // Water Coin
-        createSquare("waterFillBg", 0, 0.875, 1, 0.03, "black");
-        createSquare("waterFill", 0, 0.875, 0, 0.03, "#02F8FD");
-        createImage("currency3", 0.05, 0.875, 0.03, 0.03, "currencies/watercoin", { quadratic: true, centered: true });
-        createText("currencyDisplay2", 0.1, 0.875 + 0.05 * 0.66, "", { color: "blue", size: 64, align: "left" });
+        createSquare("waterFillBg", 0, 0.875, 1, 0.025, "black");
+        createSquare("waterFill", 0, 0.875, 0, 0.025, "#02F8FD");
+        createImage("currency3", 0.05, 0.875, 0.025, 0.025, "currencies/watercoin", { quadratic: true, centered: true });
+        createText("currencyDisplay2", 0.1, 0.9025, "", { color: "blue", size: 64, align: "left" });
 
         // Music
         wggjAudio.src = "audio/lofi-relax-music-lofium-123264.mp3";
@@ -111,18 +134,22 @@ scenes["mainmenu"] = new Scene(
 
         objects["currencyDisplay2"].text = fn(game.watercoin.amount);
 
+        objects["sceneButton2locked"].power = !(cc().getPrestigeCurrency() != undefined && cc().getPrestigeCurrency().isUnlocked());
+
         // Render falling drops
         gc().time += tick;
         game.watercoin.time += tick;
 
         // Collect animations
         objects["collected"].timer -= tick;
+        if (objects["collected"].timer < 0.125) objects["collected"].image = "collected2";
         if (objects["collected"].timer < 0) {
             objects["collected"].timer = 0;
             objects["collected"].x = -10;
             objects["collected"].y = -10;
         }
         objects["collected2"].timer -= tick;
+        if (objects["collected2"].timer < 0.125) objects["collected2"].image = "autocollected2";
         if (objects["collected2"].timer < 0) {
             objects["collected2"].timer = 0;
             objects["collected2"].x = -10;
@@ -166,7 +193,8 @@ scenes["mainmenu"] = new Scene(
 
                 if (objects["drop" + i].y > 0.1 && !objects["drop" + i].autod && objects["drop" + i].currency != "raingold" && objects["drop" + i].currency != "watercoin" && cc().auto() > 0) {
                     if (Math.random() * 100 <= cc().auto() || game.watercoin.superAutoTime > 0) {
-                        objects["drop" + i].onClick(true);
+                        collectItem(i, true);
+                        objects["drop" + i].isAuto = true;
                     }
                     objects["drop" + i].autod = true;
                 }

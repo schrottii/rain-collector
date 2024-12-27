@@ -32,6 +32,8 @@ class SaveGame {
             upgrades: {
                 tempboost: 0,
                 superauto: 0,
+                economicbubble: 0,
+                coinpop: 0,
             }
         }
 

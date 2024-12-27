@@ -1,14 +1,28 @@
+var viewUpgrades = "raindrop";
+var justClickedWaterCoinButton = 0;
+
 scenes["upgrading"] = new Scene(
     () => {
         // Init
         createSquare("bgSquare1", 0, 0, 1, 0.9, "black");
         if (game.settings.bg) createImage("bgSquare2", 0, 0, 1, 0.9, "bgShop");
-        createSquare("bgSquare3", 0, 0.9, 1, 0.1, "darkgray");
 
-        createText("header", 0.5, 0.06, "Raindrop Upgrades", { size: 60, color: "white" });
+        createText("header", 0.5, 0.06, "Upgrades", { size: 60, color: "white" });
+
+        // Water Coin
+        let showWaterCoinButton = viewUpgrades == "raindrop" || viewUpgrades == "bubble";
+        if (showWaterCoinButton) {
+            createButton("wcSquare", 0.8, 0.9, 0.2, 0.1, "button", () => {
+                justClickedWaterCoinButton = 0.33; // do not directly leave, for 0.33s
+                viewUpgrades = "watercoin";
+                loadScene("upgrading");
+            });
+            createImage("wcText", 0.9, 0.925, 0.05, 0.05, "currencies/watercoin", { quadratic: true, centered: true });
+        }
 
         // Go back
-        createClickable("backSquare", 0, 0.9, 1, 0.1, () => {
+        createButton("backSquare", 0, 0.9, showWaterCoinButton ? 0.8 : 1, 0.1, "button", () => { 
+            if (justClickedWaterCoinButton > 0) return false;
             if (game.selTemp != "none") {
                 // player is here temporarily, currency is locked
                 game.selCur = game.selTemp;
@@ -20,17 +34,11 @@ scenes["upgrading"] = new Scene(
                 loadScene("mainmenu")
             }
         });
-        createText("backText", 0.5, 0.975, "Go back", { color: "black", size: 40 });
+        createText("backText", showWaterCoinButton ? 0.4 : 0.5, 0.9625, "Go back", { color: "black", size: 40 });
 
         // Upgrades
-        for (let upg in cc().upgrades()) {
-            cc().upgrades()[upg].createObjects(Object.keys(cc().upgrades()).indexOf(upg));
-        }
-        if (cc().prestigeCurrency != undefined) {
-            createText("header2", 0.5, 0.46, "Water Coin Upgrades", { size: 60, color: "white" });
-            for (let upg in watercoinUpgrades) {
-                watercoinUpgrades[upg].createObjects(4 + Object.keys(watercoinUpgrades).indexOf(upg));
-            }
+        for (let upg in currencies[viewUpgrades].upgrades()) {
+            currencies[viewUpgrades].upgrades()[upg].createObjects(Object.keys(currencies[viewUpgrades].upgrades()).indexOf(upg));
         }
 
         // Multi buy
@@ -45,18 +53,13 @@ scenes["upgrading"] = new Scene(
 
         // Currency display
         createSquare("currency1", 0.2, 0.775, 0.6, 0.1, "#560000");
-        createImage("currency2", 0.25, 0.775, 0.1, 0.1, "currencies/raindrop", { quadratic: true, centered: true });
+        createImage("currency2", 0.25, 0.775, 0.1, 0.1, "currencies/" + currencies[viewUpgrades], { quadratic: true, centered: true });
         createText("currencyDisplay", 0.775, 0.775 + 0.1 * 0.66, "", { color: "#F78A8A", size: 64, align: "right" });
     },
     (tick) => {
         // Loop
-        for (let upg in cc().upgrades()) {
-            cc().upgrades()[upg].updateObjects();
-        }
-        if (cc().prestigeCurrency != undefined) {
-            for (let upg in watercoinUpgrades) {
-                watercoinUpgrades[upg].updateObjects();
-            }
+        for (let upg in currencies[viewUpgrades].upgrades()) {
+            currencies[viewUpgrades].upgrades()[upg].updateObjects();
         }
 
         // Multi buy
@@ -64,10 +67,10 @@ scenes["upgrading"] = new Scene(
             objects["multiBuyText" + i].color = multiBuy == [1, 5, 25, 100][i - 1] ? "green" : "white";
         }
 
-        objects["header"].text = cc().renderName() + " Upgrades";
+        objects["header"].text = currencies[viewUpgrades].renderName() + " Upgrades";
 
-        objects["currencyDisplay"].text = fn(cc().getAmount());
-        objects["currency2"].image = "currencies/" + cc().image;
+        objects["currencyDisplay"].text = fn(currencies[viewUpgrades].getAmount());
+        objects["currency2"].image = "currencies/" + currencies[viewUpgrades].image;
 
         if (game.stats.prestiges > 0) {
             for (let i = 1; i < 5; i++) {
@@ -82,5 +85,7 @@ scenes["upgrading"] = new Scene(
             }
             multiBuy = 1;
         }
+
+        justClickedWaterCoinButton -= tick;
     }
 );

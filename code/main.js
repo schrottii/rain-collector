@@ -1,6 +1,6 @@
 // game made by schrottii, do not steal/copy bla bla bla
 
-const GAMEVERSION = "1.4";
+const GAMEVERSION = "1.4.1";
 
 images = {
     button: "button.png",
@@ -31,6 +31,8 @@ images = {
 
     collected: "effects/collected.png",
     collected2: "effects/collected2.png",
+    autocollected: "effects/autocollected.png",
+    autocollected2: "effects/autocollected2.png",
 
     "currencies/raindrop": "currencies/raindrop.png",
     "currencies/watercoin": "currencies/watercoin.png",

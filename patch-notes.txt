@@ -184,7 +184,7 @@ v1.3.1:
 
 
 
-2024/12/22 1.4:
+2024/12/25 1.4:
 v1.4 Merry Glow:
 -> Glowbles:
 - New currency: Glowbles!
@@ -206,7 +206,26 @@ v1.4 Merry Glow:
 
 -> Other:
 - Added 5 new Achievements (35 total)
-- Watercoin upgrades are now visible for Bubbles
+- Water Coin upgrades are now visible for Bubbles
 - Bubbles are now affected by Temporary Boost (Water Coin Upgrade)
 - Plural name stuff
 - Re-organized some files
+
+
+
+2024/12/27 1.4.1
+v1.4.1:
+-> Water Coins:
+- New Upgrade: Economic Bubble, unlocked with Bubbles, max. level 200
+- New Upgrade: Coin Pop, unlocked with Glowbles, max. level 100
+- Collecting a Bubble now gives Water Coin progress
+- Seperated Water Coin Upgrades from Raindrops and Bubbles
+- They are now accessed via a button in the bottom right
+- Fixed Water Coin Upgrade timers not being reset after a Prestige
+
+-> Other:
+- Changed button design
+- Go back now looks like other buttons
+- Added a second frame for collect effects
+- Prestige button is now shown as locked if it's not unlocked
+- Upgrade descriptions now contain more characters per line

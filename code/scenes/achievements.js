@@ -72,7 +72,6 @@ scenes["achievements"] = new Scene(
         // Init
         createSquare("bgSquare1", 0, 0, 1, 0.9, "black");
         if (game.settings.bg) createImage("bgSquare2", 0, 0, 1, 0.9, "bgSettings");
-        createSquare("bgSquare3", 0, 0.9, 1, 0.1, "darkgray");
 
         createText("header", 0.5, 0.06, "Achievements", { size: 60, color: "white" });
 
