@@ -254,7 +254,7 @@ const currencies = {
         let amount = (game.raindrop.upgrades.worth + 1)
             * (game.watercoin.tempBoostTime > 0 ? watercoinUpgrades.tempboost.getEffect() : 1)
             * (1 + game.raingold.amount / 100)
-            * (item.isAuto ? 1 : watercoinUpgrades.economicbubble.getEffect() * economicBubbleBoost + 1)
+            * (item.isAuto ? 1 : (watercoinUpgrades.economicbubble.getEffect() / 100) * economicBubbleBoost + 1)
             * (item.inflated ? glowbleUpgrades.bigpop.getEffect() : 1);
         amount = Math.ceil(amount);
 
@@ -313,7 +313,7 @@ const currencies = {
             * (item.w * 10 > 0.8 ? glowbleUpgrades.bigpop.getEffect() : 1)
             * item.w * 10)
             * (game.watercoin.tempBoostTime > 0 ? watercoinUpgrades.tempboost.getEffect() : 1)
-            * (item.isAuto ? 1 : watercoinUpgrades.economicbubble.getEffect() * economicBubbleBoost + 1)
+            * (item.isAuto ? 1 : (watercoinUpgrades.economicbubble.getEffect() / 100) * economicBubbleBoost + 1)
             * (item.inflated ? glowbleUpgrades.bigpop.getEffect() : 1);
         amount = Math.ceil(amount);
 
