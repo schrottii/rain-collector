@@ -254,6 +254,7 @@ const currencies = {
         let amount = (game.raindrop.upgrades.worth + 1)
             * (game.watercoin.tempBoostTime > 0 ? watercoinUpgrades.tempboost.getEffect() : 1)
             * (1 + game.raingold.amount / 100)
+            * getItemBoost("raindrop", true)
             * (item.isAuto ? 1 : (watercoinUpgrades.economicbubble.getEffect() / 100) * economicBubbleBoost + 1)
             * (item.inflated ? glowbleUpgrades.bigpop.getEffect() : 1);
         amount = Math.ceil(amount);
@@ -283,7 +284,8 @@ const currencies = {
     }),
     raingold: new Currency("raingold", "raingold", [() => game.raindrop.amount >= 1e4 || postPrestige.amount > 0 || game.raingold.amount >= 1, "1000 Raindrops"], () => {
         if (postPrestige.type != "raingold") return false;
-        let amount = Math.ceil(postPrestige.worth);
+        let amount = Math.ceil(postPrestige.worth
+            * getItemBoost("raingold", true));
 
         game.raingold.amount = game.raingold.amount.add(amount);
         game.stats.totalRaingold = game.stats.totalRaingold.add(amount);
@@ -314,6 +316,7 @@ const currencies = {
             * item.w * 10)
             * (game.watercoin.tempBoostTime > 0 ? watercoinUpgrades.tempboost.getEffect() : 1)
             * (item.isAuto ? 1 : (watercoinUpgrades.economicbubble.getEffect() / 100) * economicBubbleBoost + 1)
+            * getItemBoost("bubble", true)
             * (item.inflated ? glowbleUpgrades.bigpop.getEffect() : 1);
         amount = Math.ceil(amount);
 
@@ -340,7 +343,8 @@ const currencies = {
     }),
     glowble: new Currency("glowble", "glowble", [() => game.bubble.amount >= 1e5 || game.glowble.amount >= 1, "100 000 Bubbles"], (item) => {
         if (postPrestige.type != "glowble") return false;
-        let amount = Math.ceil(postPrestige.worth);
+        let amount = Math.ceil(postPrestige.worth
+            * getItemBoost("glowble", true));
 
         game.glowble.amount = game.glowble.amount.add(amount);
         game.stats.totalGlowbles = game.stats.totalGlowbles.add(amount);

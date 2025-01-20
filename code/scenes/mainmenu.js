@@ -64,24 +64,32 @@ scenes["mainmenu"] = new Scene(
         createImage("collected2", -10, -10, 0.1, 0.1, "autocollected", { quadratic: true, centered: true, power: false });
         objects["collected2"].timer = 0;
 
-        // Buttons
-        createButton("sceneButton1", 0, 0.9, 1 / 3, 0.1, "button", () => {
+        // Bottom Buttons
+        createButton("sceneButton1", 0, 0.9, 1 / 4, 0.1, "button", () => {
             viewUpgrades = game.selCur;
             loadScene("upgrading")
         });
-        createButton("sceneButton2", 0 + 1 / 3, 0.9, 1 / 3, 0.1, "button", () => {
+        createImage("sceneImage1", 0.5 / 4, 0.91, 0.08, 0.08, "upgrades", { quadratic: true, centered: true });
+
+        createButton("sceneButton2", 0 + 1 / 4, 0.9, 1 / 4, 0.1, "button", () => {
             if (cc().getPrestigeCurrency() == undefined) alert("There is no prestige for this currency!");
             else if (cc().getPrestigeCurrency().isUnlocked() || cc().getPrestigeCurrency().getAmount().gt(0)) loadScene("prestige");
             else alert("Collect more " + cc().renderName(true) + " to unlock!");
         });
-        createButton("sceneButton3", 0 + 1 / 3 * 2, 0.9, 1 / 3, 0.1, "button", () => { loadScene("stats") });
+        createImage("sceneImage2", 0.5 / 4 * 3, 0.91, 0.08, 0.08, "prestige", { quadratic: true, centered: true });
+        createImage("sceneButton2locked", 0 + 1 / 4, 0.9, 1 / 4, 0.1, "locked", { power: false });
 
-        createImage("sceneImage1", 1 / 6, 0.91, 0.08, 0.08, "upgrades", { quadratic: true, centered: true });
-        createImage("sceneImage2", 1 / 6 * 3, 0.91, 0.08, 0.08, "prestige", { quadratic: true, centered: true });
-        createImage("sceneImage3", 1 / 6 * 5, 0.91, 0.08, 0.08, "stats", { quadratic: true, centered: true });
+        createButton("sceneButton3", 0 + 1 / 4 * 2, 0.9, 1 / 4, 0.1, "button", () => {
+            if (!unlockedItems()) alert("Unlocked at 1000 total Glowbles!");
+            else loadScene("itemselection")
+        });
+        createImage("sceneImage3", 0.5 / 4 * 5, 0.91, 0.08, 0.08, "items/sword", { quadratic: true, centered: true });
+        createImage("sceneButton3locked", 0 + 1 / 4 * 2, 0.9, 1 / 4, 0.1, "locked", { power: false });
 
-        createImage("sceneButton2locked", 0 + 1 / 3, 0.9, 1 / 3, 0.1, "locked", { power: false });
+        createButton("sceneButton4", 0 + 1 / 4 * 3, 0.9, 1 / 4, 0.1, "button", () => { loadScene("stats") });
+        createImage("sceneImage4", 0.5 / 4 * 7, 0.91, 0.08, 0.08, "stats", { quadratic: true, centered: true });
 
+        // Side button
         createButton("currencySelectionButton", 0.825, 0.8, 0.15, 0.05, "button", () => { loadScene("currencyselection") });
         createImage("currencySelectionButtonImg", 0.9, 0.8, 0.05, 0.05, "switch", { quadratic: true, centered: true });
         objects["currencySelectionButton"].power = false;
@@ -135,6 +143,7 @@ scenes["mainmenu"] = new Scene(
         objects["currencyDisplay2"].text = fn(game.watercoin.amount);
 
         objects["sceneButton2locked"].power = !(cc().getPrestigeCurrency() != undefined && cc().getPrestigeCurrency().isUnlocked());
+        objects["sceneButton3locked"].power = !(unlockedItems());
 
         // Render falling drops
         gc().time += tick;

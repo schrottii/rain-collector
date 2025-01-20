@@ -107,14 +107,14 @@ scenes["achievements"] = new Scene(
         }
 
         // Page Buttons
-        createButton("pageButtonL", 0, 0.1, 0.05, 0.05, "button", () => {
+        createButton("pageButtonL", 0, 0.1, 0.15, 0.05, "button", () => {
             if (achievementsPage > 0) achievementsPage--;
         });
-        createText("pblt", 0.025, 0.14, "<", { size: 40 });
-        createButton("pageButtonR", 0.95, 0.1, 0.05, 0.05, "button", () => {
+        createText("pblt", 0.075, 0.14, "<", { size: 40, noScaling: true });
+        createButton("pageButtonR", 0.85, 0.1, 0.15, 0.05, "button", () => {
             if (achievementsPage < Math.ceil(achievements.length / 25) - 1) achievementsPage++;
         });
-        createText("pbrt", 0.975, 0.14, ">", { size: 40 });
+        createText("pbrt", 0.925, 0.14, ">", { size: 40, noScaling: true });
     },
     (tick) => {
         // Loop

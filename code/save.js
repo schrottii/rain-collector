@@ -78,9 +78,29 @@ class SaveGame {
 
         this.achievements = [];
 
+        this.items = {
+            items: [],
+            eqitems: [],
+
+            iron: 0,
+            freeItemTime: "20050101"
+        }
+
         this.stats = {
             playTime: 0,
             prestiges: 0,
+
+            // items
+            itemsGained: 0,
+            itemsUses: 0,
+            itemsBroken: 0,
+
+            itemsDaily: 0,
+            itemsBought: 0,
+            itemsSold: 0,
+
+            totalIron: 0,
+            mostIron: 0,
 
             // currencies
             totalRaindrops: new Decimal(0),
@@ -121,16 +141,20 @@ class SaveGame {
         }
         else if (sg.startVer == "") sg.startVer = GAMEVERSION;
 
+        // resetting stuff
         if (!passive) {
             clearFallingItems();
             resetPostPrestige();
         }
 
+        // handling arrays and dicts
         for (let element in sg) {
             if (typeof (this[element]) == "object" && this[element].length == undefined) { // is {}
                 for (let element2 in this[element]) {
-                    // if it's {} inside {}, take care of that
-                    if (typeof (this[element][element2]) == "object" && this[element][element2].mantissa == undefined) sg[element][element2] = Object.assign({}, this[element][element2], sg[element][element2]);
+                    if (typeof (this[element][element2]) == "object") {
+                        // {} inside {}, [] inside {} do not need special treatment
+                        if (this[element][element2].length == undefined && this[element][element2].mantissa == undefined) sg[element][element2] = Object.assign({}, this[element][element2], sg[element][element2]);
+                    } 
                 }
                 // if it's number/breakinf/whatev inside {}, do it like that
                 this[element] = Object.assign({}, this[element], sg[element]);
@@ -146,6 +170,14 @@ class SaveGame {
             if (cur.substr(0, 4) == "most" || cur.substr(0, 5) == "total") this.stats[cur] = numberLoader(this.stats[cur]);
             if (cur.substr(0, 4) == "item" && typeof (this.stats[cur]) == "string") this.stats[cur] = this.stats[cur].length > 9 ? 0 : parseInt(this.stats[cur]);
         }
+
+        // items
+        if (sg.items != undefined && sg.items.items.length > 0 && sg.items.items[0].rd != undefined) {
+            for (let item in sg.items.items) {
+                let loadingItem = sg.items.items[item];
+                this.items.items[item] = new InventoryItem(loadingItem.id, loadingItem.rd, loadingItem.rw, loadingItem.d, loadingItem.l);
+            }
+        }
     }
 }
 
@@ -155,16 +187,17 @@ game.new();
 function save() {
     localStorage.setItem("RAINCOL1", saveGame(game));
 
-    if (objects["header"] != undefined) {
-        objects["header"].preSaveText = objects["header"].text;
-        objects["header"].text = "Game saved!";
+    if (objects["autoSaveText"] != undefined) {
+        objects["autoSaveText"].y = 1;
+        objects["autoSaveText"].text = "Game saved!";
+    }
+    else {
+        createText("autoSaveText", 0.95, 1, "", { align: "right", color: "yellow", size: 40 });
     }
 }
 
 function saveGame(toSave) {
-    let save = new SaveGame();
-    save.new();
-    save.loadFromSaveGame(toSave, true);
+    let save = structuredClone(toSave);
 
     // break infinity saver
     for (let cur in currencies) {
@@ -181,6 +214,19 @@ function saveGame(toSave) {
     if (save.selTemp != "none") {
         save.selCur = save.selTemp;
         save.selTemp = "none";
+    }
+
+    // items
+    if (save.items.items.length > 0 && save.items.items[0].itemID != undefined) {
+        for (let item in save.items.items) {
+            save.items.items[item] = {
+                id: save.items.items[item].itemID,
+                rd: save.items.items[item].randomDurability,
+                rw: save.items.items[item].randomWorth,
+                d: save.items.items[item].uses,
+                l: save.items.items[item].level
+            }
+        }
     }
 
     // heaueh uaehaeuh
@@ -205,8 +251,8 @@ function importGame() {
         game.new();
         game.loadFromSaveGame(save);
     }
-    catch {
-        alert("Wrong!");
+    catch (e) {
+        alert("Error: <br /> " + e);
     }
 }
 

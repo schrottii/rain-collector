@@ -1,6 +1,6 @@
 // game made by schrottii, do not steal/copy bla bla bla
 
-const GAMEVERSION = "1.4.1";
+const GAMEVERSION = "1.5";
 
 images = {
     button: "button.png",
@@ -40,6 +40,13 @@ images = {
     "currencies/bubble": "currencies/bubble.png",
     "currencies/snowflake": "currencies/snowflake.png",
     "currencies/glowble": "currencies/glowble.png",
+
+    "items/sword": "items/sword.png",
+    "items/barrel": "items/barrel.png",
+    "items/goldenbarrel": "items/goldenbarrel.png",
+    "items/tongue": "items/tongue.png",
+    "items/goldentongue": "items/goldentongue.png",
+    "items/lantern": "items/lantern.png",
 }
 
 GAMENAME = "Rain Collector";
@@ -73,8 +80,11 @@ function loop(delta) {
         save();
         autoSaveTime = 0;
     }
-    else if (autoSaveTime >= 0.5) {
-        if (objects["header"] != undefined && objects["header"].preSaveText != undefined) objects["header"].text = objects["header"].preSaveText;
+    else {
+        if (objects["autoSaveText"] != undefined && objects["autoSaveText"].text != "") {
+            objects["autoSaveText"].y -= 0.0001 * delta;
+            if (objects["autoSaveText"].y < 0.85) objects["autoSaveText"].text = "";
+        }
     }
 }
 
