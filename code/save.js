@@ -273,7 +273,7 @@ function deleteGame() {
     }
 }
 
-function init() {
+function customWGGJInit() {
     let cachedGame = localStorage.getItem("RAINCOL1");
     if (cachedGame != undefined) {
         game.loadFromSaveGame(JSON.parse(atob(cachedGame.slice(7))));

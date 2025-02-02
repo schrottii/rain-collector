@@ -1,6 +1,24 @@
 // game made by schrottii, do not steal/copy bla bla bla
 
-const GAMEVERSION = "1.5";
+const GAMEVERSION = "1.5.1";
+
+const PATCHNOTES = `
+2025/02/02 1.5.1
+v1.5.1:
+-> Stats:
+- Stats are now a scrollable container! Scroll down to see more stats
+- Some new stats (like for Glowbles) were previously missing due to missing space, now all stats are shown
+- Stats are now added to this list dynamically
+- Adjusted size of stat text
+
+-> Patch notes:
+- The patch notes can now be read in-game!
+- Access them with a new button below the stats
+- Patch notes are a dynamically generated scrollable container, similar to the new stats
+
+-> Other:
+- Updated WGGJ from v1.1 to v1.2.1
+`
 
 images = {
     button: "button.png",
@@ -72,7 +90,7 @@ function loadedScene() {
 
 var autoSaveTime = 0;
 
-function loop(delta) {
+function customWGGJLoop(delta) {
     game.stats.playTime += delta;
     autoSaveTime += delta / 1000;
 
