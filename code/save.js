@@ -237,22 +237,37 @@ function saveGame(toSave) {
 }
 
 function exportGame() {
-    navigator.clipboard.writeText(saveGame(game));
-    alert("The save has been copied to your clipboard!");
+    let toSave = saveGame(game);
+
+    // attempt to write to clipboard
+    navigator.clipboard.writeText(toSave);
+
+    alert("The save has been copied to your clipboard!\nLength: " + toSave.length);
 }
 
 function importGame() {
     let save = prompt("Insert the code here...");
+
+    if (save == undefined || save == null || save == "") return false;
+
+    if (save.substr(0, 4) != "rain") {
+        alert("That doesn't seem to be a valid Rain Collector save!");
+        return false;
+    }
+
     try {
-        save = atob(save.slice(7));
-        save = JSON.parse(save);
+        let parsedSave = atob(save.slice(7));
+        parsedSave = JSON.parse(parsedSave);
+
+        if (!confirm("Do you want to load this save?\nLength: " + save.length + ", name: " + parsedSave.name)) return false;
 
         game = new SaveGame();
         game.new();
-        game.loadFromSaveGame(save);
+        game.loadFromSaveGame(parsedSave);
+        alert("Save loaded!");
     }
     catch (e) {
-        alert("Error: <br /> " + e);
+        alert("Error: " + e);
     }
 }
 

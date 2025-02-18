@@ -14,6 +14,7 @@ October - December 2024:
 January - March 2025:
 1.5
 1.5.1
+1.5.2
 
 
 
@@ -297,3 +298,19 @@ v1.5.1:
 
 -> Other:
 - Updated WGGJ from v1.1 to v1.2.1
+
+
+
+2025/02/18 1.5.2
+v1.5.2:
+-> Import and Export:
+- Added success message if the save is loaded
+- Added warning message if it's not a valid save
+- Cancelling no longer causes an error message
+- Added confirmation if you want to load the detected save
+- Confirmation shows the save length and name
+- Export: now shows length of imported save
+
+-> Other:
+- Bought items now have 10x better chances than daily items (previously, they were the same)
+- Changed text scaling, and sizes / size changing of several things

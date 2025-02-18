@@ -66,7 +66,7 @@ scenes["stats"] = new Scene(
         let statSize = 0.032;
 
         for (statCount = 0; statCount < Object.keys(game.stats).length; statCount++) {
-            createText("stat" + statCount, 0.115, 0.2 + statSize * statCount, "...", { align: "left", size: isMobile() ? 40 : 24, color: "white" });
+            createText("stat" + statCount, 0.115, 0.2 + statSize * statCount, "...", { align: "left", size: 40, color: "white" });
             objects["statsContainer"].children.push("stat" + statCount);
         }
         objects["statsContainer"].YLimit[1] = statSize * statCount - (0.6 - statSize * 2);

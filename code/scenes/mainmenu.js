@@ -100,7 +100,7 @@ scenes["mainmenu"] = new Scene(
         createImage("currency2", 0.25, 0.775, 0.1, 0.1, "currencies/raindrop", { quadratic: true, centered: true });
         createText("currencyDisplay", 0.775, 0.775 + 0.1 * 0.66, "", { color: "#F78A8A", size: 64, align: "right" });
 
-        createText("latestGain", 0.775, 0.7 + 0.1 * 0.66, "", { color: "white", size: 32, align: "right" });
+        createText("latestGain", 0.775, 0.7 + 0.1 * 0.66, "", { color: "white", size: 40, align: "right" });
 
         // Water Coin
         createSquare("waterFillBg", 0, 0.875, 1, 0.025, "black");
@@ -124,7 +124,6 @@ scenes["mainmenu"] = new Scene(
             objects["currency2"].x = 0.25;
 
             objects["currencyDisplay"].x = 0.775;
-            objects["currencyDisplay"].size = 64;
         }
         else {
             // PC
@@ -133,7 +132,6 @@ scenes["mainmenu"] = new Scene(
             objects["currency2"].x = 0.4;
 
             objects["currencyDisplay"].x = 0.5775;
-            objects["currencyDisplay"].size = 43;
         }
 
         // Currency displays

@@ -34,7 +34,7 @@ scenes["upgrading"] = new Scene(
                 loadScene("mainmenu")
             }
         });
-        createText("backText", showWaterCoinButton ? 0.4 : 0.5, 0.9625, "Go back", { color: "black", size: 40 });
+        createText("backText", showWaterCoinButton ? 0.4 : 0.5, 0.9625, "Go back", { color: "black", size: 64 });
 
         // Upgrades
         for (let upg in currencies[viewUpgrades].upgrades()) {

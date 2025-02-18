@@ -8,7 +8,7 @@ scenes["itemshop"] = new Scene(
 
         // Go back
         createButton("backSquare", 0, 0.9, 1, 0.1, "button", () => { loadScene("itemselection") });
-        createText("backText", 0.5, 0.9625, "Go back", { color: "black", size: 40 });
+        createText("backText", 0.5, 0.9625, "Go back", { color: "black", size: 64 });
            
         // Daily Item
         createText("dailyItemText", 0.5, 0.2, "Free daily item", { size: 60, color: "white" });
@@ -27,7 +27,7 @@ scenes["itemshop"] = new Scene(
             if (game.items.items.length < maxItems && game.items.iron >= 50) {
                 game.items.iron -= 50;
                 game.stats.itemsBought++;
-                awardRandomitem();
+                awardRandomitem(10);
             }
         }, { quadratic: true, centered: true });
     },

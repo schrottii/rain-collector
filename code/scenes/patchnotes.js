@@ -22,7 +22,7 @@ scenes["patchnotes"] = new Scene(
         // DYNAMIC Patch notes (start of main.js)
         let patchNotes = PATCHNOTES.split("\n");
         let linedNotes = [];
-        let charactersPerLine = 45;
+        let charactersPerLine = isMobile() ? 45 : 80;
 
         patchNotes.splice(0, 1);
         /*
@@ -51,7 +51,7 @@ scenes["patchnotes"] = new Scene(
 
         for (noteCount = 0; noteCount < linedNotes.length; noteCount++) {
             let sizeBonus = linedNotes[noteCount].substr(0, 2) == "->" ? 1.25 : 1;
-            createText("note" + noteCount, 0.015, 0.2 + noteSize * noteCount, linedNotes[noteCount], { align: "left", size: (isMobile() ? 40 : 24) * sizeBonus, color: "white" });
+            createText("note" + noteCount, 0.015, 0.2 + noteSize * noteCount, linedNotes[noteCount], { align: "left", size: 40 * sizeBonus, color: "white" });
             objects["notesContainer"].children.push("note" + noteCount);
         }
         objects["notesContainer"].YLimit[1] = noteSize * noteCount - (0.6 - noteSize * 2);

@@ -10,7 +10,7 @@ scenes["itemselection"] = new Scene(
 
         // Go back
         createButton("backSquare", 0, 0.9, 1, 0.1, "button", () => { loadScene("mainmenu") });
-        createText("backText", 0.5, 0.9625, "Go back", { color: "black", size: 40 });
+        createText("backText", 0.5, 0.9625, "Go back", { color: "black", size: 64 });
 
         // Claim / Shop
         createButton("shopSquare", 0.8, 0.05, 0.05, 0.05, "button", () => { loadScene("itemshop") }, { quadratic: true });

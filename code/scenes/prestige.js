@@ -50,7 +50,7 @@ scenes["prestige"] = new Scene(
 
         // Go back
         createButton("backSquare", 0, 0.9, 1, 0.1, "button", () => { loadScene("mainmenu") });
-        createText("backText", 0.5, 0.9625, "Go back", { color: "black", size: 40 });
+        createText("backText", 0.5, 0.9625, "Go back", { color: "black", size: 64 });
 
         // Currency display
         createSquare("currency1", 0.2, 0.775, 0.6, 0.1, "#560000");

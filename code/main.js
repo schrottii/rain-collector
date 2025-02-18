@@ -1,23 +1,21 @@
 // game made by schrottii, do not steal/copy bla bla bla
 
-const GAMEVERSION = "1.5.1";
+const GAMEVERSION = "1.5.2";
 
 const PATCHNOTES = `
-2025/02/02 1.5.1
-v1.5.1:
--> Stats:
-- Stats are now a scrollable container! Scroll down to see more stats
-- Some new stats (like for Glowbles) were previously missing due to missing space, now all stats are shown
-- Stats are now added to this list dynamically
-- Adjusted size of stat text
-
--> Patch notes:
-- The patch notes can now be read in-game!
-- Access them with a new button below the stats
-- Patch notes are a dynamically generated scrollable container, similar to the new stats
+2025/02/18 1.5.2
+v1.5.2:
+-> Import and Export:
+- Added success message if the save is loaded
+- Added warning message if it's not a valid save
+- Cancelling no longer causes an error message
+- Added confirmation if you want to load the detected save
+- Confirmation shows the save length and name
+- Export: now shows length of imported save
 
 -> Other:
-- Updated WGGJ from v1.1 to v1.2.1
+- Bought items now have 10x better chances than daily items (previously, they were the same)
+- Changed text scaling, and sizes / size changing of several things
 `
 
 images = {
@@ -252,4 +250,8 @@ function isChristmas() {
     let currentDate = parseInt(today().substr(4));
     if (currentDate >= 1214 && currentDate <= 1228) return true;
     return false;
+}
+
+function wggjUpdateTextScaling() {
+    wggjTextScaling = 0.44 + 0.12 * (wggjCanvasWidth / 960);
 }
