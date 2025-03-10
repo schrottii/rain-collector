@@ -157,19 +157,19 @@ function wggjEventsOnPointerUp(e) {
 }
 
 function wggjEventsOnPointerMove(e) {
-    if (wggjMouseDown) {
-        let mouseX = e.clientX - wggjCanvas.getBoundingClientRect().x;
-        let mouseY = e.clientY - wggjCanvas.getBoundingClientRect().y;
+    // EDITED!!!
+    let mouseX = e.clientX - wggjCanvas.getBoundingClientRect().x;
+    let mouseY = e.clientY - wggjCanvas.getBoundingClientRect().y;
 
-        for (let c in objects) {
-            if (objects[c] == undefined) continue;
-            if (objects[c].onHold == undefined || objects[c].power == false) continue;
+    for (let c in objects) {
+        if (objects[c] == undefined) continue;
+        if ((objects[c].onHold == undefined && objects[c].onHover == undefined) || objects[c].power == false) continue;
 
-            if (mouseX > objects[c].currentX() && mouseY > objects[c].currentY()
-                && mouseX < objects[c].currentW() + objects[c].currentX() && mouseY < objects[c].currentH() + objects[c].currentY()) {
-                // is in the hitbox
-                objects[c].onHold(c, e);
-            }
+        if (mouseX > objects[c].currentX() && mouseY > objects[c].currentY()
+            && mouseX < objects[c].currentW() + objects[c].currentX() && mouseY < objects[c].currentH() + objects[c].currentY()) {
+            // is in the hitbox
+            if (wggjMouseDown && objects[c].onHold != undefined) objects[c].onHold(c, e);
+            if (objects[c].onHover != undefined) objects[c].onHover(c, e);
         }
     }
 }
@@ -268,6 +268,7 @@ class WGGJ_Image {
 
         this.onClick = config.onClick ? config.onClick : undefined;
         this.onHold = config.onHold ? config.onHold : undefined;
+        this.onHover = config.onHover ? config.onHover : undefined;
 
         this.config = config;
     }

@@ -1,21 +1,24 @@
 // game made by schrottii, do not steal/copy bla bla bla
 
-const GAMEVERSION = "1.5.2";
+const GAMEVERSION = "1.6";
 
 const PATCHNOTES = `
-2025/02/18 1.5.2
-v1.5.2:
--> Import and Export:
-- Added success message if the save is loaded
-- Added warning message if it's not a valid save
-- Cancelling no longer causes an error message
-- Added confirmation if you want to load the detected save
-- Confirmation shows the save length and name
-- Export: now shows length of imported save
+2025/03/10 1.6
+v1.6 Holding the Iron:
+-> Falling currencies:
+- Clicking/holding to collect is no longer needed, just hovering is enough
+- Reduced falling speed of everything by 40%
+
+-> Iron:
+- Iron is now more treated like an actual currency, rather than an Items side-thing
+- Once Items are unlocked, Iron now has a 0.1% chance to fall every time something is collected
+- Falling Iron is worth 1 Iron, and can be auto collected
+- Added image, and Iron Collected stat 
 
 -> Other:
-- Bought items now have 10x better chances than daily items (previously, they were the same)
-- Changed text scaling, and sizes / size changing of several things
+- Released the game on galaxy!
+- Fixed "Most ..." stats not working correctly sometimes
+- Fixed account version only existing after opening the game for the second time
 `
 
 images = {
@@ -56,6 +59,7 @@ images = {
     "currencies/bubble": "currencies/bubble.png",
     "currencies/snowflake": "currencies/snowflake.png",
     "currencies/glowble": "currencies/glowble.png",
+    "currencies/iron": "currencies/iron.png",
 
     "items/sword": "items/sword.png",
     "items/barrel": "items/barrel.png",
@@ -65,10 +69,13 @@ images = {
     "items/lantern": "items/lantern.png",
 }
 
+setupSave();
+
 GAMENAME = "Rain Collector";
 FONT = "Quicksand";
 wggjLoadImages();
 wggjLoop();
+
 
 function loadedScene() {
     wggjCTX.fillStyle = "darkblue";

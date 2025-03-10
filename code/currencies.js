@@ -261,7 +261,7 @@ const currencies = {
 
         game.raindrop.amount = game.raindrop.amount.add(amount);
         game.stats.totalRaindrops = game.stats.totalRaindrops.add(amount);
-        if (game.raindrop.amount > game.stats.mostRaindrops) game.stats.mostRaindrops = game.raindrop.amount;
+        if (game.raindrop.amount.gt(game.stats.mostRaindrops)) game.stats.mostRaindrops = game.raindrop.amount;
         game.stats.itemRaindrops += 1;
 
         game.watercoin.fill++;
@@ -277,7 +277,7 @@ const currencies = {
 
         game.watercoin.amount = game.watercoin.amount.add(amount);
         game.stats.totalWatercoins = game.stats.totalWatercoins.add(amount);
-        if (game.watercoin.amount > game.stats.mostWatercoins) game.stats.mostWatercoins = game.watercoin.amount;
+        if (game.watercoin.amount.gt(game.stats.mostWatercoins)) game.stats.mostWatercoins = game.watercoin.amount;
         game.stats.itemWatercoins += 1;
     }, 1, 0.8, {
         pluralname: "watercoins"
@@ -289,7 +289,7 @@ const currencies = {
 
         game.raingold.amount = game.raingold.amount.add(amount);
         game.stats.totalRaingold = game.stats.totalRaingold.add(amount);
-        if (game.raingold.amount > game.stats.mostRaingold) game.stats.mostRaingold = game.raingold.amount;
+        if (game.raingold.amount.gt(game.stats.mostRaingold)) game.stats.mostRaingold = game.raingold.amount;
         game.stats.itemRaingold += 1;
 
         game.watercoin.fill++;
@@ -322,7 +322,7 @@ const currencies = {
 
         game.bubble.amount = game.bubble.amount.add(amount);
         game.stats.totalBubbles = game.stats.totalBubbles.add(amount);
-        if (game.bubble.amount > game.stats.mostBubbles) game.stats.mostBubbles = game.bubble.amount;
+        if (game.bubble.amount.gt(game.stats.mostBubbles)) game.stats.mostBubbles = game.bubble.amount;
         game.stats.itemBubbles += 1;
 
         game.watercoin.fill++;
@@ -336,7 +336,7 @@ const currencies = {
 
         game.snowflake.amount = game.snowflake.amount.add(amount);
         game.stats.totalSnowflakes = game.stats.totalSnowflakes.add(amount);
-        if (game.snowflake.amount > game.stats.mostSnowflakes) game.stats.mostSnowflakes = game.snowflake.amount;
+        if (game.snowflake.amount.gt(game.stats.mostSnowflakes)) game.stats.mostSnowflakes = game.snowflake.amount;
         game.stats.itemSnowflakes += 1;
     }, 1, 0.6, {
         pluralname: "snowflakes"
@@ -348,7 +348,7 @@ const currencies = {
 
         game.glowble.amount = game.glowble.amount.add(amount);
         game.stats.totalGlowbles = game.stats.totalGlowbles.add(amount);
-        if (game.glowble.amount > game.stats.mostGlowbles) game.stats.mostGlowbles = game.glowble.amount;
+        if (game.glowble.amount.gt(game.stats.mostGlowbles)) game.stats.mostGlowbles = game.glowble.amount;
         game.stats.itemGlowbles += 1;
 
         game.watercoin.fill++;
@@ -370,4 +370,12 @@ const currencies = {
             return amount;
         }
     }),
+    iron: new Currency("iron", "iron", [() => unlockedItems(), "1000 Glowbles"], (item) => {
+        if (item.power == false) return false;
+        game.iron.amount = game.iron.amount.add(1);
+        game.stats.totalIron++;
+        game.stats.itemIron++;
+
+        if (game.iron.amount > game.stats.mostIron) game.stats.mostIron = game.iron.amount;
+    }, 1.5, 1),
 };

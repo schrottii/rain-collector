@@ -23,9 +23,10 @@ scenes["itemshop"] = new Scene(
         // Buy Item
         createText("buyItemText", 0.5, 0.5, "Buy random item (50 Iron per)", { size: 60, color: "white" });
         createText("ironAmount", 0.5, 0.525, "", { size: 30, color: "white" });
+        createImage("ironPic", 0.625, 0.5, 0.05, 0.05, "currencies/iron", { quadratic: true, centered: true });
         createButton("buyItem", 0.5, 0.55, 0.2, 0.2, "items/sword", () => {
-            if (game.items.items.length < maxItems && game.items.iron >= 50) {
-                game.items.iron -= 50;
+            if (game.items.items.length < maxItems && game.iron.amount >= 50) {
+                game.iron.amount = game.iron.amount.sub(50);
                 game.stats.itemsBought++;
                 awardRandomitem(10);
             }
@@ -39,10 +40,10 @@ scenes["itemshop"] = new Scene(
         else objects["dailyItem"].image = "collected";
 
         // Buy
-        if (game.items.items.length < maxItems && game.items.iron >= 50) objects["buyItem"].image = "items/sword";
+        if (game.items.items.length < maxItems && game.iron.amount >= 50) objects["buyItem"].image = "items/sword";
         else objects["buyItem"].image = "collected";
 
 
-        objects["ironAmount"].text = game.items.iron + " Iron";
+        objects["ironAmount"].text = game.iron.amount + " Iron";
     }
 );

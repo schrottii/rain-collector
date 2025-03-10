@@ -136,7 +136,7 @@ class InventoryItem extends Item {
     }
 
     renderWorth() {
-        return "Worth " + fn(this.getWorth()) + " Iron";
+        return "Worth " + fn(this.getWorth());
     }
 }
 

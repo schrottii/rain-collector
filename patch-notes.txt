@@ -314,3 +314,22 @@ v1.5.2:
 -> Other:
 - Bought items now have 10x better chances than daily items (previously, they were the same)
 - Changed text scaling, and sizes / size changing of several things
+
+
+
+2025/03/10 1.6
+v1.6 Holding the Iron:
+-> Falling currencies:
+- Clicking/holding to collect is no longer needed, just hovering is enough
+- Reduced falling speed of everything by 40%
+
+-> Iron:
+- Iron is now more treated like an actual currency, rather than an Items side-thing
+- Once Items are unlocked, Iron now has a 0.1% chance to fall every time something is collected
+- Falling Iron is worth 1 Iron, and can be auto collected
+- Added image, and Iron Collected stat 
+
+-> Other:
+- Released the game on galaxy!
+- Fixed "Most ..." stats not working correctly sometimes
+- Fixed account version only existing after opening the game for the second time

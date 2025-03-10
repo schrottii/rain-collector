@@ -3,7 +3,7 @@ const ITEM_LIMIT = 128;
 
 function collectItem(i, isAuto = false) {
     if (objects["drop" + i].power == false) return false;
-    objects["drop" + i].power = false;
+    objects["drop" + i].power = "hold";
 
     if (!isAuto && Math.random() * 100 < snowflakeUpgrades.freezedown.getEffect()) game.snowflake.freezedowntime = 0;
 
@@ -35,9 +35,15 @@ function collectItem(i, isAuto = false) {
         }, 250);
     }
 
+    if (unlockedItems() && Math.random() > 0.999) {
+        createFallingItem("iron");
+    }
+
     amountBefore = getItemCur(i).getAmount();
     getItemCur(i).onCollect(objects["drop" + i]);
     objects["latestGain"].text = "+" + fn(getItemCur(i).getAmount().sub(amountBefore));
+
+    objects["drop" + i].power = false; // don't do it until now, because otherwise it might get replaced mid-stuff
 }
 
 scenes["mainmenu"] = new Scene(
@@ -52,8 +58,8 @@ scenes["mainmenu"] = new Scene(
 
         for (let i = 1; i <= ITEM_LIMIT; i++) {
             createButton("drop" + i, -10, -10, 0.1, 0.1, "currencies/raindrop", () => {
-                collectItem(i, false);
-            }, { power: false, quadratic: true, centered: true, onHold: () => { collectItem(i, false) } });
+                
+            }, { power: false, quadratic: true, centered: true, onHover: () => { collectItem(i, false) } });
             objects["drop" + i].power = false;
         }
 
@@ -196,7 +202,7 @@ scenes["mainmenu"] = new Scene(
 
         for (let i = 1; i <= ITEM_LIMIT; i++) {
             if (objects["drop" + i].power) {
-                if (game.snowflake.freezedowntime <= 0) objects["drop" + i].y += tick * getItemCur(i).speedMulti / snowflakeUpgrades.slowfall.getEffect();
+                if (game.snowflake.freezedowntime <= 0) objects["drop" + i].y += tick * 0.6 * getItemCur(i).speedMulti / snowflakeUpgrades.slowfall.getEffect();
 
                 if (objects["drop" + i].y > 0.1 && !objects["drop" + i].autod && objects["drop" + i].currency != "raingold" && objects["drop" + i].currency != "watercoin" && cc().auto() > 0) {
                     if (Math.random() * 100 <= cc().auto() || game.watercoin.superAutoTime > 0) {

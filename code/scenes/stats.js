@@ -7,8 +7,6 @@ var statDisplays = {
     itemsDaily: ["Daily Items"],
     itemsBought: ["Bought Items"],
     itemsSold: ["Sold Items"],
-    totalIron: ["Total Iron"],
-    mostIron: ["Most Iron"],
 
     totalRaindrops: ["Total Raindrops"],
     mostRaindrops: ["Most Raindrops"],
@@ -33,6 +31,10 @@ var statDisplays = {
     totalGlowbles: ["Total Glowbles"],
     mostGlowbles: ["Most Glowbles"],
     itemGlowbles: ["Glowbles Collected"],
+
+    totalIron: ["Total Iron"],
+    mostIron: ["Most Iron"],
+    itemIron: ["Iron Collected"],
 }
 
 scenes["stats"] = new Scene(

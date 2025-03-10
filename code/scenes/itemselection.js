@@ -46,6 +46,7 @@ scenes["itemselection"] = new Scene(
         createText("selItemName", 0.31, 0.73, "", { size: 40, color: "white", align: "left" });
         createText("selItemDurability", 0.31, 0.76, "", { size: 40, color: "white", align: "left" });
         createText("selItemWorth", 0.31, 0.79, "", { size: 40, color: "white", align: "left" });
+        createImage("ironPic", 0.575, 0.75, 0.05, 0.05, "currencies/iron", { quadratic: true, centered: true });
         createText("selItemBoostType", 0.31, 0.82, "", { size: 40, color: "white", align: "left" });
         createText("selItemBoostAmount", 0.31, 0.85, "", { size: 40, color: "white", align: "left" });
         createText("selItemInventoryID", 0.875, 0.73, "", { size: 40, color: "white", align: "right" });
@@ -55,9 +56,9 @@ scenes["itemselection"] = new Scene(
             if (game.items.items.length < 1) return false;
             let amount = game.items.items[selectedItem].getWorth();
 
-            game.items.iron += amount;
+            game.iron.amount = game.iron.amount.add(amount);
             game.stats.totalIron += amount;
-            if (game.items.iron > game.stats.mostIron) game.stats.mostIron = game.items.iron;
+            if (game.iron.amount > game.stats.mostIron) game.stats.mostIron = game.iron.amount;
 
             game.stats.itemsSold++;
             game.items.items[selectedItem].destroyItem();

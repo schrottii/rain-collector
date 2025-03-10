@@ -2,7 +2,7 @@ class SaveGame {
     new() {
         this.id = Math.random().toString(16).slice(2);
         this.name = "";
-        this.startVer = "";
+        this.startVer = GAMEVERSION;
 
         this.selCur = "raindrop";
         this.selTemp = "none";
@@ -61,6 +61,10 @@ class SaveGame {
             }
         }
 
+        this.iron = {
+            amount: new Decimal(0),
+        }
+
         // event currencies
 
         this.snowflake = {
@@ -99,9 +103,6 @@ class SaveGame {
             itemsBought: 0,
             itemsSold: 0,
 
-            totalIron: 0,
-            mostIron: 0,
-
             // currencies
             totalRaindrops: new Decimal(0),
             mostRaindrops: new Decimal(0),
@@ -126,6 +127,10 @@ class SaveGame {
             totalGlowbles: new Decimal(0),
             mostGlowbles: new Decimal(0),
             itemGlowbles: 0,
+
+            totalIron: 0,
+            mostIron: 0,
+            itemIron: 0,
         }
 
         this.settings = {
@@ -135,11 +140,7 @@ class SaveGame {
         }
     }
     loadFromSaveGame(sg, passive = false) {
-        if (sg.startVer == undefined) {
-            sg.startVer = "1.0";
-            // if (game.raindrop.upgrades.time >= 100 && game.raindrop.upgrades.auto >= 50) sg.startVer = "**1.0**";
-        }
-        else if (sg.startVer == "") sg.startVer = GAMEVERSION;
+        if (sg.startVer == "") sg.startVer = GAMEVERSION;
 
         // resetting stuff
         if (!passive) {
@@ -178,11 +179,15 @@ class SaveGame {
                 this.items.items[item] = new InventoryItem(loadingItem.id, loadingItem.rd, loadingItem.rw, loadingItem.d, loadingItem.l);
             }
         }
+        if (sg.items.iron > 0 && this.iron.amount.eq(0)) this.iron.amount = new Decimal(sg.items.iron);
     }
 }
 
-var game = new SaveGame();
-game.new();
+var game;
+function setupSave() {
+    game = new SaveGame();
+    game.new();
+}
 
 function save() {
     localStorage.setItem("RAINCOL1", saveGame(game));
