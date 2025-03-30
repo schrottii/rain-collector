@@ -49,8 +49,8 @@ scenes["settings"] = new Scene(
         createText("adButtonText3", 0.75, 0.475 + 0.05 * 0.66, "Play my other games!", { size: 24 });
 
         // Music
-        createText("settingTextMusic", 0.25, 0.65, "Toggle Music", { color: "white", size: 32 });
-        createButton("musicButton", 0.25, 0.7, 0.1, 0.1, "music", () => {
+        createText("settingTextMusic", 0.25, 0.55, "Toggle Music", { color: "white", size: 32 });
+        createButton("musicButton", 0.25, 0.575, 0.1, 0.1, "music", () => {
             game.settings.music = !game.settings.music;
 
             if (game.settings.music) wggjAudio.play();
@@ -58,9 +58,9 @@ scenes["settings"] = new Scene(
         }, { quadratic: true, centered: true });
 
         // Notation
-        createText("settingTextNotation", 0.5, 0.675, "Notation: normal", { color: "white", size: 32 });
-        createText("settingTextNotation2", 0.5, 0.695, "", { color: "white", size: 32 });
-        createButton("notationButton", 0.5, 0.7, 0.1, 0.1, "notation", () => {
+        createText("settingTextNotation", 0.25, 0.775, "Notation: normal", { color: "white", size: 32 });
+        createText("settingTextNotation2", 0.25, 0.795, "", { color: "white", size: 32 });
+        createButton("notationButton", 0.25, 0.8, 0.1, 0.1, "notation", () => {
             switch (game.settings.notation) {
                 case "normal":
                     game.settings.notation = "scientific";
@@ -78,15 +78,22 @@ scenes["settings"] = new Scene(
         }, { quadratic: true, centered: true });
 
         // Background
-        createText("settingTextBackground", 0.75, 0.65, "Toggle Background", { color: "white", size: 32 });
-        createButton("backgroundButton", 0.75, 0.7, 0.1, 0.1, "background", () => {
+        createText("settingTextBackground", 0.75, 0.55, "Toggle Background", { color: "white", size: 32 });
+        createButton("backgroundButton", 0.75, 0.575, 0.1, 0.1, "background", () => {
             game.settings.bg = !game.settings.bg;
+        }, { quadratic: true, centered: true });
+
+        // Pause
+        createText("settingTextMP", 0.75, 0.775, "Toggle Menu Pause", { color: "white", size: 32 });
+        createButton("MPButton", 0.75, 0.8, 0.1, 0.1, "background", () => {
+            game.settings.menupause = !game.settings.menupause;
         }, { quadratic: true, centered: true });
     },
     (tick) => {
         // Loop
         objects["musicButton"].image = game.settings.music ? "music" : "musicoff";
         objects["backgroundButton"].image = game.settings.bg ? "background" : "backgroundoff";
+        objects["MPButton"].image = game.settings.menupause ? "background" : "backgroundoff";
 
         objects["userText1"].text = "ID: " + game.id.substr(0, 6);
         objects["userText2"].text = "Name: " + game.name;

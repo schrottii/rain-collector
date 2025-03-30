@@ -333,3 +333,18 @@ v1.6 Holding the Iron:
 - Released the game on galaxy!
 - Fixed "Most ..." stats not working correctly sometimes
 - Fixed account version only existing after opening the game for the second time
+
+
+
+x 1.7
+v1.7:
+-> Menu Pause:
+- Previously, the game always paused when you opened something (upgrades, settings, etc.) and reset the falling items (such as Raindrops)
+- Now, falling items are no longer reset, they just get paused when in a menu
+- Additionally, if the new setting Menu Pause (enabled by default) is disabled, they don't even get paused, the game keeps running (including auto)
+- Water Coin boosts use the same pause behavior, so no time is lost
+- This took a lot of changes, so it's possible that a thing or two don't work as intended now
+
+-> Other:
+- Moving the mouse is no longer needed to collect
+- Updated WGGJ from v1.2.1 to v1.3

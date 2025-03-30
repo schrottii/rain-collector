@@ -1,25 +1,33 @@
 var amountBefore = 0;
 const ITEM_LIMIT = 128;
 
+function leaveMainMenu() {
+    for (let i = 1; i <= ITEM_LIMIT; i++) {
+        fallingItems["drop" + i] = objects["drop" + i];
+    }
+}
+
 function collectItem(i, isAuto = false) {
-    if (objects["drop" + i].power == false) return false;
-    objects["drop" + i].power = "hold";
+    if (fallingItems["drop" + i].power == false) return false;
+    fallingItems["drop" + i].power = "hold";
 
     if (!isAuto && Math.random() * 100 < snowflakeUpgrades.freezedown.getEffect()) game.snowflake.freezedowntime = 0;
 
-    if (isAuto == true) {
-        objects["collected2"].power = true;
-        objects["collected2"].x = objects["drop" + i].x;
-        objects["collected2"].y = objects["drop" + i].y;
-        objects["collected2"].timer = 0.25;
-        objects["collected2"].image = "autocollected";
-    }
-    else {
-        objects["collected"].power = true;
-        objects["collected"].x = objects["drop" + i].x;
-        objects["collected"].y = objects["drop" + i].y;
-        objects["collected"].timer = 0.25;
-        objects["collected"].image = "collected";
+    if (objects["collected"] != undefined) {
+        if (isAuto == true) {
+            objects["collected2"].power = true;
+            objects["collected2"].x = fallingItems["drop" + i].x;
+            objects["collected2"].y = fallingItems["drop" + i].y;
+            objects["collected2"].timer = 0.25;
+            objects["collected2"].image = "autocollected";
+        }
+        else {
+            objects["collected"].power = true;
+            objects["collected"].x = fallingItems["drop" + i].x;
+            objects["collected"].y = fallingItems["drop" + i].y;
+            objects["collected"].timer = 0.25;
+            objects["collected"].image = "collected";
+        }
     }
 
     if (!isAuto && watercoinUpgrades.economicbubble.getLevel() > 0) {
@@ -28,10 +36,10 @@ function collectItem(i, isAuto = false) {
     }
 
     if (!isAuto && getItemCur(i).name == "bubble" && watercoinUpgrades.coinpop.getLevel() > 0 && Math.random() * 100 <= watercoinUpgrades.coinpop.getEffect()) {
-        setTimeout((x = objects["drop" + i].x, y = objects["drop" + i].y - 0.1) => {
+        setTimeout((x = fallingItems["drop" + i].x, y = fallingItems["drop" + i].y - 0.1) => {
             let spawnedCoin = createFallingItem("watercoin");
-            objects["drop" + spawnedCoin].x = x;
-            objects["drop" + spawnedCoin].y = y;
+            fallingItems["drop" + spawnedCoin].x = x;
+            fallingItems["drop" + spawnedCoin].y = y;
         }, 250);
     }
 
@@ -40,10 +48,10 @@ function collectItem(i, isAuto = false) {
     }
 
     amountBefore = getItemCur(i).getAmount();
-    getItemCur(i).onCollect(objects["drop" + i]);
-    objects["latestGain"].text = "+" + fn(getItemCur(i).getAmount().sub(amountBefore));
+    getItemCur(i).onCollect(fallingItems["drop" + i]);
+    if (objects["latestGain"] != undefined) objects["latestGain"].text = "+" + fn(getItemCur(i).getAmount().sub(amountBefore));
 
-    objects["drop" + i].power = false; // don't do it until now, because otherwise it might get replaced mid-stuff
+    fallingItems["drop" + i].power = false; // don't do it until now, because otherwise it might get replaced mid-stuff
 }
 
 scenes["mainmenu"] = new Scene(
@@ -58,9 +66,18 @@ scenes["mainmenu"] = new Scene(
 
         for (let i = 1; i <= ITEM_LIMIT; i++) {
             createButton("drop" + i, -10, -10, 0.1, 0.1, "currencies/raindrop", () => {
-                
+
             }, { power: false, quadratic: true, centered: true, onHover: () => { collectItem(i, false) } });
             objects["drop" + i].power = false;
+
+            if (fallingItems["drop" + i] == undefined) {
+                // generated them for the first time
+                fallingItems["drop" + i] = objects["drop" + i];
+            }
+            else {
+                // load from the fallingItems
+                objects["drop" + i] = fallingItems["drop" + i];
+            }
         }
 
         createImage("bgSquare4", 0, 0, 1, 1, "bg2");
@@ -73,13 +90,17 @@ scenes["mainmenu"] = new Scene(
         // Bottom Buttons
         createButton("sceneButton1", 0, 0.9, 1 / 4, 0.1, "button", () => {
             viewUpgrades = game.selCur;
-            loadScene("upgrading")
+            leaveMainMenu();
+            loadScene("upgrading");
         });
         createImage("sceneImage1", 0.5 / 4, 0.91, 0.08, 0.08, "upgrades", { quadratic: true, centered: true });
 
         createButton("sceneButton2", 0 + 1 / 4, 0.9, 1 / 4, 0.1, "button", () => {
             if (cc().getPrestigeCurrency() == undefined) alert("There is no prestige for this currency!");
-            else if (cc().getPrestigeCurrency().isUnlocked() || cc().getPrestigeCurrency().getAmount().gt(0)) loadScene("prestige");
+            else if (cc().getPrestigeCurrency().isUnlocked() || cc().getPrestigeCurrency().getAmount().gt(0)) {
+                leaveMainMenu();
+                loadScene("prestige");
+            }
             else alert("Collect more " + cc().renderName(true) + " to unlock!");
         });
         createImage("sceneImage2", 0.5 / 4 * 3, 0.91, 0.08, 0.08, "prestige", { quadratic: true, centered: true });
@@ -87,16 +108,25 @@ scenes["mainmenu"] = new Scene(
 
         createButton("sceneButton3", 0 + 1 / 4 * 2, 0.9, 1 / 4, 0.1, "button", () => {
             if (!unlockedItems()) alert("Unlocked at 1000 total Glowbles!");
-            else loadScene("itemselection")
+            else {
+                leaveMainMenu();
+                loadScene("itemselection");
+            }
         });
         createImage("sceneImage3", 0.5 / 4 * 5, 0.91, 0.08, 0.08, "items/sword", { quadratic: true, centered: true });
         createImage("sceneButton3locked", 0 + 1 / 4 * 2, 0.9, 1 / 4, 0.1, "locked", { power: false });
 
-        createButton("sceneButton4", 0 + 1 / 4 * 3, 0.9, 1 / 4, 0.1, "button", () => { loadScene("stats") });
+        createButton("sceneButton4", 0 + 1 / 4 * 3, 0.9, 1 / 4, 0.1, "button", () => {
+            leaveMainMenu();
+            loadScene("stats");
+        });
         createImage("sceneImage4", 0.5 / 4 * 7, 0.91, 0.08, 0.08, "stats", { quadratic: true, centered: true });
 
         // Side button
-        createButton("currencySelectionButton", 0.825, 0.8, 0.15, 0.05, "button", () => { loadScene("currencyselection") });
+        createButton("currencySelectionButton", 0.825, 0.8, 0.15, 0.05, "button", () => {
+            leaveMainMenu();
+            loadScene("currencyselection");
+        });
         createImage("currencySelectionButtonImg", 0.9, 0.8, 0.05, 0.05, "switch", { quadratic: true, centered: true });
         objects["currencySelectionButton"].power = false;
         objects["currencySelectionButtonImg"].power = false;
@@ -123,6 +153,17 @@ scenes["mainmenu"] = new Scene(
     },
     (tick) => {
         // Loop
+        for (let i = 1; i <= ITEM_LIMIT; i++) {
+            objects["drop" + i].power = fallingItems["drop" + i].power;
+            if (fallingItems["drop" + i].power) {
+                objects["drop" + i].x = fallingItems["drop" + i].x;
+                objects["drop" + i].y = fallingItems["drop" + i].y;
+                objects["drop" + i].w = fallingItems["drop" + i].w;
+                objects["drop" + i].h = fallingItems["drop" + i].h;
+            }
+        }
+
+        // Adjust display depending on mobile or pc
         if (isMobile()) {
             // Mobile
             objects["currency1"].x = 0.2;
@@ -149,10 +190,6 @@ scenes["mainmenu"] = new Scene(
         objects["sceneButton2locked"].power = !(cc().getPrestigeCurrency() != undefined && cc().getPrestigeCurrency().isUnlocked());
         objects["sceneButton3locked"].power = !(unlockedItems());
 
-        // Render falling drops
-        gc().time += tick;
-        game.watercoin.time += tick;
-
         // Collect animations
         objects["collected"].timer -= tick;
         if (objects["collected"].timer < 0.125) objects["collected"].image = "collected2";
@@ -169,6 +206,7 @@ scenes["mainmenu"] = new Scene(
             objects["collected2"].y = -10;
         }
 
+        // handle generation of prestige currency, it is here so the player doesn't miss it
         if (postPrestige.amount > 0) {
             if (gc().time >= 0.5) {
                 gc().time = 0;
@@ -177,48 +215,12 @@ scenes["mainmenu"] = new Scene(
                 createFallingItem(postPrestige.type);
             }
         }
-        else if (gc().time >= cc().spawntime()) {
-            gc().time = 0;
-            createFallingItem(game.selCur);
-        }
-
-        if (isChristmas()) {
-            if (game.snowflake.freezedowntime != -1) game.snowflake.freezedowntime += tick;
-
-            if (game.snowflake.freezedowntime >= 0.5) {
-                game.snowflake.freezedowntime = -1;
-            }
-        }
-
-        if (game.watercoin.time >= 5 && game.watercoin.fill >= game.watercoin.fillNeeded) {
-            game.watercoin.time = 0;
-            createFallingItem("watercoin");
-        }
 
         if (/*currencies.bubble.isUnlocked()*/ game.stats.totalRaingold >= 500) {
             objects["currencySelectionButton"].power = true;
             objects["currencySelectionButtonImg"].power = true;
         }
 
-        for (let i = 1; i <= ITEM_LIMIT; i++) {
-            if (objects["drop" + i].power) {
-                if (game.snowflake.freezedowntime <= 0) objects["drop" + i].y += tick * 0.6 * getItemCur(i).speedMulti / snowflakeUpgrades.slowfall.getEffect();
-
-                if (objects["drop" + i].y > 0.1 && !objects["drop" + i].autod && objects["drop" + i].currency != "raingold" && objects["drop" + i].currency != "watercoin" && cc().auto() > 0) {
-                    if (Math.random() * 100 <= cc().auto() || game.watercoin.superAutoTime > 0) {
-                        collectItem(i, true);
-                        objects["drop" + i].isAuto = true;
-                    }
-                    objects["drop" + i].autod = true;
-                }
-
-                if (objects["drop" + i].y > 0.8) objects["drop" + i].power = false;
-            }
-        }
-
         objects["waterFill"].w = Math.min(1, game.watercoin.fill / game.watercoin.fillNeeded);
-
-        game.watercoin.tempBoostTime -= tick;
-        game.watercoin.superAutoTime -= tick;
     }
 );

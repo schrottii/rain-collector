@@ -1,24 +1,20 @@
 // game made by schrottii, do not steal/copy bla bla bla
 
-const GAMEVERSION = "1.6";
+const GAMEVERSION = "1.7";
 
 const PATCHNOTES = `
-2025/03/10 1.6
-v1.6 Holding the Iron:
--> Falling currencies:
-- Clicking/holding to collect is no longer needed, just hovering is enough
-- Reduced falling speed of everything by 40%
-
--> Iron:
-- Iron is now more treated like an actual currency, rather than an Items side-thing
-- Once Items are unlocked, Iron now has a 0.1% chance to fall every time something is collected
-- Falling Iron is worth 1 Iron, and can be auto collected
-- Added image, and Iron Collected stat 
+x
+v1.7:
+-> Menu Pause:
+- Previously, the game always paused when you opened something (upgrades, settings, etc.) and reset the falling items (such as Raindrops)
+- Now, falling items are no longer reset, they just get paused when in a menu
+- Additionally, if the new setting Menu Pause (enabled by default) is disabled, they don't even get paused, the game keeps running (including auto)
+- Water Coin boosts use the same pause behavior, so no time is lost
+- This took a lot of changes, so it's possible that a thing or two don't work as intended now
 
 -> Other:
-- Released the game on galaxy!
-- Fixed "Most ..." stats not working correctly sometimes
-- Fixed account version only existing after opening the game for the second time
+- Moving the mouse is no longer needed to collect
+- Updated WGGJ from v1.2.1 to v1.3
 `
 
 images = {
@@ -96,6 +92,8 @@ function loadedScene() {
 var autoSaveTime = 0;
 
 function customWGGJLoop(delta) {
+    if (currentScene == "none") return false;
+
     game.stats.playTime += delta;
     autoSaveTime += delta / 1000;
 
@@ -109,6 +107,65 @@ function customWGGJLoop(delta) {
             if (objects["autoSaveText"].y < 0.85) objects["autoSaveText"].text = "";
         }
     }
+
+    fallingItemTick(delta / 1000);
+}
+
+var fallingItems = {};
+var freezeGame = false;
+
+function fallingItemTick(tick) {
+    // use this to f r e e z e :3
+    if (freezeGame || (game.settings.menupause == true && currentScene != "mainmenu")) return false;
+
+    gc().time += tick;
+    game.watercoin.time += tick;
+
+    // non-prestige currency generation
+    if (postPrestige.amount == 0 && gc().time >= cc().spawntime()) {
+        gc().time = 0;
+        createFallingItem(game.selCur);
+    }
+
+    // freeze down
+    if (isChristmas()) {
+        if (game.snowflake.freezedowntime != -1) game.snowflake.freezedowntime += tick;
+
+        if (game.snowflake.freezedowntime >= 0.5) {
+            game.snowflake.freezedowntime = -1;
+        }
+    }
+
+    // spawning water coins
+    if (game.watercoin.time >= 5 && game.watercoin.fill >= game.watercoin.fillNeeded) {
+        game.watercoin.time = 0;
+        createFallingItem("watercoin");
+    }
+
+    // handle the falling down of every item, and auto collect
+    for (let i = 1; i <= ITEM_LIMIT; i++) {
+        if (fallingItems["drop" + i].power) {
+            // FALL DOWN
+            if (game.snowflake.freezedowntime <= 0) fallingItems["drop" + i].y += tick * 0.6 * getItemCur(i).speedMulti / snowflakeUpgrades.slowfall.getEffect();
+
+            // AUTO
+            if (fallingItems["drop" + i].y > 0.1 && !fallingItems["drop" + i].autod && fallingItems["drop" + i].currency != "raingold" && fallingItems["drop" + i].currency != "watercoin" && cc().auto() > 0) {
+                if (Math.random() * 100 <= cc().auto() || game.watercoin.superAutoTime > 0) {
+                    collectItem(i, true);
+                    fallingItems["drop" + i].isAuto = true;
+                    console.log("auto collected");
+                }
+                fallingItems["drop" + i].autod = true;
+            }
+
+            // KILL EM
+            if (fallingItems["drop" + i].y > 0.8) fallingItems["drop" + i].power = false;
+        }
+    }
+
+    // timed coin boosts
+    game.watercoin.tempBoostTime -= tick;
+    game.watercoin.superAutoTime -= tick;
 }
 
 // Notations

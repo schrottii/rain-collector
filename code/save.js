@@ -137,6 +137,7 @@ class SaveGame {
             music: false,
             bg: true,
             notation: "normal",
+            menupause: true
         }
     }
     loadFromSaveGame(sg, passive = false) {

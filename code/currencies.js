@@ -211,25 +211,25 @@ function getFallingX() {
 
 function createFallingItem(item) {
     for (let i = 1; i <= ITEM_LIMIT; i++) {
-        if (objects["drop" + i].power == false && currencies[item].isUnlocked()) {
-            objects["drop" + i].x = getFallingX();
-            objects["drop" + i].y = -0.1;
-            objects["drop" + i].w = objects["drop" + i].h = 0.1
+        if (fallingItems["drop" + i].power == false && currencies[item].isUnlocked()) {
+            fallingItems["drop" + i].x = getFallingX();
+            fallingItems["drop" + i].y = -0.1;
+            fallingItems["drop" + i].w = fallingItems["drop" + i].h = 0.1
                 * currencies[item].sizeMulti
                 * (currencies[item].varyingSize == true ? Math.max(0.5, Math.random()) : 1);
 
-            objects["drop" + i].inflated = false;
+            fallingItems["drop" + i].inflated = false;
             if (glowbleUpgrades.inflatedfall.getLevel() > 0 && Math.random() * 100 <= glowbleUpgrades.inflatedfall.getEffect() && (item == "raindrop" || item == "bubble")) {
-                objects["drop" + i].w = objects["drop" + i].h = objects["drop" + i].w * 1.5;
-                objects["drop" + i].inflated = true;
+                fallingItems["drop" + i].w = fallingItems["drop" + i].h = fallingItems["drop" + i].w * 1.5;
+                fallingItems["drop" + i].inflated = true;
             }
 
-            objects["drop" + i].image = "currencies/" + currencies[item].image;
-            objects["drop" + i].currency = item;
+            fallingItems["drop" + i].image = "currencies/" + currencies[item].image;
+            fallingItems["drop" + i].currency = item;
 
-            objects["drop" + i].isAuto = false;
-            objects["drop" + i].autod = false;
-            objects["drop" + i].power = true;
+            fallingItems["drop" + i].isAuto = false;
+            fallingItems["drop" + i].autod = false;
+            fallingItems["drop" + i].power = true;
 
             return i; // can be used
         }
@@ -237,16 +237,16 @@ function createFallingItem(item) {
 }
 
 function clearFallingItems() {
-    if (objects["drop4"] != undefined) {
+    if (fallingItems["drop4"] != undefined) {
         for (let i = 1; i <= 20; i++) {
-            objects["drop" + i].power = false;
+            fallingItems["drop" + i].power = false;
         }
     }
 }
 
 function getItemCur(index) {
     // returns the currency for an item, so its onClick, speed and other can be accessed
-    return currencies[objects["drop" + index].currency];
+    return currencies[fallingItems["drop" + index].currency];
 }
 
 const currencies = {
