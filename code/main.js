@@ -5,6 +5,14 @@ const GAMEVERSION = "1.7";
 const PATCHNOTES = `
 x
 v1.7:
+-> Weather:
+- New feature: Weather! Unlocked from the start
+- Every 5 minutes, the weather can change for 30 seconds
+- Rainy: default weather
+- Sunny: 3x slower drop rate, but 3x worth
+- Windy: 50% faster falls, but 1.5x worth
+- Thunder: Sometimes thunder destroys some stuff, but x1.25 worth
+
 -> Menu Pause:
 - Previously, the game always paused when you opened something (upgrades, settings, etc.) and reset the falling items (such as Raindrops)
 - Now, falling items are no longer reset, they just get paused when in a menu
@@ -37,6 +45,11 @@ images = {
     switch2: "icons/switch2.png",
     pencil: "icons/pencil.png",
 
+    "weather-rainy": "icons/weather-rainy.png",
+    "weather-sunny": "icons/weather-sunny.png",
+    "weather-thunder": "icons/weather-thunder.png",
+    "weather-windy": "icons/weather-windy.png",
+
     music: "settings/music.png",
     musicoff: "settings/music-off.png",
     background: "settings/background.png",
@@ -48,6 +61,8 @@ images = {
     collected2: "effects/collected2.png",
     autocollected: "effects/autocollected.png",
     autocollected2: "effects/autocollected2.png",
+    thunder: "effects/thunder.png",
+    thunder2: "effects/thunder2.png",
 
     "currencies/raindrop": "currencies/raindrop.png",
     "currencies/watercoin": "currencies/watercoin.png",
@@ -109,6 +124,7 @@ function customWGGJLoop(delta) {
     }
 
     fallingItemTick(delta / 1000);
+    tickWeather(delta / 1000);
 }
 
 var fallingItems = {};
@@ -122,7 +138,7 @@ function fallingItemTick(tick) {
     game.watercoin.time += tick;
 
     // non-prestige currency generation
-    if (postPrestige.amount == 0 && gc().time >= cc().spawntime()) {
+    if (postPrestige.amount == 0 && gc().time >= cc().spawntime() / weathers[currentWeather].spawnRateMulti) {
         gc().time = 0;
         createFallingItem(game.selCur);
     }
@@ -146,14 +162,14 @@ function fallingItemTick(tick) {
     for (let i = 1; i <= ITEM_LIMIT; i++) {
         if (fallingItems["drop" + i].power) {
             // FALL DOWN
-            if (game.snowflake.freezedowntime <= 0) fallingItems["drop" + i].y += tick * 0.6 * getItemCur(i).speedMulti / snowflakeUpgrades.slowfall.getEffect();
+            if (game.snowflake.freezedowntime <= 0) fallingItems["drop" + i].y += tick * 0.6 * getItemCur(i).speedMulti / snowflakeUpgrades.slowfall.getEffect() * weathers[currentWeather].fallSpeedMulti;
 
             // AUTO
             if (fallingItems["drop" + i].y > 0.1 && !fallingItems["drop" + i].autod && fallingItems["drop" + i].currency != "raingold" && fallingItems["drop" + i].currency != "watercoin" && cc().auto() > 0) {
                 if (Math.random() * 100 <= cc().auto() || game.watercoin.superAutoTime > 0) {
                     collectItem(i, true);
                     fallingItems["drop" + i].isAuto = true;
-                    console.log("auto collected");
+                    //console.log("auto collected");
                 }
                 fallingItems["drop" + i].autod = true;
             }

@@ -338,6 +338,14 @@ v1.6 Holding the Iron:
 
 x 1.7
 v1.7:
+-> Weather:
+- New feature: Weather! Unlocked from the start
+- Every 5 minutes, the weather can change for 30 seconds
+- Rainy: default weather
+- Sunny: 3x slower drop rate, but 3x worth
+- Windy: 50% faster falls, but 1.5x worth
+- Thunder: Sometimes thunder destroys some stuff, but x1.25 worth
+
 -> Menu Pause:
 - Previously, the game always paused when you opened something (upgrades, settings, etc.) and reset the falling items (such as Raindrops)
 - Now, falling items are no longer reset, they just get paused when in a menu

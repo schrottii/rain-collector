@@ -62,8 +62,6 @@ scenes["mainmenu"] = new Scene(
 
         createSquare("autoCollectHeight", 0, 0.15, 1, 0.003, "white");
 
-        createText("header", 0.5, 0.06, "Rain Collector v" + GAMEVERSION, { size: 60, color: "white" });
-
         for (let i = 1; i <= ITEM_LIMIT; i++) {
             createButton("drop" + i, -10, -10, 0.1, 0.1, "currencies/raindrop", () => {
 
@@ -143,6 +141,19 @@ scenes["mainmenu"] = new Scene(
         createSquare("waterFill", 0, 0.875, 0, 0.025, "#02F8FD");
         createImage("currency3", 0.05, 0.875, 0.025, 0.025, "currencies/watercoin", { quadratic: true, centered: true });
         createText("currencyDisplay2", 0.1, 0.9025, "", { color: "blue", size: 64, align: "left" });
+
+        // Top / Weather
+        createSquare("topBG", 0, 0, 1, 0.05, "#560000");
+        createText("header", 0.975, 0.02, "Rain Collector", { size: 30, color: "white", align: "right" });
+        createText("header2", 0.975, 0.04, "v" + GAMEVERSION, { size: 30, color: "white", align: "right" });
+
+        createImage("weatherDisplay", 0, 0, 0.05, 0.05, "weather-thunder", { quadratic: true });
+        createText("weatherText", 0.12, 0.02, "Weather: Thunder", { size: 30, color: "white", align: "left" });
+        createSquare("weatherBarBG", 0.12, 0.03, 0.28, 0.02, "black");
+        createSquare("weatherBarFill", 0.12, 0.03, 0.28, 0.02, "lightblue");
+
+        createImage("thunderStrike", 0.5, 0.05, 0.2, 0.6, "thunder", { quadratic: true, centered: true });
+        objects["thunderStrike"].power = false;
 
         // Music
         wggjAudio.src = "audio/lofi-relax-music-lofium-123264.mp3";
