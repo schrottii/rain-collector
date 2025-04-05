@@ -22,6 +22,9 @@ v1.7:
 
 -> Other:
 - Moving the mouse is no longer needed to collect
+- Updated all background images and increased their resolution
+- Removed game saved notification
+- Improved Water Coin amount display (main menu)
 - Updated WGGJ from v1.2.1 to v1.3
 `
 
@@ -117,10 +120,12 @@ function customWGGJLoop(delta) {
         autoSaveTime = 0;
     }
     else {
+        /*
         if (objects["autoSaveText"] != undefined && objects["autoSaveText"].text != "") {
             objects["autoSaveText"].y -= 0.0001 * delta;
             if (objects["autoSaveText"].y < 0.85) objects["autoSaveText"].text = "";
         }
+        */
     }
 
     fallingItemTick(delta / 1000);

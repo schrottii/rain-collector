@@ -353,6 +353,13 @@ v1.7:
 - Water Coin boosts use the same pause behavior, so no time is lost
 - This took a lot of changes, so it's possible that a thing or two don't work as intended now
 
+-> Achievements:
+- Added 15 new Achievements (50 total)
+- New Achievements are now also given on auto save and loading a save, not only when looking at Achievements
+- Achievement boost specifies it's for Raingold/Glowbles (depending on the selected currency)
+
 -> Other:
 - Moving the mouse is no longer needed to collect
+- Updated all background images and increased their resolution
+- Improved Water Coin amount display (main menu)
 - Updated WGGJ from v1.2.1 to v1.3

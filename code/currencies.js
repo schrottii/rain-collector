@@ -375,7 +375,7 @@ const currencies = {
     iron: new Currency("iron", "iron", [() => unlockedItems(), "1000 Glowbles"], (item) => {
         if (item.power == false) return false;
         game.iron.amount = game.iron.amount.add(1);
-        game.stats.totalIron++;
+        game.stats.totalIron = game.stats.totalIron.add(1);
         game.stats.itemIron++;
 
         if (game.iron.amount > game.stats.mostIron) game.stats.mostIron = game.iron.amount;

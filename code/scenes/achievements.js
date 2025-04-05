@@ -65,11 +65,33 @@ const achievements = [
     new Achievement(33, "currencies/glowble", "The Great Low III", "Gather 64000 Glowbles!", () => game.glowble.amount.gte(64000)),
     new Achievement(34, "currencies/glowble", "The Great Low IV", "Gather 1e6 Glowbles!", () => game.glowble.amount.gte(1e6)),
     new Achievement(35, "currencies/glowble", "The Great Low V", "Gather 1e9 Glowbles!", () => game.glowble.amount.gte(1e9)),
+
+    new Achievement(36, "items/sword", "I (Boost) Them", "Unlock Items (1000 total Glowbles)", () => unlockedItems()),
+    new Achievement(37, "items/barrel", "Item Collector I", "Get 10 Items (total)", () => game.stats.itemsGained >= 10),
+    new Achievement(38, "items/barrel", "Item Collector II", "Get 25 Items (total)", () => game.stats.itemsGained >= 25),
+    new Achievement(39, "items/barrel", "Item Collector III", "Get 100 Items (total)", () => game.stats.itemsGained >= 100),
+    new Achievement(40, "items/barrel", "Item Collector IV", "Get 1000 Items (total)", () => game.stats.itemsGained >= 1000),
+
+    new Achievement(41, "items/sword", "No Warranty", "Break an Item", () => game.stats.itemsBroken >= 1),
+    new Achievement(42, "items/sword", "Taking the Trash Out", "Sell an Item", () => game.stats.itemsSold >= 1),
+    new Achievement(43, "items/lantern", "Merchant I", "Buy an Item for Iron", () => game.stats.itemsBought >= 1),
+    new Achievement(44, "items/lantern", "Merchant II", "Buy 10 Items for Iron", () => game.stats.itemsBought >= 10),
+    new Achievement(45, "items/lantern", "Merchant III", "Buy 100 Items for Iron", () => game.stats.itemsBought >= 100),
+
+    new Achievement(46, "currencies/iron", "Heavy Metal I", "Get your first Iron!", () => game.stats.totalIron >= 1),
+    new Achievement(47, "currencies/iron", "Heavy Metal II", "Gather 26 Iron!", () => game.stats.totalIron >= 26),
+    new Achievement(48, "currencies/iron", "Heavy Metal III", "Gather 100 Iron!", () => game.stats.totalIron >= 100),
+    new Achievement(49, "currencies/iron", "Heavy Metal IV", "Gather 500 Iron!", () => game.stats.totalIron >= 500),
+    new Achievement(50, "currencies/iron", "Heavy Metal V", "Gather 2600 Iron!", () => game.stats.totalIron >= 2600),
 ];
 
 scenes["achievements"] = new Scene(
     () => {
         // Init
+        checkAchievements();
+
+
+
         createSquare("bgSquare1", 0, 0, 1, 0.9, "black");
         if (game.settings.bg) createImage("bgSquare2", 0, 0, 1, 0.9, "bgSettings");
 
@@ -110,21 +132,18 @@ scenes["achievements"] = new Scene(
         createButton("pageButtonL", 0, 0.1, 0.15, 0.05, "button", () => {
             if (achievementsPage > 0) achievementsPage--;
         });
-        createText("pblt", 0.075, 0.14, "<", { size: 40, noScaling: true });
+        createText("pblt", 0.0775, 0.145, "<", { size: 40, noScaling: true });
         createButton("pageButtonR", 0.85, 0.1, 0.15, 0.05, "button", () => {
             if (achievementsPage < Math.ceil(achievements.length / 25) - 1) achievementsPage++;
         });
-        createText("pbrt", 0.925, 0.14, ">", { size: 40, noScaling: true });
+        createText("pbrt", 0.9275, 0.145, ">", { size: 40, noScaling: true });
     },
     (tick) => {
         // Loop
 
-        // Gain new Achievements
-        if (Math.random() > 0.9) checkAchievements(); // feel free to murder me
-
         // Update total achievement count
         objects["totalCount"].text = game.achievements.length + "/" + achievements.length;
-        objects["achBoost"].text = "Boost: " + (game.achievements.length * 2) + "%";
+        objects["achBoost"].text = "Boost: " + (game.achievements.length * 2) + "% " + (cc().getPrestigeCurrency() != undefined ? cc().getPrestigeCurrency().renderName(true) : "");
 
         // Update selected Achievement
         if (selectedAchievement < achievements.length) {

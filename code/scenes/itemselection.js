@@ -57,7 +57,7 @@ scenes["itemselection"] = new Scene(
             let amount = game.items.items[selectedItem].getWorth();
 
             game.iron.amount = game.iron.amount.add(amount);
-            game.stats.totalIron += amount;
+            game.stats.totalIron = game.stats.totalIron.add(amount);
             if (game.iron.amount > game.stats.mostIron) game.stats.mostIron = game.iron.amount;
 
             game.stats.itemsSold++;

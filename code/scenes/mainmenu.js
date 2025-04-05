@@ -140,7 +140,7 @@ scenes["mainmenu"] = new Scene(
         createSquare("waterFillBg", 0, 0.875, 1, 0.025, "black");
         createSquare("waterFill", 0, 0.875, 0, 0.025, "#02F8FD");
         createImage("currency3", 0.05, 0.875, 0.025, 0.025, "currencies/watercoin", { quadratic: true, centered: true });
-        createText("currencyDisplay2", 0.1, 0.9025, "", { color: "blue", size: 64, align: "left" });
+        createText("currencyDisplay2", 0.1, 0.9025, "", { color: "blue", size: 32, align: "left", noScaling: true });
 
         // Top / Weather
         createSquare("topBG", 0, 0, 1, 0.05, "#560000");

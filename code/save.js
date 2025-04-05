@@ -181,6 +181,8 @@ class SaveGame {
             }
         }
         if (sg.items.iron > 0 && this.iron.amount.eq(0)) this.iron.amount = new Decimal(sg.items.iron);
+
+        checkAchievements();
     }
 }
 
@@ -191,8 +193,11 @@ function setupSave() {
 }
 
 function save() {
+    checkAchievements();
+
     localStorage.setItem("RAINCOL1", saveGame(game));
 
+    /*
     if (objects["autoSaveText"] != undefined) {
         objects["autoSaveText"].y = 1;
         objects["autoSaveText"].text = "Game saved!";
@@ -200,6 +205,7 @@ function save() {
     else {
         createText("autoSaveText", 0.95, 1, "", { align: "right", color: "yellow", size: 40 });
     }
+    */
 }
 
 function saveGame(toSave) {
