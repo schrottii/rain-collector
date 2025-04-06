@@ -21,14 +21,16 @@ const weathers = {
 }
 
 function tickWeather(tick) {
+    let weatherSecsNeeded = 300 / (isEaster() ? 3 : 1);
+
     weatherSecs += tick;
 
-    if (weatherSecs >= 30 && weatherSecs < 300 && currentWeather != "rainy") {
+    if (weatherSecs >= 30 && weatherSecs < weatherSecsNeeded && currentWeather != "rainy") {
         // go back to normal after 30s
         currentWeather = "rainy";
     }
 
-    if (weatherSecs >= 300) {
+    if (weatherSecs >= weatherSecsNeeded) {
         let randy = Math.random();
 
         if (randy >= 0.75) {
@@ -36,12 +38,18 @@ function tickWeather(tick) {
         }
         else if (randy >= 0.5) {
             currentWeather = "sunny";
+            game.stats.weathers++;
+            game.stats.weatherSunny++;
         }
         else if (randy >= 0.25) {
             currentWeather = "windy";
+            game.stats.weathers++;
+            game.stats.weatherWindy++;
         }
         else {
             currentWeather = "thunder";
+            game.stats.weathers++;
+            game.stats.weatherThunder++;
         }
 
         weatherSecs = 0;
@@ -51,7 +59,7 @@ function tickWeather(tick) {
         objects["weatherDisplay"].image = "weather-" + currentWeather;
         objects["weatherText"].text = "Weather: " + weathers[currentWeather].displayName;
         if (currentWeather != "rainy") objects["weatherBarFill"].w = 0.28 * (weatherSecs / 30);
-        else objects["weatherBarFill"].w = 0.28 * (weatherSecs / 300);
+        else objects["weatherBarFill"].w = 0.28 * (weatherSecs / weatherSecsNeeded);
     }
 
     // thunder (imagine)
@@ -83,19 +91,19 @@ function tickWeather(tick) {
             if (objects["thunderStrike"] != undefined) {
                 objects["thunderStrike"].image = "thunder";
                 objects["thunderStrike"].power = false;
-            }
 
-            // DESTRUCTION
-            // isHit only covers a single point (for now) and not a bigger area so it is not suited here (yet)
-            for (let item in fallingItems) {
-                if (
-                    fallingItems[item].currentX() >= objects.thunderStrike.currentX() &&
-                    fallingItems[item].currentX() + fallingItems[item].currentW() <= objects.thunderStrike.currentX() + objects.thunderStrike.currentW() &&
-                    fallingItems[item].currentY() >= objects.thunderStrike.currentY() &&
-                    fallingItems[item].currentY() + fallingItems[item].currentH() <= objects.thunderStrike.currentY() + objects.thunderStrike.currentH()
-                ) {
-                    fallingItems[item].power = false;
-                    //console.log("destroyed");
+                // DESTRUCTION
+                // isHit only covers a single point (for now) and not a bigger area so it is not suited here (yet)
+                for (let item in fallingItems) {
+                    if (
+                        fallingItems[item].currentX() >= objects.thunderStrike.currentX() &&
+                        fallingItems[item].currentX() + fallingItems[item].currentW() <= objects.thunderStrike.currentX() + objects.thunderStrike.currentW() &&
+                        fallingItems[item].currentY() >= objects.thunderStrike.currentY() &&
+                        fallingItems[item].currentY() + fallingItems[item].currentH() <= objects.thunderStrike.currentY() + objects.thunderStrike.currentH()
+                    ) {
+                        fallingItems[item].power = false;
+                        //console.log("destroyed");
+                    }
                 }
             }
         }

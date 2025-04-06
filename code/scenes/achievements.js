@@ -70,13 +70,13 @@ const achievements = [
     new Achievement(37, "items/barrel", "Item Collector I", "Get 10 Items (total)", () => game.stats.itemsGained >= 10),
     new Achievement(38, "items/barrel", "Item Collector II", "Get 25 Items (total)", () => game.stats.itemsGained >= 25),
     new Achievement(39, "items/barrel", "Item Collector III", "Get 100 Items (total)", () => game.stats.itemsGained >= 100),
-    new Achievement(40, "items/barrel", "Item Collector IV", "Get 1000 Items (total)", () => game.stats.itemsGained >= 1000),
+    new Achievement(40, "items/barrel", "Item Collector IV", "Get 900 Items (total)", () => game.stats.itemsGained >= 900),
 
     new Achievement(41, "items/sword", "No Warranty", "Break an Item", () => game.stats.itemsBroken >= 1),
     new Achievement(42, "items/sword", "Taking the Trash Out", "Sell an Item", () => game.stats.itemsSold >= 1),
     new Achievement(43, "items/lantern", "Merchant I", "Buy an Item for Iron", () => game.stats.itemsBought >= 1),
     new Achievement(44, "items/lantern", "Merchant II", "Buy 10 Items for Iron", () => game.stats.itemsBought >= 10),
-    new Achievement(45, "items/lantern", "Merchant III", "Buy 100 Items for Iron", () => game.stats.itemsBought >= 100),
+    new Achievement(45, "items/lantern", "Merchant III", "Buy 25 Items for Iron", () => game.stats.itemsBought >= 25),
 
     new Achievement(46, "currencies/iron", "Heavy Metal I", "Get your first Iron!", () => game.stats.totalIron >= 1),
     new Achievement(47, "currencies/iron", "Heavy Metal II", "Gather 26 Iron!", () => game.stats.totalIron >= 26),
@@ -154,6 +154,14 @@ scenes["achievements"] = new Scene(
             objects["currentAchievementDesc2"].text = achievements[selectedAchievement].isUnlocked() ? "Unlocked" : "Locked";
             objects["currentAchievementDesc2"].color = achievements[selectedAchievement].isUnlocked() ? "green" : "red";
         }
+
+        // Show/hide page buttons
+        if (achievementsPage <= 0) objects["pageButtonL"].power = objects["pblt"].power = false;
+        else objects["pageButtonL"].power = objects["pblt"].power = true;
+
+        if (achievementsPage >= Math.ceil(achievements.length / 25) - 1) objects["pageButtonR"].power = objects["pbrt"].power = false;
+        else objects["pageButtonR"].power = objects["pbrt"].power = true;
+        
 
         // Achievement 5x5
         for (let y = 0; y < 5; y++) {

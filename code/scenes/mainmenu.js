@@ -145,7 +145,11 @@ scenes["mainmenu"] = new Scene(
         // Top / Weather
         createSquare("topBG", 0, 0, 1, 0.05, "#560000");
         createText("header", 0.975, 0.02, "Rain Collector", { size: 30, color: "white", align: "right" });
-        createText("header2", 0.975, 0.04, "v" + GAMEVERSION, { size: 30, color: "white", align: "right" });
+        createText("header2", 0.975, 0.04, "v"
+            + GAMEVERSION
+            + (isChristmas() ? " (Christmas)" : "")
+            + (isEaster() ? " (Easter)" : "")
+            , { size: 30, color: "white", align: "right" });
 
         createImage("weatherDisplay", 0, 0, 0.05, 0.05, "weather-thunder", { quadratic: true });
         createText("weatherText", 0.12, 0.02, "Weather: Thunder", { size: 30, color: "white", align: "left" });

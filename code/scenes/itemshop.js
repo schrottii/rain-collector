@@ -21,7 +21,7 @@ scenes["itemshop"] = new Scene(
         }, { quadratic: true, centered: true });
 
         // Buy Item
-        createText("buyItemText", 0.5, 0.5, "Buy random item (50 Iron per)", { size: 60, color: "white" });
+        createText("buyItemText", 0.5, 0.5, "Buy random item (50 Iron)", { size: 60, color: "white" });
         createText("ironAmount", 0.5, 0.525, "", { size: 30, color: "white" });
         createImage("ironPic", 0.625, 0.5, 0.05, 0.05, "currencies/iron", { quadratic: true, centered: true });
         createButton("buyItem", 0.5, 0.55, 0.2, 0.2, "items/sword", () => {

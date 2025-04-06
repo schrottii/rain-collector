@@ -5,6 +5,12 @@ const GAMEVERSION = "1.7";
 const PATCHNOTES = `
 x
 v1.7:
+-> Changes:
+- Moving the mouse is no longer needed to collect
+- Changed font from Quicksand to Quicksand Bold, can be changed in Settings
+- Updated all background images and increased their resolution
+- A lot more, see below!
+
 -> Weather:
 - New feature: Weather! Unlocked from the start
 - Every 5 minutes, the weather can change for 30 seconds
@@ -20,10 +26,32 @@ v1.7:
 - Water Coin boosts use the same pause behavior, so no time is lost
 - This took a lot of changes, so it's possible that a thing or two don't work as intended now
 
+-> Settings:
+- Reworked the Settings menu and design of Settings
+- Settings are now in a scrollable list with a consistent design
+- It has 5 sections: 1. Savefile 2. Gameplay 3. Design 4. Music & Audio 5. More
+- Added many new Setting images
+- Added 2 new Settings:
+- (Gameplay) Toggle Menu Pause: Pause the main gameplay when in menus
+- (Design) Text Font: Lets you change between Quicksand Bold (new default), Quicksand (pre-v1.7), Birdland Aeroplane (old versions), and system/browser default font
+
+-> Events:
+- New Event: Easter Event
+- Active from April 8th to April 21st
+- During the Event, new Weather arrives at 3x speed (300s -> 100s, 30s = 30s)
+- Every 15 seconds, an Egg appears for 15 seconds
+- Eggs can be collected by clicking twice, making 10 of your selected currency fall
+- Current Event is now displayed in the top right
+- Christmas Event: Changed start date from 14th to 15th (15 -> 14 days)
+
+-> Achievements:
+- Added 15 new Achievements (50 total)
+- New Achievements are now also given on auto save and loading a save, not only when looking at Achievements
+- Page buttons now hide when you can't go further
+- Achievement boost specifies it's for Raingold/Glowbles (depending on the selected currency)
+
 -> Other:
-- Moving the mouse is no longer needed to collect
-- Updated all background images and increased their resolution
-- Removed game saved notification
+- Changed the main menu's top, now with Weather and event display
 - Improved Water Coin amount display (main menu)
 - Updated WGGJ from v1.2.1 to v1.3
 `
@@ -32,6 +60,8 @@ images = {
     button: "button.png",
     achbg: "cool-outline.png",
     locked: "locked.png",
+    egg: "egg.png",
+    egg2: "egg-cracked.png",
 
     bg: "bg/bg.png",
     bg2: "bg/bg2.png",
@@ -59,6 +89,12 @@ images = {
     backgroundoff: "settings/backgroundoff.png",
     notation: "settings/notation.png",
     notationoff: "settings/notationoff.png",
+    export: "settings/export.png",
+    import: "settings/import.png",
+    delete: "settings/delete.png",
+    menupause: "settings/menupause.png",
+    luna32x32: "settings/luna32x32.png",
+    font: "settings/font.png",
 
     collected: "effects/collected.png",
     collected2: "effects/collected2.png",
@@ -86,7 +122,6 @@ images = {
 setupSave();
 
 GAMENAME = "Rain Collector";
-FONT = "Quicksand";
 wggjLoadImages();
 wggjLoop();
 
@@ -130,6 +165,7 @@ function customWGGJLoop(delta) {
 
     fallingItemTick(delta / 1000);
     tickWeather(delta / 1000);
+    tickEggs(delta / 1000);
 }
 
 var fallingItems = {};
@@ -187,6 +223,10 @@ function fallingItemTick(tick) {
     // timed coin boosts
     game.watercoin.tempBoostTime -= tick;
     game.watercoin.superAutoTime -= tick;
+}
+
+function updateFont() {
+    FONT = ["Quicksand Bold", "Quicksand", "Birdland Aeroplane", "none"][game.settings.font];
 }
 
 // Notations
@@ -327,14 +367,6 @@ function formatDate(date) {
     }
 
     return months[date.substr(4, 2) - 1] + " " + date.substr(6, 2) + postDay + " " + date.substr(0, 4);
-}
-
-function isChristmas() {
-    if (game.stats.totalRaingold < 2000) return false;
-
-    let currentDate = parseInt(today().substr(4));
-    if (currentDate >= 1214 && currentDate <= 1228) return true;
-    return false;
 }
 
 function wggjUpdateTextScaling() {

@@ -1,6 +1,14 @@
 var statDisplays = {
     playTime: ["Play Time", (stat) => Math.floor(stat / 1000 / 60 / 60) + " hours " + Math.floor(stat / 1000 / 60 % 60) + " minutes"],
     prestiges: ["Prestiges"],
+
+    weathers: ["Weather Changes"],
+    weatherSunny: ["Sunny Weather"],
+    weatherWindy: ["Windy Weather"],
+    weatherThunder: ["Thunder Weather"],
+
+    eggs: ["Eggs Collected"],
+
     itemsGained: ["Items Gained"],
     itemsUses: ["Items Used"],
     itemsBroken: ["Items Broken"],

@@ -93,6 +93,11 @@ class SaveGame {
         this.stats = {
             playTime: 0,
             prestiges: 0,
+            weathers: 0,
+            weatherSunny: 0,
+            weatherWindy: 0,
+            weatherThunder: 0,
+            eggs: 0,
 
             // items
             itemsGained: 0,
@@ -137,7 +142,8 @@ class SaveGame {
             music: false,
             bg: true,
             notation: "normal",
-            menupause: true
+            menupause: true,
+            font: 0,
         }
     }
     loadFromSaveGame(sg, passive = false) {
@@ -182,6 +188,7 @@ class SaveGame {
         }
         if (sg.items.iron > 0 && this.iron.amount.eq(0)) this.iron.amount = new Decimal(sg.items.iron);
 
+        updateFont();
         checkAchievements();
     }
 }
