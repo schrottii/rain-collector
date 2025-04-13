@@ -3,8 +3,8 @@
 const GAMEVERSION = "1.7";
 
 const PATCHNOTES = `
-x
-v1.7:
+2025/04/14
+v1.7 Weather Collector:
 -> Changes:
 - Moving the mouse is no longer needed to collect
 - Changed font from Quicksand to Quicksand Bold, can be changed in Settings

@@ -10,7 +10,7 @@ function isEaster() {
     if (game.stats.totalRaingold < 2000) return false;
 
     let currentDate = parseInt(today().substr(4));
-    if (currentDate >= 406 /* CHANGE TO 408!!! */ && currentDate <= 421) return true;
+    if (currentDate >= 415 && currentDate <= 428) return true;
     return false;
 }
 
