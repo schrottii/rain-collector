@@ -37,7 +37,7 @@ v1.7 Weather Collector:
 
 -> Events:
 - New Event: Easter Event
-- Active from April 8th to April 21st
+- Active from April 15th to April 28th
 - During the Event, new Weather arrives at 3x speed (300s -> 100s, 30s = 30s)
 - Every 15 seconds, an Egg appears for 15 seconds
 - Eggs can be collected by clicking twice, making 10 of your selected currency fall
