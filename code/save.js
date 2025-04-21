@@ -186,7 +186,7 @@ class SaveGame {
                 this.items.items[item] = new InventoryItem(loadingItem.id, loadingItem.rd, loadingItem.rw, loadingItem.d, loadingItem.l);
             }
         }
-        if (sg.items.iron > 0 && this.iron.amount.eq(0)) this.iron.amount = new Decimal(sg.items.iron);
+        if (sg.items != undefined && this.iron != undefined && sg.items.iron > 0 && this.iron.amount.eq(0)) this.iron.amount = new Decimal(sg.items.iron);
 
         updateFont();
         checkAchievements();
