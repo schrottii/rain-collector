@@ -61,7 +61,7 @@ class Item {
     getBoost(currencyName, falseReturn = 0) {
         if (this.config == undefined || this.config.boosts == undefined) return falseReturn;
 
-        let myBoost;
+        let myBoost = 1;
         if (typeof (currencyName) == "string") myBoost = this.config.boosts[currencyName];
         else myBoost = this.config.boosts[Object.keys(this.config.boosts)[currencyName]];
 
@@ -235,7 +235,7 @@ function getItemBoost(currencyName, consume = false) {
         let thisItem = game.items.items[game.items.eqitems[item]];
 
         let amountBefore = amount;
-        amount += thisItem.getBoost(currencyName, 1);
+        amount += thisItem.getBoost(currencyName, 0);
         if (consume && amountBefore != amount) {
             // Reduce durability, the item gets used
             thisItem.reduceDurability();
