@@ -39,6 +39,9 @@ function spawnEgg() {
                     createFallingItem(game.selCur)
                 }
                 game.stats.eggs++;
+                if (strikeActive) {
+                    awardAchievement(55);
+                }
             }
         }, { quadratic: true, centered: true });
     }

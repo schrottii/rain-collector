@@ -173,7 +173,7 @@ class ItemObject {
             case "inventory":
                 return game.items.items[this.nr] != undefined ? this.nr : -1;
             case "selected":
-                return game.items.items.indexOf(selectedItem);
+                return Object.keys(game.items.items).indexOf("" + selectedItem);
         }
     }
 
@@ -186,19 +186,23 @@ class ItemObject {
     }
 
     createObjects() {
-        createButton(this.me() + "bg", this.x, this.y, 0.1, 0.1, "button", () => {
+        createButton(this.me() + "bg", this.x, this.y, 0.1, 0.1, "common", () => {
             if (this.getInventoryID() != -1) {
                 selectedItem = this.getInventoryID();
             }
             else selectedItem = 0;
         }, { quadratic: true, centered: true });
         createImage(this.me() + "pic", this.x, this.y, 0.1, 0.1, "items/sword", { quadratic: true, centered: true });
+        createSquare(this.me() + "bar", this.x - 0.05, this.y + 0.09, 0.1, 0.01, "black");
+        createSquare(this.me() + "barfill", this.x - 0.05, this.y + 0.09, 0, 0.01, "red");
     }
 
     updateObjects() {
         //if (!this.getItem().isUnlocked()) return false;
 
+        objects[this.me() + "bg"].image = this.getItem().getRarityName().toLowerCase();
         objects[this.me() + "pic"].image = this.getItem().img;
+        if (this.getInventoryID() >= 0) objects[this.me() + "barfill"].w = 0.1 * (game.items.items[this.getInventoryID()].getRemainingDurability() / game.items.items[this.getInventoryID()].getDurability());
     }
 }
 

@@ -1,8 +1,27 @@
 // game made by schrottii, do not steal/copy bla bla bla
 
-const GAMEVERSION = "1.7";
+const GAMEVERSION = "1.7.1";
 
 const PATCHNOTES = `
+2025/04/22
+v1.7.1:
+-> Items:
+- Added bars indicating the remaining durability of an Item
+- Added 5 new Item backgrounds, one for every rarity + empty
+- Changed Iron image
+
+-> Achievements:
+- Added 5 new Achievements (for the event)
+- Added notification when you get an Achievement (based on the old auto save text)
+
+-> Other:
+- Random Weather can no longer choose rainy (rainy -> rainy)
+- Moved main menu top texts a bit lower
+- Fixed item durability sometimes being used up when it shouldn't be
+- Fixed save issues regarding items/iron
+
+
+
 2025/04/14
 v1.7 Weather Collector:
 -> Changes:
@@ -60,6 +79,13 @@ images = {
     button: "button.png",
     achbg: "cool-outline.png",
     locked: "locked.png",
+
+    common: "common.png",
+    uncommon: "uncommon.png",
+    rare: "rare.png",
+    epic: "epic.png",
+    unobtainable: "unobtainable.png",
+
     egg: "egg.png",
     egg2: "egg-cracked.png",
 
@@ -155,12 +181,10 @@ function customWGGJLoop(delta) {
         autoSaveTime = 0;
     }
     else {
-        /*
-        if (objects["autoSaveText"] != undefined && objects["autoSaveText"].text != "") {
-            objects["autoSaveText"].y -= 0.0001 * delta;
-            if (objects["autoSaveText"].y < 0.85) objects["autoSaveText"].text = "";
+        if (objects["achievementText"] != undefined && objects["achievementText"].text != "") {
+            objects["achievementText"].y -= 0.0001 * delta;
+            if (objects["achievementText"].y < 0.85) objects["achievementText"].text = "";
         }
-        */
     }
 
     fallingItemTick(delta / 1000);

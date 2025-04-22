@@ -15,8 +15,26 @@ class Achievement {
 function checkAchievements() {
     for (let ach in achievements) {
         if (!achievements[ach].isUnlocked() && achievements[ach].unlock() == true) {
-            game.achievements.push(parseInt(achievements[ach].ID));
+            awardAchievement(parseInt(achievements[ach].ID));
         }
+    }
+}
+
+function getAchievementByID(aid) {
+    for (let ach in achievements) {
+        if (achievements[ach].ID == aid) return achievements[ach];
+    }
+}
+
+function awardAchievement(aid) {
+    if (!game.achievements.includes(aid)) game.achievements.push(aid);
+
+    if (objects["achievementText"] != undefined) {
+        objects["achievementText"].y = 1;
+        objects["achievementText"].text = getAchievementByID(aid).name;
+    }
+    else {
+        createText("achievementText", 0.95, 1, getAchievementByID(aid).name, { align: "right", color: "yellow", size: 40 });
     }
 }
 
@@ -83,6 +101,12 @@ const achievements = [
     new Achievement(48, "currencies/iron", "Heavy Metal III", "Gather 100 Iron!", () => game.stats.totalIron >= 100),
     new Achievement(49, "currencies/iron", "Heavy Metal IV", "Gather 500 Iron!", () => game.stats.totalIron >= 500),
     new Achievement(50, "currencies/iron", "Heavy Metal V", "Gather 2600 Iron!", () => game.stats.totalIron >= 2600),
+
+    new Achievement(51, "egg", "Egg Collector", "Play during the Easter Event", () => isEaster()),
+    new Achievement(52, "egg", "Egg Hunt I", "Find 5 Eggs!", () => game.stats.eggs >= 5),
+    new Achievement(53, "egg", "Egg Hunt II", "Find 50 Eggs!", () => game.stats.eggs >= 50),
+    new Achievement(54, "egg", "Egg Hunt III", "Find 500 Eggs!", () => game.stats.eggs >= 500),
+    new Achievement(55, "egg2", "I'll Save You, Little One", "Find an Egg while Thunder strikes", () => false),
 ];
 
 scenes["achievements"] = new Scene(

@@ -33,15 +33,17 @@ function tickWeather(tick) {
     if (weatherSecs >= weatherSecsNeeded) {
         let randy = Math.random();
 
+        /*
         if (randy >= 0.75) {
             currentWeather = "rainy";
         }
-        else if (randy >= 0.5) {
+        */
+        if (randy >= 2/3) {
             currentWeather = "sunny";
             game.stats.weathers++;
             game.stats.weatherSunny++;
         }
-        else if (randy >= 0.25) {
+        else if (randy >= 1/3) {
             currentWeather = "windy";
             game.stats.weathers++;
             game.stats.weatherWindy++;
