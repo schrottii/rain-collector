@@ -43,6 +43,11 @@ var statDisplays = {
     totalIron: ["Total Iron"],
     mostIron: ["Most Iron"],
     itemIron: ["Iron Collected"],
+
+    totalMuddrops: ["Total Muddrops"],
+    mostMuddrops: ["Most Muddrops"],
+    itemMuddrops: ["Muddrops Collected"],
+    itemMudpuddles: ["Mud puddles Collected"],
 }
 
 scenes["stats"] = new Scene(

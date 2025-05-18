@@ -94,18 +94,18 @@ scenes["mainmenu"] = new Scene(
         createImage("sceneImage1", 0.5 / 4, 0.91, 0.08, 0.08, "upgrades", { quadratic: true, centered: true });
 
         createButton("sceneButton2", 0 + 1 / 4, 0.9, 1 / 4, 0.1, "button", () => {
-            if (cc().getPrestigeCurrency() == undefined) alert("There is no prestige for this currency!");
+            if (cc().getPrestigeCurrency() == undefined) notification_Alert("Not available", "There is no prestige for this currency!");
             else if (cc().getPrestigeCurrency().isUnlocked() || cc().getPrestigeCurrency().getAmount().gt(0)) {
                 leaveMainMenu();
                 loadScene("prestige");
             }
-            else alert("Collect more " + cc().renderName(true) + " to unlock!");
+            else notification_Alert("Locked", "Collect more " + cc().renderName(true) + " to unlock! (" + cc().getAmount() + "/" + cc().getPrestigeCurrency().unlock[1] + ")", "currencies/" + cc().image);
         });
         createImage("sceneImage2", 0.5 / 4 * 3, 0.91, 0.08, 0.08, "prestige", { quadratic: true, centered: true });
         createImage("sceneButton2locked", 0 + 1 / 4, 0.9, 1 / 4, 0.1, "locked", { power: false });
 
         createButton("sceneButton3", 0 + 1 / 4 * 2, 0.9, 1 / 4, 0.1, "button", () => {
-            if (!unlockedItems()) alert("Unlocked at 1000 total Glowbles!");
+            if (!unlockedItems()) notification_Alert("Locked", "Unlocked at 1000 total Glowbles!", "currencies/glowble");
             else {
                 leaveMainMenu();
                 loadScene("itemselection");
@@ -144,15 +144,15 @@ scenes["mainmenu"] = new Scene(
 
         // Top / Weather
         createSquare("topBG", 0, 0, 1, 0.05, "#560000");
-        createText("header", 0.975, 0.021, "Rain Collector", { size: 30, color: "white", align: "right" });
-        createText("header2", 0.975, 0.042, "v"
+        createText("header", 0.975, 0.025, "Rain Collector", { size: 30, color: "white", align: "right" });
+        createText("header2", 0.975, 0.045, "v"
             + GAMEVERSION
             + (isChristmas() ? " (Christmas)" : "")
             + (isEaster() ? " (Easter)" : "")
             , { size: 30, color: "white", align: "right" });
 
         createImage("weatherDisplay", 0, 0, 0.05, 0.05, "weather-thunder", { quadratic: true });
-        createText("weatherText", 0.12, 0.021, "Weather: Thunder", { size: 30, color: "white", align: "left" });
+        createText("weatherText", 0.12, 0.025, "Weather: Thunder", { size: 30, color: "white", align: "left" });
         createSquare("weatherBarBG", 0.12, 0.03, 0.28, 0.02, "black");
         createSquare("weatherBarFill", 0.12, 0.03, 0.28, 0.02, "lightblue");
 

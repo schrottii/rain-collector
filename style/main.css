@@ -7,6 +7,16 @@ html, body {
 }
 
 @font-face {
+    font-family: 'Quicksand Bold';
+    src: url('./Quicksand_Bold.otf');
+}
+
+@font-face {
     font-family: 'Quicksand';
     src: url('./Quicksand_Book.otf');
+}
+
+@font-face {
+    font-family: 'Birdland';
+    src: url('./Birdland Aeroplane.otf');
 }

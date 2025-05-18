@@ -1,84 +1,45 @@
 // game made by schrottii, do not steal/copy bla bla bla
 
-const GAMEVERSION = "1.7.1";
+const GAMEVERSION = "1.8";
 
 const PATCHNOTES = `
-2025/04/22
-v1.7.1:
--> Items:
-- Added bars indicating the remaining durability of an Item
-- Added 5 new Item backgrounds, one for every rarity + empty
-- Changed Iron image
+2025/05/18
+v1.8:
+-> Muddrops:
+- New main currency!
+- Unlocked at 5000 total Glowbles
+- When the drop hits the ground, it turns into a puddle
+- Falling drops count 2x for Water Coins
+- Puddles speed up Weather by 2s instead (no Coin progress)
+- Gains affected by Weather, Temp Boost and Economic Bubble
+- 3 upgrades: Worth, Auto and Puddling
+- More Muddrop content and interaction between currencies coming soon
 
--> Achievements:
-- Added 5 new Achievements (for the event)
-- Added notification when you get an Achievement (based on the old auto save text)
+-> Notifications:
+- New feature: ingame notifications!
+- Notification alerts replace the previous browser-based alerts
+- They can not only have text, but also a header and an image
+- Added extra info to some alerts
+- Added them for buying/gaining items
 
--> Other:
-- Random Weather can no longer choose rainy (rainy -> rainy)
+-> Design:
+- Adjusted text size for settings and patch notes
 - Moved main menu top texts a bit lower
-- Fixed item durability sometimes being used up when it shouldn't be
-- Fixed save issues regarding items/iron
-
-
-
-2025/04/14
-v1.7 Weather Collector:
--> Changes:
-- Moving the mouse is no longer needed to collect
-- Changed font from Quicksand to Quicksand Bold, can be changed in Settings
-- Updated all background images and increased their resolution
-- A lot more, see below!
-
--> Weather:
-- New feature: Weather! Unlocked from the start
-- Every 5 minutes, the weather can change for 30 seconds
-- Rainy: default weather
-- Sunny: 3x slower drop rate, but 3x worth
-- Windy: 50% faster falls, but 1.5x worth
-- Thunder: Sometimes thunder destroys some stuff, but x1.25 worth
-
--> Menu Pause:
-- Previously, the game always paused when you opened something (upgrades, settings, etc.) and reset the falling items (such as Raindrops)
-- Now, falling items are no longer reset, they just get paused when in a menu
-- Additionally, if the new setting Menu Pause (enabled by default) is disabled, they don't even get paused, the game keeps running (including auto)
-- Water Coin boosts use the same pause behavior, so no time is lost
-- This took a lot of changes, so it's possible that a thing or two don't work as intended now
-
--> Settings:
-- Reworked the Settings menu and design of Settings
-- Settings are now in a scrollable list with a consistent design
-- It has 5 sections: 1. Savefile 2. Gameplay 3. Design 4. Music & Audio 5. More
-- Added many new Setting images
-- Added 2 new Settings:
-- (Gameplay) Toggle Menu Pause: Pause the main gameplay when in menus
-- (Design) Text Font: Lets you change between Quicksand Bold (new default), Quicksand (pre-v1.7), Birdland Aeroplane (old versions), and system/browser default font
-
--> Events:
-- New Event: Easter Event
-- Active from April 15th to April 28th
-- During the Event, new Weather arrives at 3x speed (300s -> 100s, 30s = 30s)
-- Every 15 seconds, an Egg appears for 15 seconds
-- Eggs can be collected by clicking twice, making 10 of your selected currency fall
-- Current Event is now displayed in the top right
-- Christmas Event: Changed start date from 14th to 15th (15 -> 14 days)
-
--> Achievements:
-- Added 15 new Achievements (50 total)
-- New Achievements are now also given on auto save and loading a save, not only when looking at Achievements
-- Page buttons now hide when you can't go further
-- Achievement boost specifies it's for Raingold/Glowbles (depending on the selected currency)
+- Item Shop: moved buy random item lower
 
 -> Other:
-- Changed the main menu's top, now with Weather and event display
-- Improved Water Coin amount display (main menu)
-- Updated WGGJ from v1.2.1 to v1.3
+- Added 5 Achievements (60 total)
+- New setting: Text Scaling (x0.25, x0.5, x0.75, x1, x1.25, x1.5, x2)
+- Added web app support
+- Improved font stability
+- Fixed that I bought too many Eggs
 `
 
 images = {
     button: "button.png",
     achbg: "cool-outline.png",
     locked: "locked.png",
+    mudpuddle: "mudpuddle.png",
 
     common: "common.png",
     uncommon: "uncommon.png",
@@ -136,6 +97,7 @@ images = {
     "currencies/snowflake": "currencies/snowflake.png",
     "currencies/glowble": "currencies/glowble.png",
     "currencies/iron": "currencies/iron.png",
+    "currencies/muddrop": "currencies/muddrop.png",
 
     "items/sword": "items/sword.png",
     "items/barrel": "items/barrel.png",
@@ -226,12 +188,15 @@ function fallingItemTick(tick) {
     // handle the falling down of every item, and auto collect
     for (let i = 1; i <= ITEM_LIMIT; i++) {
         if (fallingItems["drop" + i].power) {
+            // AGE TICK
+            fallingItems["drop" + i].age += tick;
+
             // FALL DOWN
             if (game.snowflake.freezedowntime <= 0) fallingItems["drop" + i].y += tick * 0.6 * getItemCur(i).speedMulti / snowflakeUpgrades.slowfall.getEffect() * weathers[currentWeather].fallSpeedMulti;
 
             // AUTO
             if (fallingItems["drop" + i].y > 0.1 && !fallingItems["drop" + i].autod && fallingItems["drop" + i].currency != "raingold" && fallingItems["drop" + i].currency != "watercoin" && cc().auto() > 0) {
-                if (Math.random() * 100 <= cc().auto() || game.watercoin.superAutoTime > 0) {
+                if (Math.random() * 100 <= getItemCur(i).auto() || game.watercoin.superAutoTime > 0) {
                     collectItem(i, true);
                     fallingItems["drop" + i].isAuto = true;
                     //console.log("auto collected");
@@ -240,7 +205,12 @@ function fallingItemTick(tick) {
             }
 
             // KILL EM
-            if (fallingItems["drop" + i].y > 0.8) fallingItems["drop" + i].power = false;
+            if (fallingItems["drop" + i].y > 0.65) {
+                if (getItemCur(i).onBottom != undefined) getItemCur(i).onBottom(fallingItems["drop" + i]);
+            }
+            if (fallingItems["drop" + i].y > 0.8) {
+                fallingItems["drop" + i].power = false;
+            }
         }
     }
 
@@ -250,13 +220,13 @@ function fallingItemTick(tick) {
 }
 
 function updateFont() {
-    FONT = ["Quicksand Bold", "Quicksand", "Birdland Aeroplane", "none"][game.settings.font];
+    FONT = ["Quicksand Bold", "Quicksand", "Birdland", "none"][game.settings.font];
 }
 
 // Notations
 const upgradeColors = ["normal", "old", "custom"]
 const notations = ["normal", "scientific", "engineering", "alphabet"];
-const normalNotation = ["M", "B", "T", "q", "Q", "s", "S", "O", "N", "D", "UD", "DD", "TD", "qD", "QD", "sD", "SD", "OD", "ND", "V", "sV", "Tr", "UTR", "QU", "TQU", "qu", "Se", "Sp", "Oc", "No", "Améliorer", "What?!?!", "What?!?!2", "You Broke The Game", "I am crying", "no!!!", "WhyDoesFranceStillExist", "GodIsWatchingYou"];
+const normalNotation = ["M", "B", "T", "q", "Q", "s", "S", "O", "N", "D", "UD", "DD", "TD", "qD", "QD", "sD", "SD", "OD", "ND", "V", "sV", "Tr", "UTR", "QU", "TQU", "qu", "Se", "Sp", "Oc", "No", "Amï¿½liorer", "What?!?!", "What?!?!2", "You Broke The Game", "I am crying", "no!!!", "WhyDoesFranceStillExist", "GodIsWatchingYou"];
 const alphabetNotation = "a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z".split(" ")
 
 let pre =

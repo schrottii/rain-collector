@@ -201,3 +201,9 @@ const glowbleUpgrades = {
     bigpop: new Upgrade("glowble", "bigpop", "Big Pop", level => "Big Bubbles are worth extra. x" + (1 + level * 0.1).toFixed(1), level => 10 + level * 10 * Math.pow(1.04, level), level => 1 + level * 0.1, 0),
     inflatedfall: new Upgrade("glowble", "inflatedfall", "Inflated Fall", level => "Adds a chance of big currencies falling (affected by Big Pop). Chance: " + (level * 0.1).toFixed(1) + "%", level => 10 + level * 10 * Math.pow(1.2, level), level => level * 0.1, 100),
 }
+
+const muddropUpgrades = {
+    worth: new Upgrade("muddrop", "worth", "Muddrop Worth", level => "Muddrops are worth more. Current worth: +" + level, level => 25 * Math.pow(1.05, level), level => level, 0),
+    auto: new Upgrade("muddrop", "auto", "Muddrop Auto", level => "Muddrops can be collected automatically. Chance: " + level + "%", level => 5 * Math.pow(level + 1, 2.5), level => level, 25),
+    puddling: new Upgrade("muddrop", "puddling", "Muddrop Puddling", level => "Muddrops stay on the ground for longer. Lifespan: " + muddropUpgrades.puddling.getEffect(level).toFixed(2) + "s", level => 1000 * Math.pow(level + 1, 1.5), level => 5 + level, 55),
+};

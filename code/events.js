@@ -15,6 +15,8 @@ function isEaster() {
 }
 
 function spawnEgg() {
+    if (!isEaster()) return false;
+    
     if (objects["egg"] != undefined) {
         // Make it visible again
         objects["egg"].image = "egg";
@@ -57,6 +59,8 @@ var eggSecs = 0;
 var eggSpawned = false;
 
 function tickEggs(tick) {
+    if (!isEaster()) return false;
+
     eggSecs += tick;
 
     if (eggSecs >= 15 && !eggSpawned) {

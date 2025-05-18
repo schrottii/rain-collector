@@ -290,7 +290,7 @@ function awardItem(itemID) {
     game.items.items.push(new InventoryItem(itemID, rd, rw, 0, 1));
 }
 
-function awardRandomitem(multi = 1) {
+function awardRandomItem(multi = 1) {
     // this picks a random item from a random rarity and gives it to the player
     let rarity = rollRandomItemRarity(multi);
 

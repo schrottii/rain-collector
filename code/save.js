@@ -65,6 +65,16 @@ class SaveGame {
             amount: new Decimal(0),
         }
 
+        this.muddrop = {
+            amount: new Decimal(0),
+
+            upgrades: {
+                worth: 0,
+                auto: 0,
+                puddling: 0,
+            }
+        }
+
         // event currencies
 
         this.snowflake = {
@@ -136,6 +146,11 @@ class SaveGame {
             totalIron: 0,
             mostIron: 0,
             itemIron: 0,
+
+            totalMuddrops: new Decimal(0),
+            mostMuddrops: new Decimal(0),
+            itemMuddrops: 0,
+            itemMudpuddles: 0,
         }
 
         this.settings = {
@@ -144,6 +159,7 @@ class SaveGame {
             notation: "normal",
             menupause: true,
             font: 0,
+            textscale: 1,
         }
     }
     loadFromSaveGame(sg, passive = false) {
@@ -261,7 +277,7 @@ function exportGame() {
     // attempt to write to clipboard
     navigator.clipboard.writeText(toSave);
 
-    alert("The save has been copied to your clipboard!\nLength: " + toSave.length);
+    notification_Alert("Saved", "The save has been copied to your clipboard!\nLength: " + toSave.length);
 }
 
 function importGame() {
@@ -270,7 +286,7 @@ function importGame() {
     if (save == undefined || save == null || save == "") return false;
 
     if (save.substr(0, 4) != "rain") {
-        alert("That doesn't seem to be a valid Rain Collector save!");
+        notification_Alert("Error", "That doesn't seem to be a valid Rain Collector save!");
         return false;
     }
 
@@ -283,10 +299,10 @@ function importGame() {
         game = new SaveGame();
         game.new();
         game.loadFromSaveGame(parsedSave);
-        alert("Save loaded!");
+        notification_Alert("Loaded", "Save loaded!");
     }
     catch (e) {
-        alert("Error: " + e);
+        notification_Alert("Error", "Error: " + e);
     }
 }
 
@@ -301,7 +317,7 @@ function deleteGame() {
 
                 loadScene("mainmenu");
 
-                alert("Progress dropped successfully!");
+                notification_Alert("Hard Reset", "Progress dropped successfully!");
             }
         }
     }

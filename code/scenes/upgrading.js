@@ -10,7 +10,7 @@ scenes["upgrading"] = new Scene(
         createText("header", 0.5, 0.06, "Upgrades", { size: 60, color: "white" });
 
         // Water Coin
-        let showWaterCoinButton = viewUpgrades == "raindrop" || viewUpgrades == "bubble";
+        let showWaterCoinButton = viewUpgrades == "raindrop" || viewUpgrades == "bubble" || viewUpgrades == "muddrop";
         if (showWaterCoinButton) {
             createButton("wcSquare", 0.8, 0.9, 0.2, 0.1, "button", () => {
                 justClickedWaterCoinButton = 0.33; // do not directly leave, for 0.33s

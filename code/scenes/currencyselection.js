@@ -5,7 +5,7 @@ scenes["currencyselection"] = new Scene(
         if (game.settings.bg) createImage("bgSquare2", 0, 0, 1, 0.9, "bgShop");
 
         createText("header", 0.5, 0.06, "Currency Selection", { size: 60, color: "white" });
-        createText("header2", 0.5, 0.46, "Event Currencies", { size: 60, color: "white" });
+        createText("header2", 0.5, 0.56, "Event Currencies", { size: 60, color: "white" });
 
         // Go back
         createButton("backSquare", 0, 0.9, 1, 0.1, "button", () => { loadScene("mainmenu") });
@@ -14,9 +14,10 @@ scenes["currencyselection"] = new Scene(
         // Currencies
         currencies.raindrop.createObjects(0);
         currencies.bubble.createObjects(1);
+        currencies.muddrop.createObjects(2);
 
         // Event
-        currencies.snowflake.createObjects(4);
+        currencies.snowflake.createObjects(5);
     },
     (tick) => {
         // Loop
@@ -24,8 +25,9 @@ scenes["currencyselection"] = new Scene(
         // Currencies
         currencies.raindrop.updateObjects(0);
         currencies.bubble.updateObjects(1);
+        currencies.muddrop.updateObjects(2);
 
         // Event
-        currencies.snowflake.updateObjects(4);
+        currencies.snowflake.updateObjects(5);
     }
 );

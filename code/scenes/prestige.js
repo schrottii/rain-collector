@@ -68,11 +68,11 @@ scenes["prestige"] = new Scene(
 
         createButton("prestigeButton", 0.5, 0.25, 0.2, 0.2, "prestige", () => {
             if (!cc().getPrestigeCurrency().isUnlocked()) {
-                alert("You need to collect more " + cc().renderName(true) + "!");
+                notification_Alert("Locked", "You need to collect more " + cc().renderName(true) + "!");
                 return false;
             }
             if (calcPrestigeAmount() < 1) {
-                alert("You can't prestige for 0 " + cc().getPrestigeCurrency().renderName(true) + "! Keep progressing!");
+                notification_Alert("Zero", "You can't prestige for 0 " + cc().getPrestigeCurrency().renderName(true) + "! Keep progressing!");
                 return false;
             }
 

@@ -16,19 +16,23 @@ scenes["itemshop"] = new Scene(
             if (game.items.items.length < maxItems && parseInt(game.items.freeItemTime) < parseInt(today())) {
                 game.items.freeItemTime = today();
                 game.stats.itemsDaily++;
-                awardRandomitem();
+                awardRandomItem();
+
+                notification_Item(game.items.items[game.items.items.length - 1]);
             }
         }, { quadratic: true, centered: true });
 
         // Buy Item
-        createText("buyItemText", 0.5, 0.5, "Buy random item (50 Iron)", { size: 60, color: "white" });
-        createText("ironAmount", 0.5, 0.525, "", { size: 30, color: "white" });
-        createImage("ironPic", 0.625, 0.5, 0.05, 0.05, "currencies/iron", { quadratic: true, centered: true });
-        createButton("buyItem", 0.5, 0.55, 0.2, 0.2, "items/sword", () => {
+        createText("buyItemText", 0.5, 0.65, "Buy random item (50 Iron)", { size: 60, color: "white" });
+        createText("ironAmount", 0.5, 0.675, "", { size: 30, color: "white" });
+        createImage("ironPic", 0.625, 0.65, 0.05, 0.05, "currencies/iron", { quadratic: true, centered: true });
+        createButton("buyItem", 0.5, 0.7, 0.2, 0.2, "items/sword", () => {
             if (game.items.items.length < maxItems && game.iron.amount >= 50) {
                 game.iron.amount = game.iron.amount.sub(50);
                 game.stats.itemsBought++;
-                awardRandomitem(10);
+                awardRandomItem(10);
+
+                notification_Item(game.items.items[game.items.items.length - 1]);
             }
         }, { quadratic: true, centered: true });
     },

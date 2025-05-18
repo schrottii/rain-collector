@@ -13,6 +13,8 @@ class Currency {
             this.prestigeCurrency = config.prestigeCurrency;
             this.varyingSize = config.varyingSize;
 
+            this.onBottom = config.onBottom;
+
             this.prestigeFormula = config.prestigeFormula;
 
             this.config = config;
@@ -111,6 +113,8 @@ class Currency {
                 return snowflakeUpgrades;
             case "glowble":
                 return glowbleUpgrades;
+            case "muddrop":
+                return muddropUpgrades;
             default:
                 if (defaultReturn == false) return raindropUpgrades;
                 else return defaultReturn;
@@ -134,6 +138,8 @@ class Currency {
                 return raindropUpgrades.auto.getEffect();
             case "bubble":
                 return bubbleUpgrades.auto.getEffect();
+            case "muddrop":
+                return muddropUpgrades.auto.getEffect();
             default:
                 return 0;
         }
@@ -218,6 +224,8 @@ function createFallingItem(item) {
                 * currencies[item].sizeMulti
                 * (currencies[item].varyingSize == true ? Math.max(0.5, Math.random()) : 1);
 
+            fallingItems["drop" + i].age = 0;
+
             fallingItems["drop" + i].inflated = false;
             if (glowbleUpgrades.inflatedfall.getLevel() > 0 && Math.random() * 100 <= glowbleUpgrades.inflatedfall.getEffect() && (item == "raindrop" || item == "bubble")) {
                 fallingItems["drop" + i].w = fallingItems["drop" + i].h = fallingItems["drop" + i].w * 1.5;
@@ -249,6 +257,9 @@ function getItemCur(index) {
     return currencies[fallingItems["drop" + index].currency];
 }
 
+
+
+// CURRENCIES DICT
 const currencies = {
     raindrop: new Currency("raindrop", "raindrop", [() => true, "Unlocked"], (item) => {
         let amount = (game.raindrop.upgrades.worth + 1)
@@ -270,6 +281,8 @@ const currencies = {
         pluralname: "raindrops",
         prestigeCurrency: "raingold",
     }),
+
+
     watercoin: new Currency("watercoin", "watercoin", [() => true, "Unlocked"], () => {
         game.watercoin.fill = 0;
         game.watercoin.fillNeeded += 5;
@@ -283,6 +296,8 @@ const currencies = {
     }, 1, 0.8, {
         pluralname: "watercoins"
     }),
+
+
     raingold: new Currency("raingold", "raingold", [() => game.raindrop.amount >= 1e4 || postPrestige.amount > 0 || game.raingold.amount >= 1, "1000 Raindrops"], () => {
         if (postPrestige.type != "raingold") return false;
         let amount = Math.ceil(postPrestige.worth
@@ -310,6 +325,8 @@ const currencies = {
             return amount;
         }
     }),
+
+
     bubble: new Currency("bubble", "bubble", [() => game.raingold.amount >= 2000, "2000 Raingold"], (item) => {
         let amount = ((game.bubble.upgrades.worth + 1)
             * (1 + game.glowble.amount / 100)
@@ -333,6 +350,8 @@ const currencies = {
         varyingSize: true,
         prestigeCurrency: "glowble"
     }),
+
+
     snowflake: new Currency("snowflake", "snowflake", [() => isChristmas(), "Christmas & 2000 Raingold"], () => {
         let amount = 1;
 
@@ -343,6 +362,8 @@ const currencies = {
     }, 1, 0.6, {
         pluralname: "snowflakes"
     }),
+
+
     glowble: new Currency("glowble", "glowble", [() => game.bubble.amount >= 1e5 || game.glowble.amount >= 1, "100 000 Bubbles"], (item) => {
         if (postPrestige.type != "glowble") return false;
         let amount = Math.ceil(postPrestige.worth
@@ -372,6 +393,8 @@ const currencies = {
             return amount;
         }
     }),
+
+
     iron: new Currency("iron", "iron", [() => unlockedItems(), "1000 Glowbles"], (item) => {
         if (item.power == false) return false;
         game.iron.amount = game.iron.amount.add(1);
@@ -380,4 +403,35 @@ const currencies = {
 
         if (game.iron.amount > game.stats.mostIron) game.stats.mostIron = game.iron.amount;
     }, 1.5, 1),
+
+
+    muddrop: new Currency("muddrop", "muddrop", [() => game.stats.totalGlowbles >= 5000, "5000 Glowbles"], (item) => {
+        let amount = (game.muddrop.upgrades.worth + 1)
+            * getItemBoost("muddrop", true)
+            * weathers[currentWeather].worthMulti
+            * (game.watercoin.tempBoostTime > 0 ? watercoinUpgrades.tempboost.getEffect() : 1)
+            * (item.isAuto ? 1 : (watercoinUpgrades.economicbubble.getEffect() / 100) * economicBubbleBoost + 1)
+        amount = Math.ceil(amount);
+
+        if (item.image == "mudpuddle") {
+            game.stats.itemMudpuddles += 1;
+            weatherSecs += 2;
+        }
+        else {
+            game.watercoin.fill += 2;
+        }
+
+        game.muddrop.amount = game.muddrop.amount.add(amount);
+        game.stats.totalMuddrops = game.stats.totalMuddrops.add(amount);
+        if (game.muddrop.amount.gt(game.stats.mostMuddrops)) game.stats.mostMuddrops = game.muddrop.amount;
+        game.stats.itemMuddrops += 1;
+    }, 1.2, 0.8, {
+        pluralname: "muddrops",
+        onBottom: (me) => {
+            me.image = "mudpuddle";
+            me.y = 0.65;
+
+            if (me.age > muddropUpgrades.puddling.getEffect()) me.y = 2;
+        }
+    }),
 };

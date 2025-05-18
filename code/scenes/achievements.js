@@ -107,6 +107,13 @@ const achievements = [
     new Achievement(53, "egg", "Egg Hunt II", "Find 50 Eggs!", () => game.stats.eggs >= 50),
     new Achievement(54, "egg", "Egg Hunt III", "Find 500 Eggs!", () => game.stats.eggs >= 500),
     new Achievement(55, "egg2", "I'll Save You, Little One", "Find an Egg while Thunder strikes", () => false),
+
+    new Achievement(56, "currencies/muddrop", "Muddy Fingers I", "Gather 15 Muddrops!", () => game.muddrop.amount.gte(15)),
+    new Achievement(57, "currencies/muddrop", "Muddy Fingers II", "Gather 500 Muddrops!", () => game.bubble.amount.gte(500)),
+    new Achievement(58, "currencies/muddrop", "Muddy Fingers III", "Gather 25000 Muddrops!", () => game.bubble.amount.gte(25000)),
+    new Achievement(59, "currencies/muddrop", "Muddy Fingers IV", "Gather 5e5 Muddrops!", () => game.bubble.amount.gte(5e5)),
+    new Achievement(60, "currencies/muddrop", "Muddy Fingers V", "Gather 5e7 Muddrops!", () => game.bubble.amount.gte(5e7)),
+
 ];
 
 scenes["achievements"] = new Scene(

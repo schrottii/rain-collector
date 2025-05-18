@@ -5,9 +5,9 @@ function newSettingUI(name, image, displayName, description, Y, onclick) {
     createImage(me + "imgbg", 0.1, Y + 0.22, 0.08, 0.08, "button", { quadratic: true, centered: true });
     createButton(me + "img", 0.1, Y + 0.23, 0.06, 0.06, image, onclick, { quadratic: true, centered: true });
 
-    createText(me + "title", 0.2, Y + 0.24, displayName, { align: "left", color: "#01E5E5", size: 56 });
-    createText(me + "desc", 0.2, Y + 0.265, typeof (description) == "function" ? "" : description.length < 48 ? description : description.substr(0, description.substr(0, 48).lastIndexOf(" ") + 1), { align: "left", color: "#01E5E5", size: 30 });
-    createText(me + "desc2", 0.2, Y + 0.295, typeof (description) == "function" ? "" : description.length < 48 ? "" : description.substr(description.substr(0, 48).lastIndexOf(" ") + 1), { align: "left", color: "#01E5E5", size: 30 });
+    createText(me + "title", 0.2, Y + 0.24, displayName, { align: "left", color: "#01E5E5", size: 48 });
+    createText(me + "desc", 0.2, Y + 0.265, typeof (description) == "function" ? "" : description.length < 48 ? description : description.substr(0, description.substr(0, 48).lastIndexOf(" ") + 1), { align: "left", color: "#01E5E5", size: 26 });
+    createText(me + "desc2", 0.2, Y + 0.295, typeof (description) == "function" ? "" : description.length < 48 ? "" : description.substr(description.substr(0, 48).lastIndexOf(" ") + 1), { align: "left", color: "#01E5E5", size: 26 });
 
     objects[me + "bg"].texter = description;
     objects["settingsContainer"].children.push(me + "bg", me + "title", me + "imgbg", me + "img", me + "desc", me + "desc2");
@@ -49,7 +49,7 @@ scenes["settings"] = new Scene(
             createText("settingTextSavefile", 0.5, 0.275, "Savefile", { color: "white", size: 40 }),
             createText("settingTextGameplay", 0.5, objects["settingTextSavefile"].y + 0.35, "Gameplay", { color: "white", size: 40 }),
             createText("settingTextDesign", 0.5, objects["settingTextGameplay"].y + 0.25, "Design", { color: "white", size: 40 }),
-            createText("settingTextAudio", 0.5, objects["settingTextDesign"].y + 0.25, "Music & Audio", { color: "white", size: 40 }),
+            createText("settingTextAudio", 0.5, objects["settingTextDesign"].y + 0.35, "Music & Audio", { color: "white", size: 40 }),
             createText("settingTextMore", 0.5, objects["settingTextAudio"].y + 0.15, "More", { color: "white", size: 40 }),
             // .y + 0.05 + 0.1 for every element
         ]);
@@ -89,6 +89,32 @@ scenes["settings"] = new Scene(
         });
         newSettingUI("font", "font", "Text Font", () => "Changes the appearance of texts. Current: " + ["Quicksand Bold (Default)", "Quicksand", "Birdland Aeroplane", "(System)"][game.settings.font], yy + 0.2, () => {
             game.settings.font = (game.settings.font + 1) % 4;
+            updateFont();
+        });
+        newSettingUI("textscale", "font", "Text Scaling", () => "Adjust the size of text. Current: x" + game.settings.textscale, yy + 0.3, () => {
+            switch (game.settings.textscale){
+                case 1:
+                    game.settings.textscale = 1.25;
+                    break;
+                case 1.25:
+                    game.settings.textscale = 1.5;
+                    break;
+                case 1.5:
+                    game.settings.textscale = 2;
+                    break;
+                case 2:
+                    game.settings.textscale = 0.25;
+                    break;
+                case 0.25:
+                    game.settings.textscale = 0.5;
+                    break;
+                case 0.5:
+                    game.settings.textscale = 0.75;
+                    break;
+                default:
+                    game.settings.textscale = 1;
+                    break;
+            }
             updateFont();
         });
 

@@ -403,6 +403,7 @@ class WGGJ_Text {
         if (this.noScaling) scaling = this.size;
         else scaling = this.size * wggjTextScaling;
         if (scaling > 60) scaling = ~~(scaling + 0.5);
+        scaling *= game.settings.textscale; // EDITED!!!
         return scaling;
     }
 
