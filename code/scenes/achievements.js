@@ -38,6 +38,16 @@ function awardAchievement(aid) {
     }
 }
 
+function killAchievement(aid){
+    let ID = -1;
+
+    for (let a in game.achievements){
+        if (game.achievements[a] == aid) ID = a;
+    }
+
+    if (ID != -1) game.achievements.splice(ID, 1);
+}
+
 var selectedAchievement = 0;
 var achievementsPage = 0;
 
@@ -109,10 +119,10 @@ const achievements = [
     new Achievement(55, "egg2", "I'll Save You, Little One", "Find an Egg while Thunder strikes", () => false),
 
     new Achievement(56, "currencies/muddrop", "Muddy Fingers I", "Gather 15 Muddrops!", () => game.muddrop.amount.gte(15)),
-    new Achievement(57, "currencies/muddrop", "Muddy Fingers II", "Gather 500 Muddrops!", () => game.bubble.amount.gte(500)),
-    new Achievement(58, "currencies/muddrop", "Muddy Fingers III", "Gather 25000 Muddrops!", () => game.bubble.amount.gte(25000)),
-    new Achievement(59, "currencies/muddrop", "Muddy Fingers IV", "Gather 5e5 Muddrops!", () => game.bubble.amount.gte(5e5)),
-    new Achievement(60, "currencies/muddrop", "Muddy Fingers V", "Gather 5e7 Muddrops!", () => game.bubble.amount.gte(5e7)),
+    new Achievement(57, "currencies/muddrop", "Muddy Fingers II", "Gather 500 Muddrops!", () => game.muddrop.amount.gte(500)),
+    new Achievement(58, "currencies/muddrop", "Muddy Fingers III", "Gather 25000 Muddrops!", () => game.muddrop.amount.gte(25000)),
+    new Achievement(59, "currencies/muddrop", "Muddy Fingers IV", "Gather 5e5 Muddrops!", () => game.muddrop.amount.gte(5e5)),
+    new Achievement(60, "currencies/muddrop", "Muddy Fingers V", "Gather 5e7 Muddrops!", () => game.muddrop.amount.gte(5e7)),
 
 ];
 
@@ -163,11 +173,11 @@ scenes["achievements"] = new Scene(
         createButton("pageButtonL", 0, 0.1, 0.15, 0.05, "button", () => {
             if (achievementsPage > 0) achievementsPage--;
         });
-        createText("pblt", 0.0775, 0.145, "<", { size: 40, noScaling: true });
+        createText("pblt", 0.0775, 0.15, "<", { size: 40, noScaling: true });
         createButton("pageButtonR", 0.85, 0.1, 0.15, 0.05, "button", () => {
             if (achievementsPage < Math.ceil(achievements.length / 25) - 1) achievementsPage++;
         });
-        createText("pbrt", 0.9275, 0.145, ">", { size: 40, noScaling: true });
+        createText("pbrt", 0.9275, 0.15, ">", { size: 40, noScaling: true });
     },
     (tick) => {
         // Loop

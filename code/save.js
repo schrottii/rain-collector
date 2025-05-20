@@ -264,6 +264,14 @@ function saveGame(toSave) {
         }
     }
 
+    // hihihihihihi
+    if (save.stats.totalMuddrops < 500) {
+        killAchievement(57);
+        killAchievement(58);
+        killAchievement(59);
+        killAchievement(60);
+    }
+
     // heaueh uaehaeuh
     save = JSON.stringify(save);
     save = "rain601" + btoa(save);

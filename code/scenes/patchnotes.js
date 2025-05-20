@@ -1,3 +1,48 @@
+var patPage = 0;
+let noteCount = 0;
+let noteSize = 0.032;
+
+function updatePatchNotes() {
+    // DYNAMIC Patch notes
+    let patchNotes = PATCHNOTES[Object.keys(PATCHNOTES)[patPage]].split("\n");
+    let linedNotes = [];
+    let charactersPerLine = isMobile() ? 45 : 80;
+
+    //patchNotes.splice(0, 1);
+    /*
+    for (let note in patchNotes) {
+        if (patchNotes[note] == "") patchNotes.splice(note, 1);
+    }
+    */
+
+    for (let note in patchNotes) {
+        let charactersMissing = Math.max(1, patchNotes[note].length);
+        let charactersPushed = 0;
+
+        while (charactersMissing > 0) {
+            let charactersAdded = patchNotes[note].length - charactersPushed < charactersPerLine ? charactersPerLine : patchNotes[note].substr(charactersPushed, charactersPerLine).lastIndexOf(" ");
+            if (charactersAdded == -1) charactersAdded = charactersMissing;
+
+            linedNotes.push(patchNotes[note].substr(charactersPushed, charactersAdded));
+
+            charactersMissing -= charactersAdded;
+            charactersPushed += charactersAdded;
+        }
+
+        for (noteCount = 0; noteCount < 256; noteCount++) {
+            objects["note" + noteCount].text = "";
+        }
+        for (noteCount = 0; noteCount < linedNotes.length; noteCount++) {
+            let sizeBonus = linedNotes[noteCount].substr(0, 2) == "->" ? 1.25 : 1;
+            objects["note" + noteCount].text = linedNotes[noteCount];
+            objects["note" + noteCount].size = 32 * sizeBonus;
+        }
+
+        objects["notesContainer"].YLimit[1] = noteSize * noteCount - (0.6 - noteSize * 2);
+        objects["notesContainer"].scrolledY = 0;
+    }
+}
+
 scenes["patchnotes"] = new Scene(
     () => {
         // Init
@@ -10,6 +55,18 @@ scenes["patchnotes"] = new Scene(
 
         createText("header", 0.5, 0.06, "Patch notes", { size: 60, color: "white" });
 
+        // Page Buttons
+        createButton("pageButtonL", 0, 0.1, 0.15, 0.05, "button", () => {
+            if (patPage > 0) patPage--;
+            updatePatchNotes();
+        });
+        createText("pblt", 0.0775, 0.15, "<", { size: 40, noScaling: true });
+        createButton("pageButtonR", 0.85, 0.1, 0.15, 0.05, "button", () => {
+            if (patPage < Object.keys(PATCHNOTES).length - 1) patPage++;
+            updatePatchNotes();
+        });
+        createText("pbrt", 0.9275, 0.15, ">", { size: 40, noScaling: true });
+
         // Buttons
         createButton("sceneButton1", 0, 0.9, 1 / 3, 0.1, "button", () => { loadScene("achievements") });
         createButton("sceneButton2", 0 + 1 / 3, 0.9, 1 / 3, 0.1, "button", () => { loadScene("settings") });
@@ -19,44 +76,435 @@ scenes["patchnotes"] = new Scene(
         createImage("sceneImage2", 1 / 6 * 3, 0.91, 0.08, 0.08, "settings", { quadratic: true, centered: true });
         createImage("sceneImage3", 1 / 6 * 5, 0.91, 0.08, 0.08, "back", { quadratic: true, centered: true });
 
-        // DYNAMIC Patch notes (start of main.js)
-        let patchNotes = PATCHNOTES.split("\n");
-        let linedNotes = [];
-        let charactersPerLine = isMobile() ? 45 : 80;
-
-        patchNotes.splice(0, 1);
-        /*
-        for (let note in patchNotes) {
-            if (patchNotes[note] == "") patchNotes.splice(note, 1);
-        }
-        */
-
-        for (let note in patchNotes) {
-            let charactersMissing = Math.max(1, patchNotes[note].length);
-            let charactersPushed = 0;
-
-            while (charactersMissing > 0) {
-                let charactersAdded = patchNotes[note].length - charactersPushed < charactersPerLine ? charactersPerLine : patchNotes[note].substr(charactersPushed, charactersPerLine).lastIndexOf(" ");
-                if (charactersAdded == -1) charactersAdded = charactersMissing;
-
-                linedNotes.push(patchNotes[note].substr(charactersPushed, charactersAdded));
-
-                charactersMissing -= charactersAdded;
-                charactersPushed += charactersAdded;
-            }
-        }
-
-        let noteCount = 0;
-        let noteSize = 0.032;
-
-        for (noteCount = 0; noteCount < linedNotes.length; noteCount++) {
-            let sizeBonus = linedNotes[noteCount].substr(0, 2) == "->" ? 1.25 : 1;
-            createText("note" + noteCount, 0.015, 0.2 + noteSize * noteCount, linedNotes[noteCount], { align: "left", size: 32 * sizeBonus, color: "white" });
+        for (noteCount = 0; noteCount < 256; noteCount++) {
+            createText("note" + noteCount, 0.015, 0.2 + noteSize * noteCount, "", { align: "left", size: 32, color: "white" });
             objects["notesContainer"].children.push("note" + noteCount);
         }
-        objects["notesContainer"].YLimit[1] = noteSize * noteCount - (0.6 - noteSize * 2);
+
+        updatePatchNotes();
     },
     (tick) => {
         // Loop
     }
 );
+
+const PATCHNOTES = {
+    "v1.0": `2024/11/02 v1.0:
+- Release
+    `,
+
+    "v1.0.1": `2024/11/02 v1.0.1:
+- Fixed spawn speed issue
+- Fixed Temporary Boost being applied incorrectly
+- Fixed float issue
+    `,
+    
+    "v1.1": `2024/11/20 v1.1 Raingold Update:
+-> Prestige:
+- New feature: Prestige!
+- Unlocked at 10k Raindrops
+- New currency: Raingold!
+- Every Raingold boosts Raindrop gains by 1%
+- Prestige to gain Raindrops, they have to be collected to be earned
+- Prestige resets Raindrops, their upgrades and Water Coins, but nothing else
+- Raingold gain formula is based on Raindrop amount and upgrade levels
+
+-> Design:
+- New font (for higher readability)
+- Added collect effects for manual and auto
+- Items spawn closer to the middle (X-axis) on PC
+- Items spawn a bit more to the left (centered)
+
+-> Balance:
+- Reduced duration of both Water Coin boosts from 60s to 30s
+- Temporary Boost now starts at x2 as intended (rather than x2.2)
+- Changed auto collect height from 40% to 10%
+
+-> Settings:
+- Changed settings design
+- New setting: Play my other games
+- New setting: Delete Save
+- The player's start version is now displayed
+- Players who finished the game on release get a special display
+
+-> Other:
+- Changed upgrades design
+- Upgrades: added 2nd header for Water Coin Upgrades
+- Game now saves version the player started in, including v1.0 (but not v1.0.1)
+- Added a line to show the auto collect height
+    `,
+    
+    "v1.1.1": `2024/11/20 v1.1.1:
+-> Multi Buy:
+- Added multi buy for all upgrades
+- x1, x5, x25, x100
+- Unlocked after the first prestige (for free)
+
+-> Balance:
+- Changed Raindrop Worth's formula, it grows faster beyond level 100 now
+- This was needed as the previous formula struggled handling any boosts
+- Fixed Raingold item exploit
+    `,
+    
+    "v1.2": `2024/11/29 v1.2 EASNIR Update:
+-> Essential:
+- Items are now collected by swiping/holding rather than direct clicks
+- Added Achievements, Stats and more
+
+-> Achievements:
+- New feature: Achievements!
+- Added 21 Achievements (5x Raindrops, 5x Water Coins, 5x Raingold, 6x other)
+- Achievements can be seen in a 5x5 grid, and selected by clicking
+- Every Achievement gives a Raingold boost of 2% (up to 42%)
+
+-> Stats:
+- Stats can now be seen
+- This includes play time, prestiges, and total and amount for all 3 currencies
+- Your name and ID are also displayed... for bragging purposes!
+- New stats: Collected Raindrops/Water Coins/Raingold (increases by 1 per item)
+
+-> Numbers:
+- Added support for notations
+- Added 4 notations: normal, scientific, engineering, alphabet
+- Implemented break infinity
+- Supported by all 3 currencies and their stats
+
+-> Items:
+- Items can now have different speeds and sizes
+- Raindrops are 100% speed, 100% size
+- Water Coins are 80% speed, 100% size
+- Raingold is 50% speed, 120% size
+
+-> Raingold:
+- Raingold gain displayed is now completely accurate
+- Raingold is easier to earn due to its now slower speed, bigger size and swiping
+- Changed Prestige text to clarify they have to be collected
+
+-> Other:
+- Added a cute Raindrop favicon
+- The third button in the main scene now leads to Stats rather than Settings
+- Multi Buy now highlights the current choice in green
+- Slightly changed Water Coin image
+- Code improvements
+    `,
+    
+    "v1.2.1": `2024/11/30 v1.2.1 2 EAS 4 NIR Update:
+-> Upgrade prices:
+- Prices now use notations (above a million)
+- When using multi buy, the price will show the total costs for those levels
+- If an upgrade is maxed, it says MAX instead of a number
+- Added colors for the price:
+- Green if all levels can be bought
+- Yellow if multi buy is being used, and only some levels can be bought, but not all
+- Red if not a single level can be bought
+
+-> Raingold:
+- 25% of Raingold is now awarded instantly, meaning items are only 75%
+- Added Raingold gain breakdown (how much per item, how much instant, amount of items)
+- Fixed Raingold not awarding anything if collected after the last item spawned
+
+-> Other:
+- Improved collecting by swiping/holding
+- Every Water Coin collected now increases the requirement during that prestige by 5 (starting at 100, same as before)
+- Temporary Boost and Super Auto timers are now only active while collecting (main screen)
+    `,
+    
+    "v1.3": `2024/12/14 v1.3 Bubble Freeze:
+-> Currencies:
+- Two new currencies: Bubbles and Snowflakes
+- Added the Currency Selection
+- It's unlocked at 500 Raingold, but not useful until 2000 Raingold
+- Here currencies other than Raindrops can be selected, that will then fall instead
+
+-> Events:
+- Events are unlocked at 2000 Raingold
+- Added the Christmas Event
+- Active from December 14th to December 28th
+- During the event, Snowflakes can be collected
+
+-> Bubbles:
+- New currency, unlocked at 2000 Raingold
+- Falls slowly and varies strongly in size
+- How much they are worth also depends on their size
+- 3 upgrades: Worth, Time and Auto
+
+-> Snowflakes:
+- New currency, available during the Christmas Event
+- 2 upgrades: Slow Fall and Freeze Down
+- These upgrades affect other currencies as long as the event is still active
+
+-> Achievements:
+- Added Achievement pages
+- Added 9 new Achievements (30 total)
+    `,
+    
+    "v1.3.1": `2024/12/16 v1.3.1:
+- Snowflake upgrades can now be disabled (little green/red squares)
+- Play time is now shown in hours and minutes
+- Water Coin amount is now in blue so it's always visible
+- Prestiging for 0 Raingold is no longer possible
+- Savefile related bug fixes and improvements
+    `,
+    
+    "v1.4": `2024/12/25 v1.4 Merry Glow:
+-> Glowbles:
+- New currency: Glowbles!
+- Gained from Bubble Prestige, similar to Raingold
+- Different gain formula, and its size variations are purely visual
+- Boosts Bubbles, can be spent on two upgrades
+- Big Pop: Big Bubbles are worth extra
+- Inflated Fall: Adds a chance of big currencies falling (affected by Big Pop)
+
+-> Currencies:
+- Currency Selection: Levels purchased and max levels now displayed
+- Currencies can only fall if they are unlocked
+- If a currency you already earned gets locked (like Snowflakes), you can now at least access their upgrades (but not collect more)
+
+-> Design:
+- Added a display of how much the most recent collect gave
+- Added background for Upgrading, Shop & Currency Selection
+- Added background for Stats, Achievements & Settings
+
+-> Other:
+- Added 5 new Achievements (35 total)
+- Water Coin upgrades are now visible for Bubbles
+- Bubbles are now affected by Temporary Boost (Water Coin Upgrade)
+- Plural name stuff
+- Re-organized some files
+    `,
+    
+    "v1.4.1": `2024/12/27 v1.4.1:
+-> Water Coins:
+- New Upgrade: Economic Bubble, unlocked with Bubbles, max. level 200
+- New Upgrade: Coin Pop, unlocked with Glowbles, max. level 100
+- Collecting a Bubble now gives Water Coin progress
+- Seperated Water Coin Upgrades from Raindrops and Bubbles
+- They are now accessed via a button in the bottom right
+- Fixed Water Coin Upgrade timers not being reset after a Prestige
+
+-> Other:
+- Changed button design
+- Go back now looks like other buttons
+- Added a second frame for collect effects
+- Prestige button is now shown as locked if it's not unlocked
+- Upgrade descriptions now contain more characters per line
+    `,
+    
+    "v1.5": `2025/01/20 v1.5:
+-> Items:
+- New big feature: Items!
+- Unlocked at 1000 total Glowbles
+- Up to 9 items can be in the inventory
+- Up to 3 items can be equipped
+- Items can provide simple boosts (such as x2 Raindrops), they are not multiplicative with each other
+- You can have the same item multiple times
+- Every time you get an item, its durability and worth is a bit randomized
+
+-> Iron:
+- New side currency: Iron
+- Items can be sold for Iron, based on their worth and remaining durability
+
+-> Item Shop:
+- Every day, one random Item can be obtained for free
+- Extra items cost 50 Iron each
+
+-> Item Rarities:
+- There are 4 rarities: Common, Uncommon, Rare, Epic
+- Chances of the rarities:
+- Common: 224/256 chance
+- Uncommon: 28/256 chance
+- Rare: 3/256 chance
+- Epic: 1/256 chance
+
+-> New Items:
+- Added 8 items!
+- Barrel (Common, Raindrops)
+- Golden Barrel (Uncommon, Raingold)
+- Licky Tongue (Uncommon, Raindrops)
+- Golden Tongue (Rare, Raingold)
+- Bubble Sword (Common, Bubbles)
+- Excalibur (Epic, Bubbles)
+- Glow Lantenr (Uncommon, Glowbles)
+- Wicked Shortglow (Rare, Glowbles)
+
+-> Other:
+- NOTE: Item balancing, or the way how items work (for example the costs of buying a new item, chances for rarities, durabilities) may be changed drastically in the next couple of updates if needed
+- Added a proper save notification in the bottom right, previously it temporarily replaced the header
+- Made the way the game is loaded/saved more failsave
+- Increased size of page buttons for Achievements
+    `,
+    
+    "v1.5.1": `2025/02/02 v1.5.1:
+-> Stats:
+- Stats are now a scrollable container! Scroll down to see more stats
+- Some new stats (like for Glowbles) were previously missing due to missing space, now all stats are shown
+- Stats are now added to this list dynamically
+- Adjusted size of stat text
+
+-> Patch notes:
+- The patch notes can now be read in-game!
+- Access them with a new button below the stats
+- Patch notes are a dynamically generated scrollable container, similar to the new stats
+
+-> Other:
+- Updated WGGJ from v1.1 to v1.2.1
+    `,
+    
+    "v1.5.2": `2025/02/18 v1.5.2:
+-> Import and Export:
+- Added success message if the save is loaded
+- Added warning message if it's not a valid save
+- Cancelling no longer causes an error message
+- Added confirmation if you want to load the detected save
+- Confirmation shows the save length and name
+- Export: now shows length of imported save
+
+-> Other:
+- Bought items now have 10x better chances than daily items (previously, they were the same)
+- Changed text scaling, and sizes / size changing of several things
+    `,
+    
+    "v1.6": `2025/03/10 v1.6 Holding the Iron:
+-> Falling currencies:
+- Clicking/holding to collect is no longer needed, just hovering is enough
+- Reduced falling speed of everything by 40%
+
+-> Iron:
+- Iron is now more treated like an actual currency, rather than an Items side-thing
+- Once Items are unlocked, Iron now has a 0.1% chance to fall every time something is collected
+- Falling Iron is worth 1 Iron, and can be auto collected
+- Added image, and Iron Collected stat 
+
+-> Other:
+- Released the game on galaxy!
+- Fixed "Most ..." stats not working correctly sometimes
+- Fixed account version only existing after opening the game for the second time
+    `,
+    
+    "v1.7": `2025/04/14 v1.7 Weather Collector:
+-> Changes:
+- Moving the mouse is no longer needed to collect
+- Changed font from Quicksand to Quicksand Bold, can be changed in Settings
+- Updated all background images and increased their resolution
+- A lot more, see below!
+
+-> Weather:
+- New feature: Weather! Unlocked from the start
+- Every 5 minutes, the weather can change for 30 seconds
+- Rainy: default weather
+- Sunny: 3x slower drop rate, but 3x worth
+- Windy: 50% faster falls, but 1.5x worth
+- Thunder: Sometimes thunder destroys some stuff, but x1.25 worth
+
+-> Menu Pause:
+- Previously, the game always paused when you opened something (upgrades, settings, etc.) and reset the falling items (such as Raindrops)
+- Now, falling items are no longer reset, they just get paused when in a menu
+- Additionally, if the new setting Menu Pause (enabled by default) is disabled, they don't even get paused, the game keeps running (including auto)
+- Water Coin boosts use the same pause behavior, so no time is lost
+- This took a lot of changes, so it's possible that a thing or two don't work as intended now
+
+-> Settings:
+- Reworked the Settings menu and design of Settings
+- Settings are now in a scrollable list with a consistent design
+- It has 5 sections: 1. Savefile 2. Gameplay 3. Design 4. Music & Audio 5. More
+- Added many new Setting images
+- Added 2 new Settings:
+- (Gameplay) Toggle Menu Pause: Pause the main gameplay when in menus
+- (Design) Text Font: Lets you change between Quicksand Bold (new default), Quicksand (pre-v1.7), Birdland Aeroplane (old versions), and system/browser default font
+
+-> Events:
+- New Event: Easter Event
+- Active from April 15th to April 28th
+- During the Event, new Weather arrives at 3x speed (300s -> 100s, 30s = 30s)
+- Every 15 seconds, an Egg appears for 15 seconds
+- Eggs can be collected by clicking twice, making 10 of your selected currency fall
+- Current Event is now displayed in the top right
+- Christmas Event: Changed start date from 14th to 15th (15 -> 14 days)
+
+-> Achievements:
+- Added 15 new Achievements (50 total)
+- New Achievements are now also given on auto save and loading a save, not only when looking at Achievements
+- Page buttons now hide when you can't go further
+- Achievement boost specifies it's for Raingold/Glowbles (depending on the selected currency)
+
+-> Other:
+- Changed the main menu's top, now with Weather and event display
+- Improved Water Coin amount display (main menu)
+- Updated WGGJ from v1.2.1 to v1.3
+    `,
+    
+    "v1.7.1": `2025/04/22 v1.7.1:
+-> Items:
+- Added bars indicating the remaining durability of an Item
+- Added 5 new Item backgrounds, one for every rarity + empty
+- Changed Iron image
+
+-> Achievements:
+- Added 5 new Achievements (for the event)
+- Added notification when you get an Achievement (based on the old auto save text)
+
+-> Other:
+- Random Weather can no longer choose rainy (rainy -> rainy)
+- Moved main menu top texts a bit lower
+- Fixed item durability sometimes being used up when it shouldn't be
+- Fixed save issues regarding items/iron
+    `,
+    
+    "v1.8": `2025/05/18 v1.8:
+-> Muddrops:
+- New main currency!
+- Unlocked at 5000 total Glowbles
+- When the drop hits the ground, it turns into a puddle
+- Falling drops count 2x for Water Coins
+- Puddles speed up Weather by 2s instead (no Coin progress)
+- Gains affected by Weather, Temp Boost and Economic Bubble
+- 3 upgrades: Worth, Auto and Puddling
+- More Muddrop content and interaction between currencies coming soon
+
+-> Notifications:
+- New feature: ingame notifications!
+- Notification alerts replace the previous browser-based alerts
+- They can not only have text, but also a header and an image
+- Added extra info to some alerts
+- Added them for buying/gaining items
+
+-> Design:
+- Adjusted text size for settings and patch notes
+- Moved main menu top texts a bit lower
+- Item Shop: moved buy random item lower
+
+-> Other:
+- Added 5 Achievements (60 total)
+- New setting: Text Scaling (x0.25, x0.5, x0.75, x1, x1.25, x1.5, x2)
+- Added web app support
+- Improved font stability
+- Fixed that I bought too many Eggs
+    `,
+    
+    "v1.8.1": `2025/05/20 v1.8.1
+-> Patch notes:
+- You can see older patch notes!
+- Inluding their name and release date
+- Use page buttons to navigate
+- Latest patch notes are still shown by default
+
+-> Muddrops:
+- Mud puddles become brighter, 2 seconds before they disappear
+- Fixed Muddrop Achievement unlock issue
+
+-> Other:
+- You can click the weather icon (top left) to see effects of current weather
+- Background flower and glass are less distracting
+- Fixed mobile tapping issue
+- Fixed prestige unlock text saying 1000 instead of 10000 Raindrops
+    `,
+};
+
+/*
+    
+    "": `
+    `,
+
+*/
+
+patPage = Object.keys(PATCHNOTES).length - 1;

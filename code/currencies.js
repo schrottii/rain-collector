@@ -298,7 +298,7 @@ const currencies = {
     }),
 
 
-    raingold: new Currency("raingold", "raingold", [() => game.raindrop.amount >= 1e4 || postPrestige.amount > 0 || game.raingold.amount >= 1, "1000 Raindrops"], () => {
+    raingold: new Currency("raingold", "raingold", [() => game.raindrop.amount >= 1e4 || postPrestige.amount > 0 || game.raingold.amount >= 1, "10000 Raindrops"], () => {
         if (postPrestige.type != "raingold") return false;
         let amount = Math.ceil(postPrestige.worth
             * getItemBoost("raingold", true));
@@ -413,7 +413,7 @@ const currencies = {
             * (item.isAuto ? 1 : (watercoinUpgrades.economicbubble.getEffect() / 100) * economicBubbleBoost + 1)
         amount = Math.ceil(amount);
 
-        if (item.image == "mudpuddle") {
+        if (item.image == "mudpuddle" || item.image == "mudpuddle2") {
             game.stats.itemMudpuddles += 1;
             weatherSecs += 2;
         }
@@ -431,6 +431,7 @@ const currencies = {
             me.image = "mudpuddle";
             me.y = 0.65;
 
+            if (me.age > muddropUpgrades.puddling.getEffect() - 2) me.image = "mudpuddle2";
             if (me.age > muddropUpgrades.puddling.getEffect()) me.y = 2;
         }
     }),

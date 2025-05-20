@@ -151,7 +151,12 @@ scenes["mainmenu"] = new Scene(
             + (isEaster() ? " (Easter)" : "")
             , { size: 30, color: "white", align: "right" });
 
-        createImage("weatherDisplay", 0, 0, 0.05, 0.05, "weather-thunder", { quadratic: true });
+        createButton("weatherDisplay", 0, 0, 0.05, 0.05, "weather-thunder", () => {
+            notification_Alert("Weather: " + weathers[currentWeather].displayName,
+                "x" + weathers[currentWeather].worthMulti + " worth, "
+                + "x" + weathers[currentWeather].fallSpeedMulti + " fall speed, "
+                + "x" + weathers[currentWeather].spawnRateMulti + " spawn rate");
+        }, { quadratic: true });
         createText("weatherText", 0.12, 0.025, "Weather: Thunder", { size: 30, color: "white", align: "left" });
         createSquare("weatherBarBG", 0.12, 0.03, 0.28, 0.02, "black");
         createSquare("weatherBarFill", 0.12, 0.03, 0.28, 0.02, "lightblue");

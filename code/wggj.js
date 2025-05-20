@@ -125,6 +125,8 @@ wggjCanvas.addEventListener("pointerleave", wggjEventsOnPointerUp);
 wggjCanvas.addEventListener("pointermove", wggjEventsOnPointerMove);
 
 function wggjEventsOnClick(e) {
+    wggjMouse.x = e.clientX - wggjCanvas.getBoundingClientRect().x;
+    wggjMouse.y = e.clientY - wggjCanvas.getBoundingClientRect().y;
     wggjMouseDown = true;
 
     for (let c in objects) {

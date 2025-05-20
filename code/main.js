@@ -1,45 +1,11 @@
 // game made by schrottii, do not steal/copy bla bla bla
 
-const GAMEVERSION = "1.8";
-
-const PATCHNOTES = `
-2025/05/18
-v1.8:
--> Muddrops:
-- New main currency!
-- Unlocked at 5000 total Glowbles
-- When the drop hits the ground, it turns into a puddle
-- Falling drops count 2x for Water Coins
-- Puddles speed up Weather by 2s instead (no Coin progress)
-- Gains affected by Weather, Temp Boost and Economic Bubble
-- 3 upgrades: Worth, Auto and Puddling
-- More Muddrop content and interaction between currencies coming soon
-
--> Notifications:
-- New feature: ingame notifications!
-- Notification alerts replace the previous browser-based alerts
-- They can not only have text, but also a header and an image
-- Added extra info to some alerts
-- Added them for buying/gaining items
-
--> Design:
-- Adjusted text size for settings and patch notes
-- Moved main menu top texts a bit lower
-- Item Shop: moved buy random item lower
-
--> Other:
-- Added 5 Achievements (60 total)
-- New setting: Text Scaling (x0.25, x0.5, x0.75, x1, x1.25, x1.5, x2)
-- Added web app support
-- Improved font stability
-- Fixed that I bought too many Eggs
-`
+const GAMEVERSION = "1.8.1";
 
 images = {
     button: "button.png",
     achbg: "cool-outline.png",
     locked: "locked.png",
-    mudpuddle: "mudpuddle.png",
 
     common: "common.png",
     uncommon: "uncommon.png",
@@ -89,6 +55,8 @@ images = {
     autocollected2: "effects/autocollected2.png",
     thunder: "effects/thunder.png",
     thunder2: "effects/thunder2.png",
+    mudpuddle: "effects/mudpuddle.png",
+    mudpuddle2: "effects/mudpuddle2.png",
 
     "currencies/raindrop": "currencies/raindrop.png",
     "currencies/watercoin": "currencies/watercoin.png",
