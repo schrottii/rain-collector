@@ -27,14 +27,16 @@ function getAchievementByID(aid) {
 }
 
 function awardAchievement(aid) {
-    if (!game.achievements.includes(aid)) game.achievements.push(aid);
+    if (!game.achievements.includes(aid)) {
+        game.achievements.push(aid);
 
-    if (objects["achievementText"] != undefined) {
-        objects["achievementText"].y = 1;
-        objects["achievementText"].text = getAchievementByID(aid).name;
-    }
-    else {
-        createText("achievementText", 0.95, 1, getAchievementByID(aid).name, { align: "right", color: "yellow", size: 40 });
+        if (objects["achievementText"] != undefined) {
+            objects["achievementText"].y = 1;
+            objects["achievementText"].text = getAchievementByID(aid).name;
+        }
+        else {
+            createText("achievementText", 0.95, 1, getAchievementByID(aid).name, { align: "right", color: "yellow", size: 40 });
+        }
     }
 }
 
@@ -64,31 +66,31 @@ const achievements = [
     new Achievement(9, "currencies/watercoin", "Money Wash IV", "Collect 250 Water Coins! (total)", () => game.stats.totalWatercoins.gte(250)),
     new Achievement(10, "currencies/watercoin", "Money Wash V", "Collect 1000 Water Coins! (total)", () => game.stats.totalWatercoins.gte(1000)),
 
-    new Achievement(11, "currencies/raingold", "Golden Shower I", "Gather 100 Raingold!", () => game.raingold.amount.gte(100)),
+    new Achievement(11, "currencies/raingold", "Golden Shower I", "Gather 100 Raingold! " + curUnlock("raingold"), () => game.raingold.amount.gte(100)),
     new Achievement(12, "currencies/raingold", "Golden Shower II", "Gather 1000 Raingold!", () => game.raingold.amount.gte(1000)),
     new Achievement(13, "currencies/raingold", "Golden Shower III", "Gather 10000 Raingold!", () => game.raingold.amount.gte(10000)),
     new Achievement(14, "currencies/raingold", "Golden Shower IV", "Gather 1e6 Raingold!", () => game.raingold.amount.gte(1e6)),
     new Achievement(15, "currencies/raingold", "Golden Shower V", "Gather 1e9 Raingold!", () => game.raingold.amount.gte(1e9)),
 
-    new Achievement(16, "prestige", "Falling Apart", "Unlock Prestige", () => game.raindrop.amount.gte(10000)),
+    new Achievement(16, "prestige", "Falling Apart", "Unlock Prestige with " + currencies.raingold.unlock[1], () => game.raindrop.amount.gte(currencies.raingold.unlock[1])),
     new Achievement(17, "prestige", "Golden Honor", "Do your first Prestige!", () => game.stats.prestiges > 0),
     new Achievement(18, "pencil", "No Nobody", "Change your name", () => game.name != ""),
     new Achievement(19, "currencies/raindrop", "Right On Time", "Max. Raindrop Time", () => raindropUpgrades.time.getLevel() == raindropUpgrades.time.getMaxLevel()),
     new Achievement(20, "currencies/raindrop", "Automation", "Max. Raindrop Auto", () => raindropUpgrades.auto.getLevel() == raindropUpgrades.auto.getMaxLevel()),
-    new Achievement(21, "achievements", "Early Rain", "Finish the game in v1.0", () => game.startVer == "**1.0**"),
-
-    new Achievement(22, "currencies/snowflake", "Gift Collector", "Play during the Christmas Event", () => isChristmas()),
+    
+    new Achievement(21, "achievements", "Early Rain", "Finish the tutorial", () => game.startVer == "**1.0**"),
+    new Achievement(22, "currencies/snowflake", "Gift Collector", "Play during the Christmas Event (December 15th - 28th)", () => isChristmas()),
     new Achievement(23, "currencies/snowflake", "Counter Celsius I", "Gather 100 Snowflakes!", () => game.snowflake.amount.gte(100)),
     new Achievement(24, "currencies/snowflake", "Counter Celsius II", "Gather 1000 Snowflakes!", () => game.snowflake.amount.gte(1000)),
     new Achievement(25, "currencies/snowflake", "Special Snowflake", "Max. a Snowflake Upgrade", () => snowflakeUpgrades.slowfall.isMaxed() || snowflakeUpgrades.freezedown.isMaxed()),
 
-    new Achievement(26, "currencies/bubble", "Colandpop I", "Gather 20 Bubbles!", () => game.bubble.amount.gte(20)),
+    new Achievement(26, "currencies/bubble", "Colandpop I", "Gather 20 Bubbles! " + curUnlock("bubble"), () => game.bubble.amount.gte(20)),
     new Achievement(27, "currencies/bubble", "Colandpop II", "Gather 400 Bubbles!", () => game.bubble.amount.gte(400)),
     new Achievement(28, "currencies/bubble", "Colandpop III", "Gather 20000 Bubbles!", () => game.bubble.amount.gte(20000)),
     new Achievement(29, "currencies/bubble", "Colandpop IV", "Gather 1e6 Bubbles!", () => game.bubble.amount.gte(1e6)),
     new Achievement(30, "currencies/bubble", "Colandpop V", "Gather 1e8 Bubbles!", () => game.bubble.amount.gte(1e8)),
 
-    new Achievement(31, "currencies/glowble", "The Great Low I", "Gather 100 Glowbles!", () => game.glowble.amount.gte(100)),
+    new Achievement(31, "currencies/glowble", "The Great Low I", "Gather 100 Glowbles! " + curUnlock("glowble"), () => game.glowble.amount.gte(100)),
     new Achievement(32, "currencies/glowble", "The Great Low II", "Gather 4000 Glowbles!", () => game.glowble.amount.gte(4000)),
     new Achievement(33, "currencies/glowble", "The Great Low III", "Gather 64000 Glowbles!", () => game.glowble.amount.gte(64000)),
     new Achievement(34, "currencies/glowble", "The Great Low IV", "Gather 1e6 Glowbles!", () => game.glowble.amount.gte(1e6)),
@@ -106,19 +108,19 @@ const achievements = [
     new Achievement(44, "items/lantern", "Merchant II", "Buy 10 Items for Iron", () => game.stats.itemsBought >= 10),
     new Achievement(45, "items/lantern", "Merchant III", "Buy 25 Items for Iron", () => game.stats.itemsBought >= 25),
 
-    new Achievement(46, "currencies/iron", "Heavy Metal I", "Get your first Iron!", () => game.stats.totalIron >= 1),
+    new Achievement(46, "currencies/iron", "Heavy Metal I", "Get your first Iron! " + curUnlock("iron"), () => game.stats.totalIron >= 1),
     new Achievement(47, "currencies/iron", "Heavy Metal II", "Gather 26 Iron!", () => game.stats.totalIron >= 26),
     new Achievement(48, "currencies/iron", "Heavy Metal III", "Gather 100 Iron!", () => game.stats.totalIron >= 100),
     new Achievement(49, "currencies/iron", "Heavy Metal IV", "Gather 500 Iron!", () => game.stats.totalIron >= 500),
     new Achievement(50, "currencies/iron", "Heavy Metal V", "Gather 2600 Iron!", () => game.stats.totalIron >= 2600),
 
-    new Achievement(51, "egg", "Egg Collector", "Play during the Easter Event", () => isEaster()),
+    new Achievement(51, "egg", "Egg Collector", "Play during the Easter Event (April 15th - 28th)", () => isEaster()),
     new Achievement(52, "egg", "Egg Hunt I", "Find 5 Eggs!", () => game.stats.eggs >= 5),
     new Achievement(53, "egg", "Egg Hunt II", "Find 50 Eggs!", () => game.stats.eggs >= 50),
     new Achievement(54, "egg", "Egg Hunt III", "Find 500 Eggs!", () => game.stats.eggs >= 500),
     new Achievement(55, "egg2", "I'll Save You, Little One", "Find an Egg while Thunder strikes", () => false),
 
-    new Achievement(56, "currencies/muddrop", "Muddy Fingers I", "Gather 15 Muddrops!", () => game.muddrop.amount.gte(15)),
+    new Achievement(56, "currencies/muddrop", "Muddy Fingers I", "Gather 15 Muddrops! " + curUnlock("muddrop"), () => game.muddrop.amount.gte(15)),
     new Achievement(57, "currencies/muddrop", "Muddy Fingers II", "Gather 500 Muddrops!", () => game.muddrop.amount.gte(500)),
     new Achievement(58, "currencies/muddrop", "Muddy Fingers III", "Gather 25000 Muddrops!", () => game.muddrop.amount.gte(25000)),
     new Achievement(59, "currencies/muddrop", "Muddy Fingers IV", "Gather 5e5 Muddrops!", () => game.muddrop.amount.gte(5e5)),

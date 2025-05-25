@@ -257,6 +257,10 @@ function getItemCur(index) {
     return currencies[fallingItems["drop" + index].currency];
 }
 
+function curUnlock(cur){
+    return "(Unlocked at " + currencies[cur].unlock[1] + ")";
+}
+
 
 
 // CURRENCIES DICT
@@ -395,7 +399,7 @@ const currencies = {
     }),
 
 
-    iron: new Currency("iron", "iron", [() => unlockedItems(), "1000 Glowbles"], (item) => {
+    iron: new Currency("iron", "iron", [() => unlockedItems(), "1000 Total Glowbles"], (item) => {
         if (item.power == false) return false;
         game.iron.amount = game.iron.amount.add(1);
         game.stats.totalIron = game.stats.totalIron.add(1);
@@ -405,7 +409,7 @@ const currencies = {
     }, 1.5, 1),
 
 
-    muddrop: new Currency("muddrop", "muddrop", [() => game.stats.totalGlowbles >= 5000, "5000 Glowbles"], (item) => {
+    muddrop: new Currency("muddrop", "muddrop", [() => game.stats.totalGlowbles >= 5000, "5000 Total Glowbles"], (item) => {
         let amount = (game.muddrop.upgrades.worth + 1)
             * getItemBoost("muddrop", true)
             * weathers[currentWeather].worthMulti

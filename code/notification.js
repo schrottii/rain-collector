@@ -11,6 +11,9 @@ function notification_Alert(title, text, image = "none") {
             for (let o in objs) {
                 objects["notifAlert" + objs[o]].power = false;
             }
+
+            tutorialStep = true;
+            if (tutorialActive) calcTutorial();
         }, { quadratic: true, centered: true });
         createText("notifAlertButtonText", 0.5, 0.6 + 0.08 * 0.66, "O K", { align: "center", color: "blak", size: 40 });
 
@@ -40,4 +43,61 @@ function notification_Item(item) {
         + " (" + item.getRarityName() + "): x"
         + fn(item.getBoost(0)) + " " + currencies[item.getBoostName()].renderName(true),
         item.img);
+}
+
+// TUTORIAL
+var tutorialProgress = 0;
+var tutorialActive = false;
+var tutorialStep = false;
+var tutorialShown = false;
+
+var tutorial = [
+    [() => true, "Welcome to Rain Collector!", "This little tutorial will explain the game's basics. Hover over the falling drops!", "currencies/raindrop"],
+    [() => tutorialStep && game.raindrop.amount.gte(10), "10 drops, well done!", "Go to Upgrades and spend your 10 Raindrops.", "upgrades"],
+    [() => tutorialStep && game.raindrop.upgrades.worth > 0, "Upgrade bought", "Here, currencies can be spent on various boosts, including auto collect."],
+    [() => tutorialStep, "Water Coins", "Water Coins fall after collecting enough and can be spent on worldwide boosts.", "currencies/watercoin"],
+    [() => tutorialStep, "Water Coins", "Keep playing until you get one!", "currencies/watercoin"],
+    [() => tutorialStep && game.watercoin.amount.gte(1), "Settings & Stats", "Settings, Stats and more can be found there.", "stats"],
+    [() => tutorialStep, "Achievements", "Achievements boost prestige currency and show you what to do.", "achievements"],
+    [() => tutorialStep, "The Future", "Keep playing and you will unlock Prestige and new currencies!", "prestige"],
+    [() => tutorialStep || getAchievementByID(21).isUnlocked(), "Tutorial complete!", "If you need more help, you can ask in DC or look at Achievements"],
+    //[() => false, "", ""],
+];
+
+function calcTutorial(){
+    // init after game start
+    if (tutorialProgress == 0 && !tutorialActive){
+        if (tutorial[tutorial.length - 1][0]() == true) tutorialActive = false;
+        else tutorialActive = true;
+    }
+
+    // done
+    if (tutorialProgress == tutorial.length - 1) {
+        awardAchievement(21);
+        tutorialActive = false;
+    }
+
+    // see how far you got
+    for (let tu in tutorial){
+        if (tu <= tutorialProgress){
+            tutorialProgress = Math.max(tutorialProgress, tu);
+        }
+        else if (tutorial[tu][0]() == true) {
+            tutorialProgress = Math.max(tutorialProgress, tu);
+            tutorialStep = false;
+            tutorialShown = false;
+        }
+        else {
+            break; // no skipping allowed
+        }
+    }
+    
+    doTutorial();
+}
+
+function doTutorial(){
+    if (!tutorialActive || tutorialShown) return false;
+    if (tutorial[tutorialProgress][3] != undefined) notification_Alert(tutorial[tutorialProgress][1], tutorial[tutorialProgress][2], tutorial[tutorialProgress][3]);
+    else notification_Alert(tutorial[tutorialProgress][1], tutorial[tutorialProgress][2]);
+    tutorialShown = true;
 }

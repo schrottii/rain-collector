@@ -169,6 +169,9 @@ scenes["mainmenu"] = new Scene(
         wggjAudio.volume = 0.2; // I prefer having the volume a bit down
         if (game.settings.music) wggjAudio.play();
 
+        // Tutorial
+        calcTutorial();
+
         save();
     },
     (tick) => {

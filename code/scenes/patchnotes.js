@@ -498,6 +498,19 @@ const PATCHNOTES = {
 - Fixed mobile tapping issue
 - Fixed prestige unlock text saying 1000 instead of 10000 Raindrops
     `,
+
+    "v1.8.2": `2025/05/26 v1.8.2:
+-> Tutorial:
+- Added a short ingame tutorial
+- 9 steps explaining the game's basics
+- Finishing it grants an Achievement
+- Added Setting to repeat the tutorial
+
+-> Achievements:
+- Changed #21 Early Rain from finishing in v1.0 to finishing the tutorial
+- Added unlock info to #11, #16, #26, #31, #46, #56
+- Added event duration to #22, #51
+    `,
 };
 
 /*

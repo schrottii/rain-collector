@@ -47,18 +47,24 @@ scenes["settings"] = new Scene(
          */
         createContainer("settingsContainer", 0, 0.25, 1, 0.55, { YScroll: true, YLimit: [0.0000000001, 1] }, [
             createText("settingTextSavefile", 0.5, 0.275, "Savefile", { color: "white", size: 40 }),
-            createText("settingTextGameplay", 0.5, objects["settingTextSavefile"].y + 0.35, "Gameplay", { color: "white", size: 40 }),
-            createText("settingTextDesign", 0.5, objects["settingTextGameplay"].y + 0.25, "Design", { color: "white", size: 40 }),
-            createText("settingTextAudio", 0.5, objects["settingTextDesign"].y + 0.35, "Music & Audio", { color: "white", size: 40 }),
-            createText("settingTextMore", 0.5, objects["settingTextAudio"].y + 0.15, "More", { color: "white", size: 40 }),
-            // .y + 0.05 + 0.1 for every element
+            
+            createText("settingTextGameplay", 0.5, 
+                objects["settingTextSavefile"].y + (4 * 0.1 + 0.05), "Gameplay", { color: "white", size: 40 }),
+            createText("settingTextDesign", 0.5, 
+                objects["settingTextGameplay"].y + (2 * 0.1 + 0.05), "Design", { color: "white", size: 40 }),
+            createText("settingTextAudio", 0.5, 
+                objects["settingTextDesign"].y + (3 * 0.1 + 0.05), "Music & Audio", { color: "white", size: 40 }),
+            createText("settingTextMore", 0.5, 
+                objects["settingTextAudio"].y + (1 * 0.1 + 0.05), "More", { color: "white", size: 40 }),
+
         ]);
 
         // SAVEFILE SETTINGS
         let yy = objects["settingTextSavefile"].y - 0.3;
         newSettingUI("export", "export", "Export Save", "Export this savefile", yy + 0.1, () => { exportGame() });
-        newSettingUI("import", "import", "Import Save",  "Import a savefile", yy + 0.2, () => { importGame() });
+        newSettingUI("import", "import", "Import Save", "Import a savefile", yy + 0.2, () => { importGame() });
         newSettingUI("delete", "delete", "Delete Save", "Delete this savefile (HARD RESET)", yy + 0.3, () => { deleteGame() });
+        newSettingUI("tutorial", "delete", "Tutorial", "Repeats the tutorial", yy + 0.4, () => { killAchievement(21); tutorialActive = true; tutorialProgress = 0; tutorialStep = false; save(); });
 
         // GAMEPLAY SETTINGS
         yy = objects["settingTextGameplay"].y - 0.3;

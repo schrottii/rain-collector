@@ -217,6 +217,7 @@ function setupSave() {
 
 function save() {
     checkAchievements();
+    if (tutorialActive) calcTutorial();
 
     localStorage.setItem("RAINCOL1", saveGame(game));
 
