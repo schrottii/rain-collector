@@ -71,7 +71,17 @@ class Item {
 
     getBoostName() {
         if (this.config == undefined || this.config.boosts == undefined) return "";
-        return Object.keys(this.config.boosts)[0];
+        if (currencies[Object.keys(this.config.boosts)[0]] != undefined) return currencies[Object.keys(this.config.boosts)[0]].renderName(true);
+        return this.boostEnum(Object.keys(this.config.boosts)[0]);
+    }
+
+    boostEnum(boost) {
+        switch (boost) {
+            case "weatherspeed":
+                return "Weather Speed";
+            default:
+                return "";
+        }
     }
 }
 
@@ -107,15 +117,15 @@ class InventoryItem extends Item {
     }
 
     getRemainingDurability() {
-        return this.getDurability() - this.uses;
+        return (this.getDurability() - this.uses).toFixed(0);
     }
 
     renderDurability() {
         return this.getRemainingDurability() + "/" + this.getDurability() + " Durability";
     }
 
-    reduceDurability() {
-        this.uses++;
+    reduceDurability(amount = 1) {
+        this.uses += amount;
 
         if (this.uses >= this.getDurability()) {
             this.destroyItem();
@@ -229,7 +239,7 @@ function equippedItem(inventoryID) {
     return false;
 }
 
-function getItemBoost(currencyName, consume = false) {
+function getItemBoost(currencyName, consume = false, consumeMul = 1) {
     // get the amount of how much a currency (or other thing) is boosted by the equipped items
     if (game.items.eqitems.length == 0) return 1;
 
@@ -242,8 +252,8 @@ function getItemBoost(currencyName, consume = false) {
         amount += thisItem.getBoost(currencyName, 0);
         if (consume && amountBefore != amount) {
             // Reduce durability, the item gets used
-            thisItem.reduceDurability();
-            game.stats.itemsUses++;
+            thisItem.reduceDurability(consumeMul);
+            if (consumeMul >= 1 || Math.random() <= consumeMul) game.stats.itemsUses++;
         }
     }
 
@@ -326,19 +336,19 @@ const items = [
         boosts: { "raindrop": 2 }
     }),
 
-    new Item(2, 2, "Golden Barrel", "items/goldenbarrel", 150, 30, {
+    new Item(2, 2, "Golden Barrel", "items/goldenbarrel", 150, 10, {
         boosts: { "raingold": 1.5 }
     }),
 
-    new Item(3, 2, "Licky Tongue", "items/tongue", 80, 20, {
+    new Item(3, 2, "Licky Tongue", "items/tongue", 80, 10, {
         boosts: { "raindrop": 5 }
     }),
 
-    new Item(4, 3, "Golden Tongue", "items/goldentongue", 20, 40, {
+    new Item(4, 3, "Golden Tongue", "items/goldentongue", 20, 20, {
         boosts: { "raingold": 3 }
     }),
 
-    new Item(5, 1, "Bubble Sword", "items/sword", 160, 10, {
+    new Item(5, 1, "Bubble Sword", "items/sword", 160, 5, {
         boosts: { "bubble": 4 }
     }),
 
@@ -346,11 +356,23 @@ const items = [
         boosts: { "bubble": 64 }
     }),
 
-    new Item(7, 2, "Glow Lantern", "items/lantern", 80, 10, {
+    new Item(7, 2, "Glow Lantern", "items/lantern", 80, 8, {
         boosts: { "glowble": 2 }
     }),
 
-    new Item(8, 3, "Wicked Shortglow", "items/lantern", 20, 20, {
+    new Item(8, 3, "Wicked Shortglow", "items/lantern", 20, 12, {
         boosts: { "glowble": 4 }
+    }),
+
+    new Item(9, 1, "Used Boots", "items/boots", 100, 2, {
+        boosts: { "muddrop": 3 }
+    }),
+
+    new Item(10, 2, "Rubber Boots", "items/boots", 400, 8, {
+        boosts: { "muddrop": 4 }
+    }),
+
+    new Item(11, 3, "Weather Vane", "items/weathervane", 600, 15, {
+        boosts: { "weatherspeed": 3 }
     }),
 ];

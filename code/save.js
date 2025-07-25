@@ -155,6 +155,7 @@ class SaveGame {
 
         this.settings = {
             music: false,
+            musicVolume: 0.2,
             bg: true,
             notation: "normal",
             menupause: true,

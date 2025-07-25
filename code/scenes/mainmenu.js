@@ -165,9 +165,9 @@ scenes["mainmenu"] = new Scene(
         objects["thunderStrike"].power = false;
 
         // Music
-        wggjAudio.src = "audio/lofi-relax-music-lofium-123264.mp3";
-        wggjAudio.volume = 0.2; // I prefer having the volume a bit down
-        if (game.settings.music) wggjAudio.play();
+        if (wggjAudio.src == "") wggjAudio.src = "audio/lofi-relax-music-lofium-123264.mp3";
+        wggjAudio.volume = game.settings.musicVolume;
+        if (game.settings.music && wggjAudio.currentTime == 0) wggjAudio.play();
 
         // Tutorial
         calcTutorial();

@@ -55,7 +55,7 @@ scenes["settings"] = new Scene(
             createText("settingTextAudio", 0.5, 
                 objects["settingTextDesign"].y + (3 * 0.1 + 0.05), "Music & Audio", { color: "white", size: 40 }),
             createText("settingTextMore", 0.5, 
-                objects["settingTextAudio"].y + (1 * 0.1 + 0.05), "More", { color: "white", size: 40 }),
+                objects["settingTextAudio"].y + (2 * 0.1 + 0.05), "More", { color: "white", size: 40 }),
 
         ]);
 
@@ -129,8 +129,15 @@ scenes["settings"] = new Scene(
         newSettingUI("music", "music", "Toggle Music", () => (game.settings.music ? "Enabled. " : "Disabled. ") + "Turn music on or off", yy + 0.1, () => {
             game.settings.music = !game.settings.music;
 
+            wggjAudio.currentTime = 0;
             if (game.settings.music) wggjAudio.play();
             else wggjAudio.pause();
+        });
+        newSettingUI("musicVolume", "music", "Music Volume", () => "Adjust volume. Current: " + (game.settings.musicVolume * 100).toFixed(0) + "%", yy + 0.2, () => {
+            game.settings.musicVolume += 0.1;
+            if (game.settings.musicVolume > 1) game.settings.musicVolume = 0;
+
+            wggjAudio.volume = game.settings.musicVolume;
         });
 
         // BLATANT ADVERTIZING SETTINGS
@@ -170,8 +177,8 @@ scenes["settings"] = new Scene(
             if (obj == undefined || typeof(obj) != "function") continue;
             obj = obj();
 
-            objects[object.substr(0, object.length - 2) + "desc"].text = obj.substr(0, obj.substr(0, 48).lastIndexOf(" ") + 1);
-            objects[object.substr(0, object.length - 2) + "desc2"].text = obj.substr(obj.substr(0, 48).lastIndexOf(" ") + 1);
+            objects[object.substr(0, object.length - 2) + "desc"].text = obj.length < 48 ? obj : obj.substr(0, obj.substr(0, 48).lastIndexOf(" ") + 1);
+            objects[object.substr(0, object.length - 2) + "desc2"].text = obj.length < 48 ? "" : obj.substr(obj.substr(0, 48).lastIndexOf(" ") + 1);
         }
     }
 );

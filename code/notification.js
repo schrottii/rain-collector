@@ -41,7 +41,7 @@ function notification_Alert(title, text, image = "none") {
 function notification_Item(item) {
     notification_Alert("Item gained", item.name
         + " (" + item.getRarityName() + "): x"
-        + fn(item.getBoost(0)) + " " + currencies[item.getBoostName()].renderName(true),
+        + fn(item.getBoost(0)) + " " + item.getBoostName(),
         item.img);
 }
 

@@ -511,6 +511,23 @@ const PATCHNOTES = {
 - Added unlock info to #11, #16, #26, #31, #46, #56
 - Added event duration to #22, #51
     `,
+
+    "v1.8.3": `2025/07/25 v1.8.3:
+-> Items:
+- Added 3 new items, first time since v1.5 (11 total)
+- Used Boots (Common, Muddrops)
+- Rubber Boots (Uncommon, Muddrops)
+- Weather Vane (Rare, Weather Speed)
+- Reduced worth of most items
+
+-> Music:
+- No longer resets every time you enter the main menu
+- But toggling the setting now starts it from the beginning
+- New Setting: Music Volume (0% - 100%, default is 20%)
+
+-> Other:
+- Fixed some setting descriptions being forced into two lines
+- Fixed browser-based drag issue`
 };
 
 /*

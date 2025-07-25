@@ -23,7 +23,8 @@ const weathers = {
 function tickWeather(tick) {
     let weatherSecsNeeded = 300 / (isEaster() ? 3 : 1);
 
-    weatherSecs += tick;
+    if (currentWeather != "rainy") weatherSecs += tick;
+    else weatherSecs += tick * getItemBoost("weatherspeed", true, tick);
 
     if (weatherSecs >= 30 && weatherSecs < weatherSecsNeeded && currentWeather != "rainy") {
         // go back to normal after 30s

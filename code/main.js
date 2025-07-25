@@ -1,6 +1,6 @@
 // game made by schrottii, do not steal/copy bla bla bla
 
-const GAMEVERSION = "1.8.2";
+const GAMEVERSION = "1.8.3";
 
 images = {
     button: "button.png",
@@ -73,6 +73,8 @@ images = {
     "items/tongue": "items/tongue.png",
     "items/goldentongue": "items/goldentongue.png",
     "items/lantern": "items/lantern.png",
+    "items/boots": "items/boots.png",
+    "items/weathervane": "items/weathervane.png",
 }
 
 setupSave();

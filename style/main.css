@@ -6,6 +6,11 @@ html, body {
     overflow-y: hidden;
 }
 
+canvas {
+    -webkit-user-drag: none;
+    user-select: none;
+}
+
 @font-face {
     font-family: 'Quicksand Bold';
     src: url('./Quicksand_Bold.otf');

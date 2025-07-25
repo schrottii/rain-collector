@@ -99,7 +99,7 @@ scenes["itemselection"] = new Scene(
 
         if (item.getBoostName() != "") {
             objects["selItemBoostType"].text = "x" + fn(item.getBoost(0));
-            objects["selItemBoostAmount"].text = currencies[item.getBoostName()].renderName(true);
+            objects["selItemBoostAmount"].text = item.getBoostName();
             objects["selItemRarity"].text = item.getRarityName();
         }
         else {
