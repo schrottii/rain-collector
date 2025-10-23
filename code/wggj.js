@@ -171,7 +171,6 @@ function wggjEventsOnPointerMove(e) {
 }
 
 function wggjEventsOnLoop(e) {
-    e.preventDefault();
     for (let c in objects) {
         if (objects[c] == undefined) continue;
         if (objects[c].onHover == undefined || objects[c].power == false) continue;
