@@ -125,6 +125,7 @@ wggjCanvas.addEventListener("pointerleave", wggjEventsOnPointerUp);
 wggjCanvas.addEventListener("pointermove", wggjEventsOnPointerMove);
 
 function wggjEventsOnClick(e) {
+    e.preventDefault();
     wggjMouse.x = e.clientX - wggjCanvas.getBoundingClientRect().x;
     wggjMouse.y = e.clientY - wggjCanvas.getBoundingClientRect().y;
     wggjMouseDown = true;
@@ -140,6 +141,7 @@ function wggjEventsOnClick(e) {
 }
 
 function wggjEventsOnPointerUp(e) {
+    e.preventDefault();
     wggjMouseDown = false;
 
     for (let c in objects) {
@@ -153,6 +155,7 @@ function wggjEventsOnPointerUp(e) {
 }
 
 function wggjEventsOnPointerMove(e) {
+    e.preventDefault();
     wggjMouse.x = e.clientX - wggjCanvas.getBoundingClientRect().x;
     wggjMouse.y = e.clientY - wggjCanvas.getBoundingClientRect().y;
 
@@ -168,6 +171,7 @@ function wggjEventsOnPointerMove(e) {
 }
 
 function wggjEventsOnLoop(e) {
+    e.preventDefault();
     for (let c in objects) {
         if (objects[c] == undefined) continue;
         if (objects[c].onHover == undefined || objects[c].power == false) continue;
