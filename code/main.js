@@ -1,6 +1,6 @@
 // game made by schrottii, do not steal/copy bla bla bla
 
-const GAMEVERSION = "1.8.3";
+const GAMEVERSION = "1.9";
 
 images = {
     button: "button.png",
@@ -75,35 +75,46 @@ images = {
     "items/lantern": "items/lantern.png",
     "items/boots": "items/boots.png",
     "items/weathervane": "items/weathervane.png",
-}
+};
+
+var audio = {
+    song: "lofi-relax-music-lofium-123264.mp3",
+
+
+};
 
 setupSave();
 
-GAMENAME = "Rain Collector";
+wggj.config.gameName = "Rain Collector";
 wggjLoadImages();
+wggjLoadAudio();
 wggjLoop();
 
+document.addEventListener('contextmenu', event => event.preventDefault());
 
 function loadedScene() {
+    let w = wggj.canvas.w;
+    let h = wggj.canvas.h;
+
     wggjCTX.fillStyle = "darkblue";
-    wggjCTX.fillRect(0, 0, wggjCanvasWidth, wggjCanvasHeight);
+    wggjCTX.fillRect(0, 0, w, h);
 
     wggjCTX.fillStyle = "white";
     wggjCTX.textBaseline = "bottom";
     wggjCTX.textAlign = "center";
 
-    wggjCTX.font = "60px " + FONT;
-    wggjCTX.fillText(GAMENAME, wggjCanvasWidth / 2, wggjCanvasHeight / 4);
+    wggjCTX.font = "60px " + wggj.config.font;
+    wggjCTX.fillText(wggj.config.gameName, w / 2, h / 4);
 
-    wggjCTX.font = "40px " + FONT;
-    if (wggjLoadedImages == wggjLoadingImages) wggjCTX.fillText("Click to start!", wggjCanvasWidth / 2, wggjCanvasHeight / 2);
-    else wggjCTX.fillText("Loaded: " + wggjLoadedImages + "/" + wggjLoadingImages, wggjCanvasWidth / 2, wggjCanvasHeight / 2);
+    wggjCTX.font = "40px " + wggj.config.font;
+    if (wggjLoadedImages == wggjLoadingImages) wggjCTX.fillText("Click to start!", w / 2, h / 2);
+    else wggjCTX.fillText("Loaded: " + wggjLoadedImages + "/" + wggjLoadingImages, w / 2, h / 2);
 }
 
 var autoSaveTime = 0;
 
 function customWGGJLoop(delta) {
-    if (currentScene == "none") return false;
+    if (wggj.canvas.currentScene == "none") return false;
 
     game.stats.playTime += delta;
     autoSaveTime += delta / 1000;
@@ -190,7 +201,7 @@ function fallingItemTick(tick) {
 }
 
 function updateFont() {
-    FONT = ["Quicksand Bold", "Quicksand", "Birdland", "none"][game.settings.font];
+    wggj.config.font = ["Quicksand Bold", "Quicksand", "Birdland", "none"][game.settings.font];
 }
 
 // Notations
@@ -334,5 +345,7 @@ function formatDate(date) {
 }
 
 function wggjUpdateTextScaling() {
-    wggjTextScaling = 0.44 + 0.12 * (wggjCanvasWidth / 960);
+    wggj.canvas.textScaling = 0.45 + 0.3 * (wggj.canvas.w / 1920) * game.settings.textscale;
 }
+wggjUpdateTextScaling();
+//wggj.canvas.textScaling = 0.5 + 0.5 * (wggj.canvas.w / 1920) / 2;

@@ -9,6 +9,7 @@ html, body {
 canvas {
     -webkit-user-drag: none;
     user-select: none;
+    touch-action: none;
 }
 
 @font-face {

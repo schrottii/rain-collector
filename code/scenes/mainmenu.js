@@ -65,9 +65,8 @@ scenes["mainmenu"] = new Scene(
         for (let i = 1; i <= ITEM_LIMIT; i++) {
             createButton("drop" + i, -10, -10, 0.1, 0.1, "currencies/raindrop", () => {
 
-            }, { power: false, quadratic: true, centered: true, onHover: () => { collectItem(i, false) } });
-            objects["drop" + i].power = false;
-
+            }, { power: false, quadratic: true, centered: true });
+            objects["drop" + i].onHover = () => { collectItem(i, false) };
             if (fallingItems["drop" + i] == undefined) {
                 // generated them for the first time
                 fallingItems["drop" + i] = objects["drop" + i];

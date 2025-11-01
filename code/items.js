@@ -137,6 +137,9 @@ class InventoryItem extends Item {
         if (game.items.eqitems.includes(this.getInventoryID())) game.items.eqitems.splice(game.items.eqitems.indexOf(this.getInventoryID()), 1);
         game.items.items.splice(this.getInventoryID(), 1);
         if (selectedItem == this.getInventoryID()) selectedItem = 0;
+        for (let i in game.items.eqitems) {
+            if (game.items.eqitems[i] > this.getInventoryID()) game.items.eqitems[i] -= 1;
+        }
     }
 
     // WORTH

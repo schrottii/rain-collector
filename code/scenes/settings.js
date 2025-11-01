@@ -121,6 +121,7 @@ scenes["settings"] = new Scene(
                     game.settings.textscale = 1;
                     break;
             }
+            wggjUpdateTextScaling();
             updateFont();
         });
 

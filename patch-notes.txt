@@ -485,3 +485,10 @@ July - September 2025:
 -> Other:
 - Fixed some setting descriptions being forced into two lines
 - Fixed browser-based drag issue
+
+
+
+x
+- Disabled right click and touchscreen issues
+- Fixed item breaking issue
+- Updated WGGJ from v1.3 to v1.5
