@@ -198,6 +198,7 @@ wggjCanvas.addEventListener("pointerleave", wggjEventsOnPointerUp);
 wggjCanvas.addEventListener("pointermove", wggjEventsOnPointerMove);
 
 function wggjEventsOnClick(e) {
+    e.preventDefault();
     wggj.mouse.x = e.clientX - wggjCanvas.getBoundingClientRect().x;
     wggj.mouse.y = e.clientY - wggjCanvas.getBoundingClientRect().y;
     wggj.mouse.down = true;
@@ -213,6 +214,7 @@ function wggjEventsOnClick(e) {
 }
 
 function wggjEventsOnPointerUp(e) {
+    e.preventDefault();
     wggj.mouse.down = false;
 
     for (let c in objects) {
@@ -226,6 +228,7 @@ function wggjEventsOnPointerUp(e) {
 }
 
 function wggjEventsOnPointerMove(e) {
+    e.preventDefault();
     wggj.mouse.x = e.clientX - wggjCanvas.getBoundingClientRect().x;
     wggj.mouse.y = e.clientY - wggjCanvas.getBoundingClientRect().y;
 
