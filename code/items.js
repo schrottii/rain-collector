@@ -155,11 +155,12 @@ class InventoryItem extends Item {
 
 // this one is just for rendering
 class ItemObject {
-    constructor(x, y, type, nr) {
+    constructor(x, y, type, nr, sizeMod) {
         this.x = x;
         this.y = y;
         this.type = type;
         this.nr = nr;
+        this.sizeMod = sizeMod != undefined ? sizeMod : 1;
     }
 
     getID() {
@@ -199,15 +200,16 @@ class ItemObject {
     }
 
     createObjects() {
-        createButton(this.me() + "bg", this.x, this.y, 0.1, 0.1, "common", () => {
+        let w = 0.1 * this.sizeMod;
+        createButton(this.me() + "bg", this.x, this.y, w, w, "common", () => {
             if (this.getInventoryID() != -1) {
                 selectedItem = this.getInventoryID();
             }
-            else selectedItem = 0;
+            //else selectedItem = 0;
         }, { quadratic: true, centered: true });
-        createImage(this.me() + "pic", this.x, this.y, 0.1, 0.1, "items/sword", { quadratic: true, centered: true });
-        createSquare(this.me() + "bar", this.x - 0.05, this.y + 0.09, 0.1, 0.01, "black");
-        createSquare(this.me() + "barfill", this.x - 0.05, this.y + 0.09, 0, 0.01, "red");
+        createImage(this.me() + "pic", this.x, this.y, w, w, "items/sword", { quadratic: true, centered: true });
+        createSquare(this.me() + "bar", this.x - w/2, this.y + w * 0.9, w, w / 10, "black");
+        createSquare(this.me() + "barfill", this.x - w/2, this.y + w * 0.9, 0, w / 10, "red");
     }
 
     updateObjects() {
@@ -215,7 +217,8 @@ class ItemObject {
 
         objects[this.me() + "bg"].image = this.getItem().getRarityName().toLowerCase();
         objects[this.me() + "pic"].image = this.getItem().img;
-        if (this.getInventoryID() >= 0) objects[this.me() + "barfill"].w = 0.1 * (game.items.items[this.getInventoryID()].getRemainingDurability() / game.items.items[this.getInventoryID()].getDurability());
+        if (this.getInventoryID() >= 0) objects[this.me() + "barfill"].w = 0.1 * this.sizeMod * (game.items.items[this.getInventoryID()].getRemainingDurability() / game.items.items[this.getInventoryID()].getDurability());
+        else objects[this.me() + "barfill"].w = 0;
     }
 }
 
@@ -250,6 +253,7 @@ function getItemBoost(currencyName, consume = false, consumeMul = 1) {
 
     for (let item in game.items.eqitems) {
         let thisItem = game.items.items[game.items.eqitems[item]];
+        if (thisItem == undefined) continue;
 
         let amountBefore = amount;
         amount += thisItem.getBoost(currencyName, 0);

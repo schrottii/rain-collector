@@ -67,6 +67,7 @@ class SaveGame {
 
         this.muddrop = {
             amount: new Decimal(0),
+            time: 0,
 
             upgrades: {
                 worth: 0,
@@ -107,6 +108,7 @@ class SaveGame {
             weatherSunny: 0,
             weatherWindy: 0,
             weatherThunder: 0,
+            weatherFog: 0,
             eggs: 0,
 
             // items
@@ -154,13 +156,15 @@ class SaveGame {
         }
 
         this.settings = {
-            music: false,
+            music: true,
             musicVolume: 0.2,
             bg: true,
             notation: "normal",
             menupause: true,
             font: 0,
             textscale: 1,
+            sounds: true,
+            soundVolume: 0.5,
         }
     }
     loadFromSaveGame(sg, passive = false) {

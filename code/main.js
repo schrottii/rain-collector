@@ -4,6 +4,7 @@ const GAMEVERSION = "1.9";
 
 images = {
     button: "button.png",
+    button_dark: "button_dark.png",
     achbg: "cool-outline.png",
     locked: "locked.png",
 
@@ -35,6 +36,7 @@ images = {
     "weather-sunny": "icons/weather-sunny.png",
     "weather-thunder": "icons/weather-thunder.png",
     "weather-windy": "icons/weather-windy.png",
+    "weather-fog": "icons/weather-fog.png",
 
     music: "settings/music.png",
     musicoff: "settings/music-off.png",
@@ -53,6 +55,9 @@ images = {
     collected2: "effects/collected2.png",
     autocollected: "effects/autocollected.png",
     autocollected2: "effects/autocollected2.png",
+    wc_collected: "effects/wc_collected.png",
+    wc_collected2: "effects/wc_collected2.png",
+
     thunder: "effects/thunder.png",
     thunder2: "effects/thunder2.png",
     mudpuddle: "effects/mudpuddle.png",
@@ -78,9 +83,21 @@ images = {
 };
 
 var audio = {
-    song: "lofi-relax-music-lofium-123264.mp3",
+    // music
+    maintheme: "Rain_of_Tropfen.mp3",
+    //song: "lofi-relax-music-lofium-123264.mp3",
 
+    // sounds
+    click: "sounds/146721__leszek_szary__menu-click.wav",
+    upgrade: "sounds/upgrade_edit_of_657948.wav",//edit (volume)
 
+    "raindrop": "sounds/water_edit_of_371274.wav",//edit
+    "coin": "sounds/341231__jeremysykes__coin00.wav",
+    "small_plop": "sounds/small_plop.mp3",//selfmade
+    "medium_plop": "sounds/medium_plop.mp3",//selfmade
+    "big_plop": "sounds/big_plop.mp3",//selfmade
+    "muddrop": "sounds/mud_edit_of_371274.wav",//edit
+    "iron": "sounds/98867__unstableuranium__iron-clang.wav",
 };
 
 setupSave();

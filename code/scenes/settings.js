@@ -22,9 +22,9 @@ scenes["settings"] = new Scene(
         createText("header", 0.5, 0.06, "Settings", { size: 60, color: "white" });
 
         // Buttons
-        createButton("sceneButton1", 0, 0.9, 1 / 3, 0.1, "button", () => { loadScene("stats") });
-        createButton("sceneButton2", 0 + 1 / 3, 0.9, 1 / 3, 0.1, "button", () => { loadScene("achievements") });
-        createButton("sceneButton3", 0 + 1 / 3 * 2, 0.9, 1 / 3, 0.1, "button", () => { loadScene("mainmenu") });
+        createButton("sceneButton1", 0, 0.9, 1 / 3, 0.1, "button", () => { audioPlaySound("click"); loadScene("stats") });
+        createButton("sceneButton2", 0 + 1 / 3, 0.9, 1 / 3, 0.1, "button", () => { audioPlaySound("click"); loadScene("achievements") });
+        createButton("sceneButton3", 0 + 1 / 3 * 2, 0.9, 1 / 3, 0.1, "button", () => { audioPlaySound("click"); loadScene("mainmenu") });
 
         createImage("sceneImage1", 1 / 6, 0.91, 0.08, 0.08, "stats", { quadratic: true, centered: true });
         createImage("sceneImage2", 1 / 6 * 3, 0.91, 0.08, 0.08, "achievements", { quadratic: true, centered: true });
@@ -55,7 +55,7 @@ scenes["settings"] = new Scene(
             createText("settingTextAudio", 0.5, 
                 objects["settingTextDesign"].y + (3 * 0.1 + 0.05), "Music & Audio", { color: "white", size: 40 }),
             createText("settingTextMore", 0.5, 
-                objects["settingTextAudio"].y + (2 * 0.1 + 0.05), "More", { color: "white", size: 40 }),
+                objects["settingTextAudio"].y + (4 * 0.1 + 0.05), "More", { color: "white", size: 40 }),
 
         ]);
 
@@ -131,14 +131,25 @@ scenes["settings"] = new Scene(
             game.settings.music = !game.settings.music;
 
             wggjAudio.currentTime = 0;
-            if (game.settings.music) wggjAudio.play();
+            if (game.settings.music) audioPlayMusic("maintheme");
             else wggjAudio.pause();
         });
         newSettingUI("musicVolume", "music", "Music Volume", () => "Adjust volume. Current: " + (game.settings.musicVolume * 100).toFixed(0) + "%", yy + 0.2, () => {
             game.settings.musicVolume += 0.1;
             if (game.settings.musicVolume > 1) game.settings.musicVolume = 0;
 
-            wggjAudio.volume = game.settings.musicVolume;
+            audioChangeVolume("music", game.settings.musicVolume);
+        });
+        newSettingUI("sounds", "music", "Toggle Sounds", () => (game.settings.sounds ? "Enabled. " : "Disabled. ") + "Turn music on or off", yy + 0.3, () => {
+            game.settings.sounds = !game.settings.sounds;
+
+            wggj.audio.soundMuted = !game.settings.sounds;
+        });
+        newSettingUI("soundVolume", "music", "Sound Volume", () => "Adjust volume. Current: " + (game.settings.soundVolume * 100).toFixed(0) + "%", yy + 0.4, () => {
+            game.settings.soundVolume += 0.1;
+            if (game.settings.soundVolume > 1) game.settings.soundVolume = 0;
+
+            audioChangeVolume("sounds", game.settings.soundVolume);
         });
 
         // BLATANT ADVERTIZING SETTINGS

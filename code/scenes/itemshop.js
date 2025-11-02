@@ -7,7 +7,7 @@ scenes["itemshop"] = new Scene(
         createText("header", 0.5, 0.06, "Item Shop", { size: 60, color: "white" });
 
         // Go back
-        createButton("backSquare", 0, 0.9, 1, 0.1, "button", () => { loadScene("itemselection") });
+        createButton("backSquare", 0, 0.9, 1, 0.1, "button", () => { audioPlaySound("click"); loadScene("itemselection") });
         createText("backText", 0.5, 0.9625, "Go back", { color: "black", size: 64 });
            
         // Daily Item

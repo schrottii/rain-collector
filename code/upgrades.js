@@ -17,6 +17,7 @@ class Upgrade {
             this.config = config;
             if (config.unlock) this.unlock = config.unlock;
             if (config.onBuy) this.onBuy = config.onBuy;
+            if (config.buysingle) this.buysingle = config.buysingle;
         }
     }
 
@@ -50,7 +51,7 @@ class Upgrade {
             // recalculate
             let amount = new Decimal(0);
 
-            if (multiBuy == 1) {
+            if (multiBuy == 1 || this.buysingle) {
                 // no multi buy, well, this is gonna be pretty easy
                 amount = this.getPrice(level);
             }
@@ -114,7 +115,8 @@ class Upgrade {
 
         if (!this.isUnlocked()) return false;
         createButton(this.me() + "button", 0.025, 0.1 + index * 0.1, 0.1, 0.1, "upgrades", () => {
-            for (let i = 0; i < multiBuy; i++) {
+            let levelsToBuy = this.buysingle ? 1 : multiBuy;
+            for (let i = 0; i < levelsToBuy; i++) {
                 if (this.canAfford() && this.getLevel() < this.getMaxLevel()) {
                     // reduce currency amount
                     game[this.currency].amount = game[this.currency].amount.sub(this.getPrice());
@@ -125,7 +127,9 @@ class Upgrade {
 
                     if (this.onBuy) this.onBuy(this);
                 }
+                else break;
             }
+            audioPlaySound("upgrade");
         }, { quadratic: true });
         createImage(this.me() + "pic", 0.025, 0.1 + index * 0.1, 0.025, 0.025, "currencies/" + currencies[this.currency].image, { quadratic: true });
 
@@ -173,14 +177,16 @@ const watercoinUpgrades = {
             if (upg.name == "tempboost") {
                 game.watercoin.tempBoostTime = 30;
             }
-        }
+        },
+        buysingle: true
     }),
     superauto: new Upgrade("watercoin", "superauto", "Super Auto", level => "Auto has a 100% collect rate for 30 seconds. Does not stack. " + (game.watercoin.superAutoTime > 0 ? game.watercoin.superAutoTime.toFixed(1) + "s/30s" : ""), 2, 1, 0, {
         onBuy: (upg) => {
             if (upg.name == "superauto") {
                 game.watercoin.superAutoTime = 30;
             }
-        }
+        },
+        buysingle: true
     }),
     economicbubble: new Upgrade("watercoin", "economicbubble", "Economic Bubble", level => "Every falling currency collect is worth " + level + "% more (additive). 10% reset chance every collect. No auto.", level => 10 + 5 * level, level => level, 200, { unlock: () => currencies.bubble.isUnlocked() }),
     coinpop: new Upgrade("watercoin", "coinpop", "Coin Pop", level => (level / 20) + "% chance of Bubbles dropping a Water Coin after collected. No auto.", level => 4 + 2 * level, level => level / 20, 100, { unlock: () => currencies.glowble.isUnlocked() }),

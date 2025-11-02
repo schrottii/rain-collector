@@ -17,7 +17,8 @@ const weathers = {
     rainy: new Weather("rainy", "Rainy", 1, 1, 1),
     sunny: new Weather("sunny", "Sunny", 3, 1, 0.3333),
     windy: new Weather("windy", "Windy", 1.5, 1.5, 1),
-    thunder: new Weather("thunder", "Thunder", 1.5, 1, 1) // also has spawning thunder
+    thunder: new Weather("thunder", "Thunder", 1.5, 1, 1), // also has spawning thunder
+    fog: new Weather("fog", "The Fog", 1.5, 1.25, 1.33) // also has opacity
 }
 
 function tickWeather(tick) {
@@ -39,20 +40,31 @@ function tickWeather(tick) {
             currentWeather = "rainy";
         }
         */
-        if (randy >= 2/3) {
+        if (randy >= 3/4) {
             currentWeather = "sunny";
             game.stats.weathers++;
             game.stats.weatherSunny++;
         }
-        else if (randy >= 1/3) {
+        else if (randy >= 2/4) {
             currentWeather = "windy";
             game.stats.weathers++;
             game.stats.weatherWindy++;
         }
-        else {
+        else if (randy >= 1/4) {
             currentWeather = "thunder";
             game.stats.weathers++;
             game.stats.weatherThunder++;
+        }
+        else {
+            currentWeather = "fog";
+            game.stats.weathers++;
+            game.stats.weatherFog++;
+
+            for (let o in objects) {
+                if (o.substr(0, 4) == "drop") {
+                    objects[o].alpha = 0.1 + 0.2 * Math.random();
+                }
+            }
         }
 
         weatherSecs = 0;

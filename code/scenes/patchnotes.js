@@ -68,9 +68,9 @@ scenes["patchnotes"] = new Scene(
         createText("pbrt", 0.9275, 0.15, ">", { size: 40, noScaling: true });
 
         // Buttons
-        createButton("sceneButton1", 0, 0.9, 1 / 3, 0.1, "button", () => { loadScene("achievements") });
-        createButton("sceneButton2", 0 + 1 / 3, 0.9, 1 / 3, 0.1, "button", () => { loadScene("settings") });
-        createButton("sceneButton3", 0 + 1 / 3 * 2, 0.9, 1 / 3, 0.1, "button", () => { loadScene("mainmenu") });
+        createButton("sceneButton1", 0, 0.9, 1 / 3, 0.1, "button", () => { audioPlaySound("click"); loadScene("achievements") });
+        createButton("sceneButton2", 0 + 1 / 3, 0.9, 1 / 3, 0.1, "button", () => { audioPlaySound("click"); loadScene("settings") });
+        createButton("sceneButton3", 0 + 1 / 3 * 2, 0.9, 1 / 3, 0.1, "button", () => { audioPlaySound("click"); loadScene("mainmenu") });
 
         createImage("sceneImage1", 1 / 6, 0.91, 0.08, 0.08, "achievements", { quadratic: true, centered: true });
         createImage("sceneImage2", 1 / 6 * 3, 0.91, 0.08, 0.08, "settings", { quadratic: true, centered: true });
@@ -527,7 +527,40 @@ const PATCHNOTES = {
 
 -> Other:
 - Fixed some setting descriptions being forced into two lines
-- Fixed browser-based drag issue`
+- Fixed browser-based drag issue`,
+
+    "v1.9": `2025/11/02 v1.9:
+Rain Collector is now one year old, happy birthday!
+
+-> Audio:
+- Replaced song with a new one I made ("Rain of Tropfen")
+- Added sounds: click, upgrade, Raindrops, Bubbles, Muddrops, Iron
+- Bubbles have 3 different sounds depending on their size, made by a good friend
+- Added Setting to toggle sounds
+- Added Setting for sound volume
+- Music (and sounds) now enabled by default
+
+-> Weather:
+- New Weather: The Fog
+- Falling stuff becomes transparent
+- x1.5 worth, x1.25 speed, x1.33 spawn rate
+- Split Weather info into multiple lines
+
+-> Design:
+- Your equipped items are now shown at the top, including durability
+- When Temporary Boost / Super Auto is active, a duration bar appears in the top right
+
+-> Upgrades:
+- Multi Buy can no longer be used on Temporary Boost and Super Auto
+- Optimized Multi Buy a bit
+
+-> Other:
+- Added unique collect animation for Water Coins
+- Darker button for unequipping items
+- Selecting an empty item slot no longer selects the first item
+- Fixed item breaking issue
+- Disabled right click and touchscreen issues
+- Updated WGGJ from v1.3 to v1.5.1`,
 };
 
 /*

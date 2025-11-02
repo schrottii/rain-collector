@@ -22,16 +22,17 @@ scenes["upgrading"] = new Scene(
 
         // Go back
         createButton("backSquare", 0, 0.9, showWaterCoinButton ? 0.8 : 1, 0.1, "button", () => { 
+            audioPlaySound("click"); 
             if (justClickedWaterCoinButton > 0) return false;
             if (game.selTemp != "none") {
                 // player is here temporarily, currency is locked
                 game.selCur = game.selTemp;
                 game.selTemp = "none";
-                loadScene("currencyselection")
+                loadScene("currencyselection");
             }
             else {
                 // normal return
-                loadScene("mainmenu")
+                loadScene("mainmenu");
             }
         });
         createText("backText", showWaterCoinButton ? 0.4 : 0.5, 0.9625, "Go back", { color: "black", size: 64 });

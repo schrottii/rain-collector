@@ -144,9 +144,9 @@ scenes["achievements"] = new Scene(
         createText("achBoost", 0.5, 0.14, "Boost: +0% Raingold", { size: 40, color: "white" });
 
         // Buttons
-        createButton("sceneButton1", 0, 0.9, 1 / 3, 0.1, "button", () => { loadScene("stats") });
-        createButton("sceneButton2", 0 + 1 / 3, 0.9, 1 / 3, 0.1, "button", () => { loadScene("settings") });
-        createButton("sceneButton3", 0 + 1 / 3 * 2, 0.9, 1 / 3, 0.1, "button", () => { loadScene("mainmenu") });
+        createButton("sceneButton1", 0, 0.9, 1 / 3, 0.1, "button", () => { audioPlaySound("click"); loadScene("stats") });
+        createButton("sceneButton2", 0 + 1 / 3, 0.9, 1 / 3, 0.1, "button", () => { audioPlaySound("click"); loadScene("settings") });
+        createButton("sceneButton3", 0 + 1 / 3 * 2, 0.9, 1 / 3, 0.1, "button", () => { audioPlaySound("click"); loadScene("mainmenu") });
 
         createImage("sceneImage1", 1 / 6, 0.91, 0.08, 0.08, "stats", { quadratic: true, centered: true });
         createImage("sceneImage2", 1 / 6 * 3, 0.91, 0.08, 0.08, "settings", { quadratic: true, centered: true });
@@ -173,10 +173,12 @@ scenes["achievements"] = new Scene(
 
         // Page Buttons
         createButton("pageButtonL", 0, 0.1, 0.15, 0.05, "button", () => {
+            audioPlaySound("click");
             if (achievementsPage > 0) achievementsPage--;
         });
         createText("pblt", 0.0775, 0.15, "<", { size: 40, noScaling: true });
         createButton("pageButtonR", 0.85, 0.1, 0.15, 0.05, "button", () => {
+            audioPlaySound("click");
             if (achievementsPage < Math.ceil(achievements.length / 25) - 1) achievementsPage++;
         });
         createText("pbrt", 0.9275, 0.15, ">", { size: 40, noScaling: true });

@@ -6,6 +6,7 @@ var statDisplays = {
     weatherSunny: ["Sunny Weather"],
     weatherWindy: ["Windy Weather"],
     weatherThunder: ["Thunder Weather"],
+    weatherFog: ["Fog Weather"],
 
     eggs: ["Eggs Collected"],
 
@@ -65,9 +66,9 @@ scenes["stats"] = new Scene(
         createText("userID", 1, 0.1, "", { size: 30, color: "white", align: "right" });
 
         // Buttons
-        createButton("sceneButton1", 0, 0.9, 1 / 3, 0.1, "button", () => { loadScene("achievements") });
-        createButton("sceneButton2", 0 + 1 / 3, 0.9, 1 / 3, 0.1, "button", () => { loadScene("settings") });
-        createButton("sceneButton3", 0 + 1 / 3 * 2, 0.9, 1 / 3, 0.1, "button", () => { loadScene("mainmenu") });
+        createButton("sceneButton1", 0, 0.9, 1 / 3, 0.1, "button", () => { audioPlaySound("click"); loadScene("achievements") });
+        createButton("sceneButton2", 0 + 1 / 3, 0.9, 1 / 3, 0.1, "button", () => { audioPlaySound("click"); loadScene("settings") });
+        createButton("sceneButton3", 0 + 1 / 3 * 2, 0.9, 1 / 3, 0.1, "button", () => { audioPlaySound("click"); loadScene("mainmenu") });
 
         createImage("sceneImage1", 1 / 6, 0.91, 0.08, 0.08, "achievements", { quadratic: true, centered: true });
         createImage("sceneImage2", 1 / 6 * 3, 0.91, 0.08, 0.08, "settings", { quadratic: true, centered: true });

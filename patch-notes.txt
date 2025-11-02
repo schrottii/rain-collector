@@ -24,6 +24,8 @@ April - June 2025:
 1.8.2
 July - September 2025:
 1.8.3
+October - December 2025:
+1.9
 
 
 
@@ -488,7 +490,35 @@ July - September 2025:
 
 
 
-x
-- Disabled right click and touchscreen issues
+2025/11/02 v1.9:
+Rain Collector is now one year old, happy birthday!
+
+-> Audio:
+- Replaced song with a new one I made ("Rain of Tropfen")
+- Added sounds: click, upgrade, Raindrops, Bubbles, Muddrops, Iron
+- Bubbles have 3 different sounds depending on their size, made by a good friend
+- Added Setting to toggle sounds
+- Added Setting for sound volume
+- Music (and sounds) now enabled by default
+
+-> Weather:
+- New Weather: The Fog
+- Falling stuff becomes transparent
+- x1.5 worth, x1.25 speed, x1.33 spawn rate
+- Split Weather info into multiple lines
+
+-> Design:
+- Your equipped items are now shown at the top, including durability
+- When Temporary Boost / Super Auto is active, a duration bar appears in the top right
+
+-> Upgrades:
+- Multi Buy can no longer be used on Temporary Boost and Super Auto
+- Optimized Multi Buy a bit
+
+-> Other:
+- Added unique collect animation for Water Coins
+- Darker button for unequipping items
+- Selecting an empty item slot no longer selects the first item
 - Fixed item breaking issue
-- Updated WGGJ from v1.3 to v1.5
+- Disabled right click and touchscreen issues
+- Updated WGGJ from v1.3 to v1.5.1

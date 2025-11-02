@@ -239,6 +239,11 @@ function createFallingItem(item) {
             fallingItems["drop" + i].autod = false;
             fallingItems["drop" + i].power = true;
 
+            if (currentWeather == "fog") {
+                fallingItems["drop" + i].alpha = 0.1 + 0.2 * Math.random();
+            }
+            else fallingItems["drop" + i].alpha = 1;
+
             return i; // can be used
         }
     }

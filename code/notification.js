@@ -1,5 +1,5 @@
 function notification_Alert(title, text, image = "none") {
-    let objs = ["Bg", "Bg2", "Button", "ButtonText", "Img", "Title", "Desc", "Desc2"];
+    let objs = ["Bg", "Bg2", "Button", "ButtonText", "Img", "Title", "Desc"];
 
     // Create objects
     if (objects["notifAlertBg"] == undefined) {
@@ -20,9 +20,8 @@ function notification_Alert(title, text, image = "none") {
         createImage("notifAlertImg", 0.5, 0.375, 0.2, 0.2, "button", { centered: true, quadratic: true });
 
         createText("notifAlertTitle", 0.5, 0.275, "", { align: "center", color: "#01E5E5", size: 48 });
-        createText("notifAlertDesc", 0.5, 0.325, "", { align: "center", color: "#01E5E5", size: 24 });
-        createText("notifAlertDesc2", 0.5, 0.35, "", { align: "center", color: "#01E5E5", size: 24 });
-    }
+        createText("notifAlertDesc", 0.5, 0.325, "", { align: "center", color: "#01E5E5", size: 32 });
+     }
 
     // Show
     for (let o in objs){
@@ -34,8 +33,7 @@ function notification_Alert(title, text, image = "none") {
     if (objects["notifAlertImg"].image == "button") objects["notifAlertImg"].power = false;
 
     objects["notifAlertTitle"].text = title;
-    objects["notifAlertDesc"].text = text.length < 40 ? text : text.substr(0, text.substr(0, 40).lastIndexOf(" ") + 1);
-    objects["notifAlertDesc2"].text = text.length < 40 ? "" : text.substr(text.substr(0, 40).lastIndexOf(" ") + 1);
+    objects["notifAlertDesc"].text = text;
 }
 
 function notification_Item(item) {
@@ -52,15 +50,15 @@ var tutorialStep = false;
 var tutorialShown = false;
 
 var tutorial = [
-    [() => true, "Welcome to Rain Collector!", "This little tutorial will explain the game's basics. Hover over the falling drops!", "currencies/raindrop"],
-    [() => tutorialStep && game.raindrop.amount.gte(10), "10 drops, well done!", "Go to Upgrades and spend your 10 Raindrops.", "upgrades"],
-    [() => tutorialStep && game.raindrop.upgrades.worth > 0, "Upgrade bought", "Here, currencies can be spent on various boosts, including auto collect."],
-    [() => tutorialStep, "Water Coins", "Water Coins fall after collecting enough and can be spent on worldwide boosts.", "currencies/watercoin"],
+    [() => true, "Welcome to Rain Collector!", "This little tutorial will\nexplain the game's basics.\nHover over the falling drops!", "currencies/raindrop"],
+    [() => tutorialStep && game.raindrop.amount.gte(10), "10 drops, well done!", "Go to Upgrades and spend\nyour 10 Raindrops.", "upgrades"],
+    [() => tutorialStep && game.raindrop.upgrades.worth > 0, "Upgrade bought", "Here, currencies can be spent on\nvarious boosts, including auto collect."],
+    [() => tutorialStep, "Water Coins", "Water Coins fall after collecting enough\nand can be spent on worldwide boosts.", "currencies/watercoin"],
     [() => tutorialStep, "Water Coins", "Keep playing until you get one!", "currencies/watercoin"],
-    [() => tutorialStep && game.watercoin.amount.gte(1), "Settings & Stats", "Settings, Stats and more can be found there.", "stats"],
-    [() => tutorialStep, "Achievements", "Achievements boost prestige currency and show you what to do.", "achievements"],
-    [() => tutorialStep, "The Future", "Keep playing and you will unlock Prestige and new currencies!", "prestige"],
-    [() => tutorialStep || getAchievementByID(21).isUnlocked(), "Tutorial complete!", "If you need more help, you can ask in DC or look at Achievements"],
+    [() => tutorialStep && game.watercoin.amount.gte(1), "Settings & Stats", "Settings, Stats and more\ncan be found there.", "stats"],
+    [() => tutorialStep, "Achievements", "Achievements boost prestige currency\nand show you what to do.", "achievements"],
+    [() => tutorialStep, "The Future", "Keep playing and you will unlock\nPrestige and new currencies!", "prestige"],
+    [() => tutorialStep || getAchievementByID(21).isUnlocked(), "Tutorial complete!", "If you need more help, you can\nask in DC or look at Achievements"],
     //[() => false, "", ""],
 ];
 

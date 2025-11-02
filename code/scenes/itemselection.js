@@ -9,7 +9,7 @@ scenes["itemselection"] = new Scene(
         createText("header", 0.5, 0.06, "Items", { size: 60, color: "white" });
 
         // Go back
-        createButton("backSquare", 0, 0.9, 1, 0.1, "button", () => { loadScene("mainmenu") });
+        createButton("backSquare", 0, 0.9, 1, 0.1, "button", () => { audioPlaySound("click"); loadScene("mainmenu") });
         createText("backText", 0.5, 0.9625, "Go back", { color: "black", size: 64 });
 
         // Claim / Shop
@@ -21,6 +21,8 @@ scenes["itemselection"] = new Scene(
         createSquare("square1", 0.1, 0.12, 0.8, 0.12, "black");
 
         let itemCreateCounter = 0;
+        renderItems = [];
+
         for (let i = 0.25; i <= 0.75; i += 0.25) {
             renderItems.push(new ItemObject(i, 0.13, "equipped", itemCreateCounter));
             itemCreateCounter++;
@@ -31,6 +33,7 @@ scenes["itemselection"] = new Scene(
         createSquare("square2", 0.1, 0.30, 0.8, 0.36, "black");
 
         itemCreateCounter = 0;
+
         for (let j = 0.31; j <= 0.55; j += 0.12) {
             for (let i = 0.25; i <= 0.75; i += 0.25) {
                 renderItems.push(new ItemObject(i, j, "inventory", itemCreateCounter));
@@ -53,6 +56,7 @@ scenes["itemselection"] = new Scene(
         createText("selItemRarity", 0.875, 0.75, "", { size: 40, color: "white", align: "right" });
 
         createButton("selItemSell", 0.65, 0.78, 0.25, 0.04, "button", () => {
+            // Sell
             if (game.items.items.length < 1) return false;
             let amount = game.items.items[selectedItem].getWorth();
 
@@ -62,6 +66,8 @@ scenes["itemselection"] = new Scene(
 
             game.stats.itemsSold++;
             game.items.items[selectedItem].destroyItem();
+
+            selectedItem = 0;
         });
         createText("selItemSellText", 0.775, 0.81, "Sell", { size: 40, color: "black", align: "center" });
 
@@ -109,6 +115,7 @@ scenes["itemselection"] = new Scene(
         }
 
         objects["selItemEquipText"].text = !equippedItem(item.getInventoryID()) ? "Equip" : "Unequip";
+        objects["selItemEquip"].image = !equippedItem(item.getInventoryID()) ? "button" : "button_dark";
         objects["selItemEquip"].power = item.itemID != 0;
         objects["selItemEquipText"].power = item.itemID != 0;
         objects["selItemInventoryID"].text = (item.getInventoryID() + 1) + "/" + game.items.items.length;

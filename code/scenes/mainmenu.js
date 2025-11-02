@@ -14,7 +14,14 @@ function collectItem(i, isAuto = false) {
     if (!isAuto && Math.random() * 100 < snowflakeUpgrades.freezedown.getEffect()) game.snowflake.freezedowntime = 0;
 
     if (objects["collected"] != undefined) {
-        if (isAuto == true) {
+        if (getItemCur(i).name == "watercoin") {
+            objects["collected3"].power = true;
+            objects["collected3"].x = fallingItems["drop" + i].x;
+            objects["collected3"].y = fallingItems["drop" + i].y;
+            objects["collected3"].timer = 0.25;
+            objects["collected3"].image = "wc_collected";
+        }
+        else if (isAuto == true) {
             objects["collected2"].power = true;
             objects["collected2"].x = fallingItems["drop" + i].x;
             objects["collected2"].y = fallingItems["drop" + i].y;
@@ -47,6 +54,21 @@ function collectItem(i, isAuto = false) {
         createFallingItem("iron");
     }
 
+    // sound
+    if (getItemCur(i).name == "raindrop") audioPlaySound("raindrop");
+    if (getItemCur(i).name == "bubble") {
+        //if (fallingItems["drop" + i].w > 0.12) console.log("big");
+        //else if (fallingItems["drop" + i].w > 0.08) console.log("mid");
+        //else console.log("smol");
+        if (fallingItems["drop" + i].w > 0.12) audioPlaySound("big_plop");
+        else if (fallingItems["drop" + i].w > 0.08) audioPlaySound("medium_plop");
+        else audioPlaySound("small_plop");
+    }
+    if (getItemCur(i).name == "watercoin") audioPlaySound("coin");
+    if (getItemCur(i).name == "iron") audioPlaySound("iron");
+    if (getItemCur(i).name == "muddrop") audioPlaySound("muddrop");
+
+    // finalize
     amountBefore = getItemCur(i).getAmount();
     getItemCur(i).onCollect(fallingItems["drop" + i]);
     if (objects["latestGain"] != undefined) objects["latestGain"].text = "+" + fn(getItemCur(i).getAmount().sub(amountBefore));
@@ -83,9 +105,12 @@ scenes["mainmenu"] = new Scene(
         objects["collected"].timer = 0;
         createImage("collected2", -10, -10, 0.1, 0.1, "autocollected", { quadratic: true, centered: true, power: false });
         objects["collected2"].timer = 0;
+        createImage("collected3", -10, -10, 0.1, 0.1, "wc_collected", { quadratic: true, centered: true, power: false });
+        objects["collected3"].timer = 0;
 
         // Bottom Buttons
         createButton("sceneButton1", 0, 0.9, 1 / 4, 0.1, "button", () => {
+            audioPlaySound("click");
             viewUpgrades = game.selCur;
             leaveMainMenu();
             loadScene("upgrading");
@@ -93,6 +118,7 @@ scenes["mainmenu"] = new Scene(
         createImage("sceneImage1", 0.5 / 4, 0.91, 0.08, 0.08, "upgrades", { quadratic: true, centered: true });
 
         createButton("sceneButton2", 0 + 1 / 4, 0.9, 1 / 4, 0.1, "button", () => {
+            audioPlaySound("click");
             if (cc().getPrestigeCurrency() == undefined) notification_Alert("Not available", "There is no prestige for this currency!");
             else if (cc().getPrestigeCurrency().isUnlocked() || cc().getPrestigeCurrency().getAmount().gt(0)) {
                 leaveMainMenu();
@@ -104,6 +130,7 @@ scenes["mainmenu"] = new Scene(
         createImage("sceneButton2locked", 0 + 1 / 4, 0.9, 1 / 4, 0.1, "locked", { power: false });
 
         createButton("sceneButton3", 0 + 1 / 4 * 2, 0.9, 1 / 4, 0.1, "button", () => {
+            audioPlaySound("click");
             if (!unlockedItems()) notification_Alert("Locked", "Unlocked at 1000 total Glowbles!", "currencies/glowble");
             else {
                 leaveMainMenu();
@@ -114,6 +141,7 @@ scenes["mainmenu"] = new Scene(
         createImage("sceneButton3locked", 0 + 1 / 4 * 2, 0.9, 1 / 4, 0.1, "locked", { power: false });
 
         createButton("sceneButton4", 0 + 1 / 4 * 3, 0.9, 1 / 4, 0.1, "button", () => {
+            audioPlaySound("click");
             leaveMainMenu();
             loadScene("stats");
         });
@@ -121,6 +149,7 @@ scenes["mainmenu"] = new Scene(
 
         // Side button
         createButton("currencySelectionButton", 0.825, 0.8, 0.15, 0.05, "button", () => {
+            audioPlaySound("click");
             leaveMainMenu();
             loadScene("currencyselection");
         });
@@ -151,10 +180,11 @@ scenes["mainmenu"] = new Scene(
             , { size: 30, color: "white", align: "right" });
 
         createButton("weatherDisplay", 0, 0, 0.05, 0.05, "weather-thunder", () => {
+            audioPlaySound("click");
             notification_Alert("Weather: " + weathers[currentWeather].displayName,
-                "x" + weathers[currentWeather].worthMulti + " worth, "
-                + "x" + weathers[currentWeather].fallSpeedMulti + " fall speed, "
-                + "x" + weathers[currentWeather].spawnRateMulti + " spawn rate");
+                "x" + weathers[currentWeather].worthMulti + " worth"
+                + "\nx" + weathers[currentWeather].fallSpeedMulti + " fall speed"
+                + "\nx" + weathers[currentWeather].spawnRateMulti + " spawn rate");
         }, { quadratic: true });
         createText("weatherText", 0.12, 0.025, "Weather: Thunder", { size: 30, color: "white", align: "left" });
         createSquare("weatherBarBG", 0.12, 0.03, 0.28, 0.02, "black");
@@ -163,10 +193,27 @@ scenes["mainmenu"] = new Scene(
         createImage("thunderStrike", 0.5, 0.05, 0.2, 0.6, "thunder", { quadratic: true, centered: true });
         objects["thunderStrike"].power = false;
 
+        // Top / equipped items
+        renderItems = [];
+        if (unlockedItems()) {
+            for (let i = 1; i <= 3; i++) {
+                renderItems.push(new ItemObject(0.4 + 0.075 * i, 0, "equipped", i - 1, 0.5));
+            }
+            for (let renderItem in renderItems) {
+                renderItems[renderItem].createObjects();
+            }
+        }
+
+        // Top / temp boosts
+        createSquare("temp1_bg", 0.8, 0.025, 0.2, 0.0125, "black");
+        createSquare("temp1_fill", 0.8, 0.025, 0.2, 0.0125, "blue");
+        createSquare("temp2_bg", 0.8, 0.025 + 0.0125, 0.2, 0.0125, "black");
+        createSquare("temp2_fill", 0.8, 0.025 + 0.0125, 0.2, 0.0125, "blue");
+
         // Music
-        if (wggjAudio.src == "") wggjAudio.src = "audio/lofi-relax-music-lofium-123264.mp3";
-        wggjAudio.volume = game.settings.musicVolume;
-        if (game.settings.music && wggjAudio.currentTime == 0) wggjAudio.play();
+        audioChangeVolume("music", game.settings.musicVolume);
+        audioChangeVolume("sounds", game.settings.soundVolume);
+        if (game.settings.music) audioPlayMusic("maintheme");
 
         // Tutorial
         calcTutorial();
@@ -175,6 +222,10 @@ scenes["mainmenu"] = new Scene(
     },
     (tick) => {
         // Loop
+        for (let renderItem in renderItems) {
+            renderItems[renderItem].updateObjects();
+        }
+
         for (let i = 1; i <= ITEM_LIMIT; i++) {
             objects["drop" + i].power = fallingItems["drop" + i].power;
             if (fallingItems["drop" + i].power) {
@@ -183,6 +234,25 @@ scenes["mainmenu"] = new Scene(
                 objects["drop" + i].w = fallingItems["drop" + i].w;
                 objects["drop" + i].h = fallingItems["drop" + i].h;
             }
+        }
+
+        if (game.watercoin.tempBoostTime > 0) {
+            objects["temp1_fill"].w = 0.2 * game.watercoin.tempBoostTime / 30;
+            objects["temp1_bg"].alpha = 1;
+            objects["temp1_fill"].alpha = 1;
+        }
+        else {
+            objects["temp1_bg"].alpha = 0;
+            objects["temp1_fill"].alpha = 0;
+        }
+        if (game.watercoin.superAutoTime > 0) {
+            objects["temp2_fill"].w = 0.2 * game.watercoin.superAutoTime / 30;
+            objects["temp2_bg"].alpha = 1;
+            objects["temp2_fill"].alpha = 1;
+        }
+        else {
+            objects["temp2_bg"].alpha = 0;
+            objects["temp2_fill"].alpha = 0;
         }
 
         // Adjust display depending on mobile or pc
@@ -226,6 +296,13 @@ scenes["mainmenu"] = new Scene(
             objects["collected2"].timer = 0;
             objects["collected2"].x = -10;
             objects["collected2"].y = -10;
+        }
+        objects["collected3"].timer -= tick;
+        if (objects["collected3"].timer < 0.125) objects["collected3"].image = "wc_collected2";
+        if (objects["collected3"].timer < 0) {
+            objects["collected3"].timer = 0;
+            objects["collected3"].x = -10;
+            objects["collected3"].y = -10;
         }
 
         // handle generation of prestige currency, it is here so the player doesn't miss it
