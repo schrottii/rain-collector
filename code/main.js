@@ -157,7 +157,7 @@ var freezeGame = false;
 
 function fallingItemTick(tick) {
     // use this to f r e e z e :3
-    if (freezeGame || (game.settings.menupause == true && currentScene != "mainmenu")) return false;
+    if (freezeGame || (game.settings.menupause == true && wggj.canvas.currentScene != "mainmenu")) return false;
 
     gc().time += tick;
     game.watercoin.time += tick;
